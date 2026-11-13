@@ -1,5 +1,5 @@
 window.PN_CONFIG = {
-  supabaseUrl: 'https://qqaoyvezwccrucudwohg.supabase.co/rest/v1/',
+  supabaseUrl: 'https://qqaoyvezwccrucudwohg.supabase.co',
   supabaseKey: 'sb_publishable_X7Vbn5QG1uYZCxNI2RF8uA_Ht1T4YfX',
   email: 'pluddiedoodle@gmail.com'
 };

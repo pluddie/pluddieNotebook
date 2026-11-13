@@ -2,6 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
+<meta name="pn-build" content="1794560852">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -103,6 +104,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .seg button.on{color:var(--acc-ink)}
 .seg svg{width:15px;height:15px;flex:none}
 .nav{margin-left:auto}
+.rbtn.upd{background:var(--btn-bg);color:var(--btn-fg)}
 .nav button{padding:8px 16px}
 .modeseg button{width:44px;height:32px}
 .modeseg svg{width:16px;height:16px}
@@ -229,12 +231,11 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .notes .ecol>.panel{flex:1;overflow:hidden;position:relative}
 .escroll{flex:1;overflow:auto;min-height:0;position:relative}
 .meta-line{font-size:11px;color:var(--faint);text-align:center;padding-top:8px;font-variant-numeric:tabular-nums}
-#editor{outline:none;padding:10px 28px 80px;min-height:calc(100% - 30px);font-size:15px;line-height:1.65;letter-spacing:.01em}
-#editor h1{font-size:24px;line-height:1.35;margin:0;font-weight:700;letter-spacing:0}
-#editor h2{font-size:19px;line-height:1.4;margin:0;color:var(--acc-text);font-weight:600;letter-spacing:0}
+#editor{outline:none;padding:10px 28px 80px;min-height:calc(100% - 30px);font-size:13px;line-height:1.7;letter-spacing:.01em}
+#editor h1,#editor .h1{font-size:24px;line-height:1.35;margin:0;font-weight:700;letter-spacing:0}
+#editor h2,#editor .h2{font-size:19px;line-height:1.4;margin:0;color:var(--acc-text);font-weight:600;letter-spacing:0}
 #editor p,#editor div{margin:0}
 #editor .lg{font-size:18px}
-#editor .sm{font-size:13px}
 #editor .gal{display:flex;gap:8px;overflow-x:auto;margin:.5em 0;padding-bottom:6px;scroll-snap-type:x proximity;user-select:none;-webkit-user-select:none}
 #editor .gal img{height:180px;width:auto;max-width:none;flex:none;margin:0;object-fit:cover;scroll-snap-align:start;cursor:grab;background:var(--s2);-webkit-user-drag:none;-webkit-touch-callout:none}
 @media (max-width:760px){#editor .gal img{height:140px}}
@@ -389,6 +390,9 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .meta-open .metatg svg{transform:rotate(180deg)}
 .cal-d.has.reels{background:var(--reels);color:var(--reels-ink)}
 .cal-d.has.mixed{background:linear-gradient(135deg,var(--acc) 50%,var(--reels) 50%);color:var(--acc-ink)}
+.cal-d.has.past{background:var(--s3);color:var(--muted)}   /* already posted: greyed out */
+.card.past{opacity:.5;filter:grayscale(.7)}
+.nitem.past{opacity:.5}
 .ktag{display:inline-block;font-style:normal;font-size:10px;font-weight:700;line-height:15px;padding:0 5px;margin-right:5px;border-radius:5px;background:var(--reels);color:var(--reels-ink);vertical-align:1px}
 .chip.reels{background:var(--reels);color:var(--reels-ink)}
 
@@ -498,6 +502,7 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
       <button role="tab" id="tab-posts" data-view="posts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7.5" height="9" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="9" rx="1.5"/><rect x="3" y="14" width="7.5" height="7" rx="1.5"/><rect x="13.5" y="14" width="7.5" height="7" rx="1.5"/></svg>貼文</button>
       <button role="tab" id="tab-notes" data-view="notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7"/></svg>備忘錄</button>
     </nav>
+    <button class="rbtn upd" id="updBtn" title="有新版本，按一下更新" aria-label="更新到新版本" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 11-2.3-5.7"/><path d="M20 4v5h-5"/></svg></button>
     <button class="rbtn" id="setBtn" title="設定" aria-label="設定" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></button>
     <div class="scrim" id="setScrim" hidden></div>
     <div class="setpop" id="setPop" hidden>
@@ -583,9 +588,6 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <button class="rbtn fsbtn" id="noteBack" title="返回" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
               <div class="tools">
               <div class="tgrp">
-              <button class="tb" data-block="h1" title="標題">標題</button>
-              <button class="tb" data-block="h2" title="副標題">副標</button>
-              <button class="tb" data-block="p" title="內文">內文</button>
               <button class="tb" data-pop="size" title="文字樣式・字級"><span style="font-size:11px">A</span><span style="font-size:15px;margin-left:-2px">A</span></button>
               <button class="tb" data-pop="lh" title="行高"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6h10M11 12h10M11 18h10M5 4v16M2.5 6.5L5 4l2.5 2.5M2.5 17.5L5 20l2.5-2.5"/></svg></button>
               </div>
@@ -613,7 +615,7 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <span class="sep"></span>
               <div class="tgrp">
               <button class="tb" data-pop="link" title="連結"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 006.4 0l3-3a4.5 4.5 0 00-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 00-6.4 0l-3 3a4.5 4.5 0 006.4 6.4l1.2-1.2"/></svg></button>
-              <button class="tb" data-block="blockquote" title="引言"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 7H6a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6zM20 7h-4a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6z"/></svg></button>
+              <button class="tb" id="quoteBtn" title="引言"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 7H6a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6zM20 7h-4a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6z"/></svg></button>
               <button class="tb" data-cmd="insertHorizontalRule" title="分隔線"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12h18"/></svg></button>
               <button class="tb" data-pop="table" title="插入表格"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9.5h18M3 15h18M9 4v16M15 4v16"/></svg></button>
               <button class="tb" id="imgBtn" title="插入圖片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg></button>
@@ -756,7 +758,7 @@ function parseDate(s){ if(!s) return null; const [y, m, d] = s.split('-').map(Nu
 function dateLabel(s){ const d = parseDate(s); return d ? `${d.getMonth()+1}/${d.getDate()}（${WEEK[d.getDay()]}）` : ''; }
 function dayDiff(s){ const d = parseDate(s); if(!d) return null; const t = new Date(); t.setHours(0,0,0,0); return Math.round((d - t) / 864e5); }
 function relDay(s){ const n = dayDiff(s); if(n == null) return ''; return n === 0 ? '今天' : n === 1 ? '明天' : n === -1 ? '昨天' : n > 0 ? `${n} 天後` : `已過 ${-n} 天`; }
-const row = (id, inner, on) => `<div class="row"><button class="row-del" data-del="${id}" aria-label="刪除" tabindex="-1">${ICON.trash}</button><button class="nitem ${on ? 'on' : ''}" data-id="${id}">${inner}</button></div>`;
+const row = (id, inner, cls = '') => `<div class="row"><button class="row-del" data-del="${id}" aria-label="刪除" tabindex="-1">${ICON.trash}</button><button class="nitem ${cls}" data-id="${id}">${inner}</button></div>`;
 const byPinThenRecent = (a, b) => (!!b.pinned - !!a.pinned) || (b.updatedAt - a.updatedAt);
 
 const ICON = {
@@ -912,9 +914,12 @@ const MAX_IMG = 20;   // IG / Threads carousel limit
 let posts = [], cur = null;
 const postSaver = makeSaver('posts', () => posts);
 
-function sortedPosts(){   // pinned first, then undated, then latest date first (the IG grid's direction)
-  return posts.slice().sort((a, b) =>
-    (!!b.pinned - !!a.pinned) || (!b.date - !a.date) || (a.date < b.date ? 1 : a.date > b.date ? -1 : 0) || (b.createdAt - a.createdAt));
+/* pinned, then upcoming (nearest date first), then undated, then already past (most recent first, greyed out) */
+const isPast = d => !!d.date && d.date < localISO(new Date());
+function sortedPosts(){
+  const today = localISO(new Date()), rank = d => !d.date ? 1 : d.date >= today ? 0 : 2, cmp = (x, y) => x < y ? -1 : x > y ? 1 : 0;
+  return posts.slice().sort((a, b) => (!!b.pinned - !!a.pinned) || (rank(a) - rank(b))
+    || (rank(a) === 0 ? cmp(a.date, b.date) : rank(a) === 2 ? cmp(b.date, a.date) : 0) || (b.createdAt - a.createdAt));
 }
 let calMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1), dayFilter = '';
 const postName = d => d.title.trim() || d.caption.trim().split('\n')[0] || '（沒有文案）';
@@ -935,7 +940,7 @@ function renderCalendar(){   // month calendar with post dates circled
 }
 function renderPostList(list){   // the same posts as the grid, as a list (the only view on phones)
   $('#plistLabel').textContent = dayFilter ? `${dateLabel(dayFilter)} 的貼文` : '全部貼文';
-  $('#plist').innerHTML = list.length ? list.map(d => row(d.id, `<b>${d.pinned ? ICON.pin : ''}${d.kind === 'reels' ? '<i class="ktag">Reels</i>' : ''}${esc(postName(d))}</b><span><em>${d.date ? dateLabel(d.date) : '未排日期'}</em>${esc(d.caption.trim().split('\n')[d.title.trim() ? 0 : 1] || '沒有文案')}</span>`, d === cur)).join('')
+  $('#plist').innerHTML = list.length ? list.map(d => row(d.id, `<b>${d.pinned ? ICON.pin : ''}${d.kind === 'reels' ? '<i class="ktag">Reels</i>' : ''}${esc(postName(d))}</b><span><em>${d.date ? dateLabel(d.date) : '未排日期'}</em>${esc(d.caption.trim().split('\n')[d.title.trim() ? 0 : 1] || '沒有文案')}</span>`, (d === cur ? 'on ' : '') + (isPast(d) ? 'past' : ''))).join('')
     : `<div class="empty-note">${posts.length ? '找不到符合的貼文' : '還沒有貼文，按 + 新增'}</div>`;
 }
 function renderPosts(){
@@ -947,7 +952,7 @@ function renderPosts(){
   $('#grid').innerHTML = list.length ? list.map(d => {
     const cover = d.images[0] ? `<img src="${d.images[0].src}" alt="" loading="lazy">`
       : `<div class="txtcover ${d.caption.trim() ? '' : 'blank'}">${esc(d.caption.trim().slice(0, 90) || '空白貼文')}</div>`;
-    return `<div class="card" role="button" tabindex="0" data-id="${d.id}" aria-label="貼文 ${esc(d.title)} ${dateLabel(d.date) || '未排日期'}">${cover}
+    return `<div class="card${isPast(d) ? ' past' : ''}" role="button" tabindex="0" data-id="${d.id}" aria-label="貼文 ${esc(d.title)} ${dateLabel(d.date) || '未排日期'}">${cover}
       <div class="ctop">${d.title.trim() ? `<span class="ctitle">${esc(d.title)}</span>` : ''}${d.kind === 'reels' ? '<span class="chip reels">Reels</span>' : ''}${d.images.length > 1 ? `<span class="chip">${ICON.multi}${d.images.length}</span>` : ''}${d.pinned ? `<span class="chip pin" title="已釘選">${ICON.pin}</span>` : ''}</div>
       <div class="cfoot"><span class="${!d.date ? 'nodate' : d.date < today ? 'past' : ''}">${d.date ? dateLabel(d.date) : '未排日期'}</span>
       <button class="ccopy" data-copy="${d.id}" title="複製文案" aria-label="複製文案">${ICON.copy}</button></div></div>`;
@@ -1109,9 +1114,10 @@ function endDrag(){
 let notes = [], curNote = null, curCell = null;
 const editor = $('#editor');
 const Hist = { undo:[], redo:[], kind:'', at:0 };
+const UI_CLASS = ['cur', 'csel', 'dragging', 'fit', 'picking'];
+const noteHtml = () => editor.innerHTML.replace(/ class="([^"]*)"/g, (m, c) => { const k = c.split(' ').filter(x => x && !UI_CLASS.includes(x)).join(' '); return k ? ` class="${k}"` : ''; });
 function histState(){
-  const s = getSelection(), r = s.rangeCount && editor.contains(s.anchorNode) ? s.getRangeAt(0) : null;
-  return { html:editor.innerHTML, sel: r ? [offIn(editor, r.startContainer, r.startOffset), offIn(editor, r.endContainer, r.endOffset)] : null };
+  return { html:noteHtml(), sel:selOffsets() };
 }
 function snap(kind = 'op'){   // call right before a change; typing / deleting runs are one step
   if(!curNote) return;
@@ -1122,14 +1128,14 @@ function snap(kind = 'op'){   // call right before a change; typing / deleting r
   Hist.undo.push(st); if(Hist.undo.length > 60) Hist.undo.shift(); Hist.redo.length = 0;
 }
 function applyHist(st){
-  editor.innerHTML = st.html; editor.focus(); Hist.kind = '';
-  if(st.sel){ try{ setRange(...posIn(editor, st.sel[0]), ...posIn(editor, st.sel[1])); }catch(e){} }
-  curCell = null; sel = null; touchNote(); updateState(); queueMedia();
+  editor.innerHTML = st.html; editor.focus({preventScroll:true}); Hist.kind = '';
+  setOffsets(st.sel);
+  curCell = null; cellSel = null; sel = null; touchNote(); fitWraps(); updateState(); queueMedia();
 }
 function undo(){ const prev = Hist.undo.pop(); if(!prev){ toast('沒有可以復原的步驟'); return; } Hist.redo.push(histState()); applyHist(prev); }
 function redo(){ const next = Hist.redo.pop(); if(!next) return; Hist.undo.push(histState()); applyHist(next); }
 let htmlT = null;
-function syncHtml(){ clearTimeout(htmlT); htmlT = null; if(curNote) curNote.html = editor.innerHTML; }   // the note's HTML is read from the editor lazily, not on every key
+function syncHtml(){ clearTimeout(htmlT); htmlT = null; if(curNote) curNote.html = noteHtml(); }   // the note's HTML is read from the editor lazily, not on every key
 const saveAll = () => Promise.all([noteSaver.flush(), postSaver.flush()]);
 const noteSaver = makeSaver('notes', () => { syncHtml(); return notes; });
 const collapsed = new Set(JSON.parse(lsGet('pn-collapsed') || lsGet('ml-collapsed') || '[]'));
@@ -1151,7 +1157,7 @@ function renderNoteList(){
   const list = notes.slice().sort(byPinThenRecent)
     .filter(n => !q || (n.title + ' ' + n.category + ' ' + htmlLines(n.html).join(' ')).toLowerCase().includes(q));
   const item = n => { const [t, s] = noteLabel(n);
-    return row(n.id, `<b>${n.pinned ? ICON.pin : ''}${esc(t)}</b><span><em>${fmtShort(n.updatedAt)}</em>${esc(s)}</span>`, n === curNote); };
+    return row(n.id, `<b>${n.pinned ? ICON.pin : ''}${esc(t)}</b><span><em>${fmtShort(n.updatedAt)}</em>${esc(s)}</span>`, n === curNote ? 'on' : ''); };
   const cats = categories(), rest = list.filter(n => !n.pinned);
   const groups = [['__pin', '已釘選', list.filter(n => n.pinned)],
     ...cats.map(c => [c, c, rest.filter(n => n.category.trim() === c)]),
@@ -1178,7 +1184,10 @@ function openNote(id, focusTitle){
   curNote = notes.find(n => n.id === id) || null;
   editor.innerHTML = curNote ? curNote.html : '';
   editor.contentEditable = curNote ? 'true' : 'false';
-  if(curNote){ tidyColors(editor); migrateSizes(); if(editor.innerHTML !== curNote.html){ curNote.html = editor.innerHTML; noteSaver.soon(curNote.id); } }
+  if(curNote){   // older saves may hold stray colours, inline sizes or UI marks: tidy once, save if anything changed
+    tidyColors(editor); migrateSizes(); $$('.' + UI_CLASS.join(',.'), editor).forEach(x => UI_CLASS.forEach(c => unmark(x, c)));
+    const h = noteHtml(); if(h !== curNote.html){ curNote.html = h; noteSaver.soon(curNote.id); }
+  }
   $('#ntitle').value = curNote?.title || ''; $('#ncat').value = curNote?.category || '';
   $('#ntitle').disabled = $('#ncat').disabled = !curNote;
   $('#pinNote').classList.toggle('on', !!curNote?.pinned);
@@ -1202,7 +1211,7 @@ editor.addEventListener('beforeinput', e => {
   if(barLink) hideLinkBar();
 });
 $('#ntitle').addEventListener('input', e => { curNote.title = e.target.value; touchNote(false); });
-$('#ntitle').addEventListener('keydown', e => { if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); editor.focus(); caretIn(editor.firstElementChild || editor); } });
+$('#ntitle').addEventListener('keydown', e => { if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); editor.focus({preventScroll:true}); caretIn(editor.firstElementChild || editor); } });
 $('#ncat').addEventListener('input', e => { curNote.category = e.target.value; touchNote(false); });
 $('#pinNote').addEventListener('click', () => {
   if(!curNote) return; curNote.pinned = !curNote.pinned;
@@ -1230,20 +1239,21 @@ const ROOT_BLOCK = /^(P|H1|H2|H3|BLOCKQUOTE|DIV|UL|OL|HR|IMG|TABLE)$/;
 const isQuoteBox = n => n.nodeName === 'BLOCKQUOTE' && [...n.children].some(c => ROOT_BLOCK.test(c.nodeName));   // a quote holding several lines
 const isTextBlock = n => n.nodeType === 1 && TEXT_BLOCK.test(n.nodeName) && !n.classList.contains('tbl-wrap') && !n.classList.contains('gal') && !isQuoteBox(n);
 /* line styles: one per line, so copying / joining lines keeps a predictable look */
-const STYLES = [['h1', '標題', 24, 'h1', ''], ['h2', '副標', 19, 'h2', ''], ['lg', '大字', 18, 'p', 'lg'], ['p', '內文', 15, 'p', ''], ['sm', '小字', 13, 'p', 'sm']];
-const styleOf = n => n?.nodeType !== 1 ? 'p' : n.nodeName === 'H1' ? 'h1' : n.nodeName === 'H2' ? 'h2' : n.classList.contains('lg') ? 'lg' : n.classList.contains('sm') ? 'sm' : 'p';
+const STYLES = [['h1', '標題', 24, 'h1', ''], ['h2', '副標', 19, 'h2', ''], ['lg', '大字', 18, 'p', 'lg'], ['p', '內文', 13, 'p', '']];   // key, label, px, tag, class
+const styleOf = n => n?.nodeType !== 1 ? 'p' : n.nodeName === 'H1' || n.classList.contains('h1') ? 'h1' : n.nodeName === 'H2' || n.classList.contains('h2') ? 'h2' : n.classList.contains('lg') ? 'lg' : 'p';   // list items / cells carry it as a class
 function stripSizes(root){   // inline sizes from older notes or other apps give way to the line style
   root.querySelectorAll('font[size]').forEach(f => f.replaceWith(...f.childNodes));
   root.querySelectorAll('[style]').forEach(x => { x.style.removeProperty('font-size'); if(!x.getAttribute('style')){ x.removeAttribute('style'); if(x.nodeName === 'SPAN') x.replaceWith(...x.childNodes); } });
 }
 function migrateSizes(){
+  $$('.sm', editor).forEach(x => unmark(x, 'sm'));   // 小字 (13px) is now the normal body size
   $$('p,h1,h2,div,li,td', editor).forEach(b => {
     if(!b.querySelector('[style*="font-size"],font[size]') || b.querySelector('p,h1,h2,div,li,td')) return;
     const sizes = new Set(), w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT);
     for(let t; (t = w.nextNode());){ if(!t.textContent.trim()) continue; const z = t.parentElement.closest('[style*="font-size"]'); sizes.add(z && b.contains(z) ? parseFloat(z.style.fontSize) || 0 : 0); }
     if(sizes.size > 1) return;   // mixed sizes inside one line stay as they are
     const px = [...sizes][0] || 0;
-    if(b.nodeName !== 'H1' && b.nodeName !== 'H2'){ b.classList.remove('sm', 'lg'); if(px && px < 15) b.classList.add('sm'); else if(px > 16) b.classList.add('lg'); }
+    if(b.nodeName !== 'H1' && b.nodeName !== 'H2'){ b.classList.remove('lg'); if(px > 16) b.classList.add('lg'); }
     stripSizes(b); if(!b.className) b.removeAttribute('class');
   });
 }
@@ -1251,10 +1261,14 @@ const isLoose = n => (n.nodeType === 3 && n.textContent.trim()) || (n.nodeType =
 
 let savedRange = null;
 function saveSel(){ const s = getSelection(); if(s.rangeCount && editor.contains(s.anchorNode)) savedRange = s.getRangeAt(0).cloneRange(); }
-function restoreSel(){ editor.focus(); if(savedRange && editor.contains(savedRange.startContainer)){ const s = getSelection(); s.removeAllRanges(); s.addRange(savedRange); } }
+function restoreSel(){ editor.focus({preventScroll:true}); if(savedRange && editor.contains(savedRange.startContainer)){ const s = getSelection(); s.removeAllRanges(); s.addRange(savedRange); } }
 function selNode(){ const s = getSelection(); if(!s.rangeCount) return null; let n = s.anchorNode; if(n?.nodeType === 3) n = n.parentElement; return n && editor.contains(n) ? n : null; }
 function setRange(sn, so, en = sn, eo = so){ const r = document.createRange(); r.setStart(sn, so); r.setEnd(en, eo); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
-function caretIn(el, atEnd){ const r = document.createRange(); r.selectNodeContents(el); r.collapse(!atEnd); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+function selectIn(el, collapse){   // select an element's contents; collapse: 'start' / 'end' puts just the caret there
+  const r = document.createRange(); r.selectNodeContents(el); if(collapse) r.collapse(collapse === 'start');
+  const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+const caretIn = (el, atEnd) => selectIn(el, atEnd ? 'end' : 'start');
 function keepSel(fn){   // run a DOM change that moves (not recreates) nodes, then put the selection back
   const s = getSelection(), r = s.rangeCount ? s.getRangeAt(0) : null;
   const pts = r && [r.startContainer, r.startOffset, r.endContainer, r.endOffset];
@@ -1292,42 +1306,39 @@ function splitBrs(block){
   block.replaceWith(...out);
 }
 const offIn = (block, node, off) => { const r = document.createRange(); r.selectNodeContents(block); try{ r.setEnd(node, off); }catch(e){ return 0; } return r.toString().length; };
-function posIn(el, n){
+function posIn(el, n, next){   // text offset → [node, offset]; next: at a boundary, prefer the start of the following text
   const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let t, last = null;
-  while((t = w.nextNode())){ if(n <= t.length) return [t, n]; n -= t.length; last = t; }
+  while((t = w.nextNode())){ if(next ? n < t.length : n <= t.length) return [t, n]; n -= t.length; last = t; }
   return last ? [last, last.length] : [el, 0];
 }
 const blocksBetween = (a, b) => { const L = []; for(let n = a; n; n = n.nextSibling){ L.push(n); if(n === b) break; } return L; };
 
-/* 標題 / 副標 / 內文 / 引言 — done by hand so only the selected lines change and 內文 always turns a heading back */
+/* the lines a selection touches (or the picked table cells): paragraphs, headings, list items, cells, old one-line quotes */
+const LINE = 'p,h1,h2,div,li,td,blockquote';
+function selLines(){
+  if(cellSel) return cellSel.cells.slice();
+  const s = getSelection(); if(!s.rangeCount || !editor.contains(s.anchorNode)) return [];
+  const r = s.getRangeAt(0);
+  return $$(LINE, editor).filter(el => !el.classList.contains('gal') && !el.classList.contains('tbl-wrap') && !el.querySelector(LINE + ',ul,ol,table')
+    && r.intersectsNode(el) && (r.collapsed || el.contains(r.startContainer) || !el.contains(r.endContainer) || offIn(el, r.endContainer, r.endOffset) > 0));   // a selection ending at a line's very start leaves that line out
+}
+const selOffsets = () => { const s = getSelection(), r = s.rangeCount && editor.contains(s.anchorNode) ? s.getRangeAt(0) : null; return r && [offIn(editor, r.startContainer, r.startOffset), offIn(editor, r.endContainer, r.endOffset)]; };
+const setOffsets = o => { if(o){ try{ setRange(...posIn(editor, o[0], o[0] < o[1]), ...posIn(editor, o[1])); }catch(e){} } };
+/* 字級: one style per line; pressing 標題 / 副標 on lines that already have it turns them back into 內文 */
 function setBlock(key){
-  restoreSel(); snap();
-  if(!getSelection().rangeCount) return;
-  keepSel(() => {
-    normalizeRoot();
-    const r = getSelection().getRangeAt(0), a = topBlock(r.startContainer);
-    if(a) blocksBetween(a, topBlock(r.endContainer)).forEach(splitBrs);
+  if(!cellSel) restoreSel();
+  snap();
+  keepSel(() => { normalizeRoot(); selLines().forEach(splitBrs); });
+  const lines = selLines(); if(!lines.length) return;
+  const pick = (key === 'h1' || key === 'h2') && lines.every(n => styleOf(n) === key) ? 'p' : key;
+  const [, , , tag, cls] = STYLES.find(x => x[0] === pick), o = selOffsets();
+  lines.forEach(n => {
+    let el = n;
+    if(/^(P|H1|H2|DIV)$/.test(n.nodeName)){ el = document.createElement(tag); if(n.style.cssText) el.style.cssText = n.style.cssText; el.append(...n.childNodes); n.replaceWith(el); if(cls) el.className = cls; }
+    else { el.classList.remove('h1', 'h2', 'lg'); if(pick !== 'p') el.classList.add(pick); if(!el.classList.length) el.removeAttribute('class'); }
+    stripSizes(el); if(!el.firstChild) el.innerHTML = '<br>';
   });
-  const r = getSelection().getRangeAt(0);
-  let a = topBlock(r.startContainer), b = topBlock(r.endContainer);
-  if(!a){ ensureBody(); a = editor.firstChild; }
-  if(!b || b.parentNode !== a.parentNode) b = a;
-  const blocks = blocksBetween(a, b).filter(n => isTextBlock(n) || (n.nodeType === 1 && !ROOT_BLOCK.test(n.nodeName)) || (n.nodeType === 3 && n.textContent.trim()));
-  if(!blocks.length) return;
-  const pick = ((key === 'h1' || key === 'h2') && blocks.every(n => styleOf(n) === key)) ? 'p' : key;   // pressing 標題 on a 標題 turns it back
-  const [, , , tag, cls] = STYLES.find(x => x[0] === pick);
-  const si = Math.max(0, blocks.indexOf(topBlock(r.startContainer))), endIdx = blocks.indexOf(topBlock(r.endContainer));
-  const so = offIn(blocks[si], r.startContainer, r.startOffset);
-  const ei = endIdx < si ? si : endIdx, eo = endIdx < si ? so : offIn(blocks[ei], r.endContainer, r.endOffset);
-  const made = blocks.map(n => {
-    const el = document.createElement(tag); if(cls) el.className = cls;
-    if(isTextBlock(n)){ if(n.style.cssText) el.style.cssText = n.style.cssText; el.append(...n.childNodes); n.replaceWith(el); }
-    else { n.replaceWith(el); el.appendChild(n); }
-    stripSizes(el);
-    if(!el.firstChild) el.innerHTML = '<br>';
-    return el;
-  });
-  setRange(...posIn(made[si], so), ...posIn(made[ei], eo));
+  if(!cellSel) setOffsets(o);
   touchNote(); updateState();
 }
 
@@ -1355,6 +1366,19 @@ function toggleQuote(){
   touchNote(); updateState();
 }
 
+/* Backspace right after (or Delete right before) a picture or an album: the first press selects it, the second removes just that one */
+const mediaOf = x => x?.nodeType === 1 && (x.classList.contains('gal') || x.nodeName === 'IMG' || (x.nodeName === 'P' && x.childNodes.length === 1 && x.firstChild.nodeName === 'IMG')) ? x : null;
+function mediaKey(key){
+  const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
+  const n = selNode(), blk = n && topBlock(n); if(!blk || blk.parentNode !== editor || mediaOf(blk)) return false;
+  const r = s.getRangeAt(0), off = offIn(blk, r.startContainer, r.startOffset);
+  const m = mediaOf(key === 'Backspace' ? (off === 0 ? blk.previousSibling : null) : (off === blk.textContent.length ? blk.nextSibling : null));
+  if(!m) return false;
+  const img = m.nodeName === 'IMG' ? m : m.querySelector('img');
+  if(sel && (sel.gal ? sel.gal === m : sel.img === img)){ snap(); m.remove(); selectImg(null); touchNote(); }
+  else { selectImg(img); toast(m.classList.contains('gal') ? '再按一次刪除這個相簿' : '再按一次刪除這張圖片'); }
+  return true;
+}
 function joinLines(key){
   const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
   const r = s.getRangeAt(0), n = selNode(); if(!n || n.closest('li,td')) return false;
@@ -1374,8 +1398,16 @@ function joinLines(key){
 }
 editor.addEventListener('keydown', e => {
   if((e.metaKey || e.ctrlKey) && !e.altKey && /^[zy]$/i.test(e.key)){ e.preventDefault(); (e.key.toLowerCase() === 'y' || e.shiftKey) ? redo() : undo(); return; }
-  if(e.key === 'Tab' && curCell){ e.preventDefault(); moveCell(e.shiftKey ? -1 : 1); return; }
-  if(curCell && e.key.startsWith('Arrow') && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey && !imeBusy(e) && arrowCell(e.key)){ e.preventDefault(); return; }
+  const cell = selNode()?.closest('td');
+  if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'a' && cell){   // ⌘A in a cell: that cell; again: every cell of the table
+    e.preventDefault();
+    if(getSelection().toString() === cell.textContent && cell.textContent){ const cells = $$('td', cell.closest('table')); selectCells(cells[0], cells[cells.length - 1]); }
+    else selectIn(cell);
+    return;
+  }
+  if(e.key === 'Tab' && cell){ e.preventDefault(); curCell = cell; moveCell(e.shiftKey ? -1 : 1); return; }
+  if((e.key === 'Backspace' || e.key === 'Delete') && !e.metaKey && !e.altKey && !imeBusy(e) && mediaKey(e.key)){ e.preventDefault(); return; }
+  if(cell && e.key.startsWith('Arrow') && (curCell = cell) && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey && !imeBusy(e) && arrowCell(e.key)){ e.preventDefault(); return; }
   if((e.key === 'Backspace' || e.key === 'Delete') && !e.metaKey && !e.altKey && !imeBusy(e) && joinLines(e.key)){ e.preventDefault(); return; }
   /* Enter: a new line after a heading / quote starts as body text instead of copying the style */
   if(e.key !== 'Enter' || e.shiftKey || imeBusy(e)) return;
@@ -1429,7 +1461,7 @@ function tidyColors(root){
 }
 
 /* paste: anything this editor can't make is turned into something it can, or dropped */
-const KEEP_CLASS = ['lg', 'sm', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
+const KEEP_CLASS = ['lg', 'h1', 'h2', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
 const RENAME = { H3:'h2', H4:'h2', H5:'h2', H6:'h2', PRE:'p', DT:'p', DD:'p', ADDRESS:'p', STRONG:'b', EM:'i', DEL:'s', STRIKE:'s', INS:'u' };
 const ALLOWED = /^(P|DIV|H1|H2|BR|B|I|U|S|A|UL|OL|LI|BLOCKQUOTE|HR|IMG|TABLE|THEAD|TBODY|TFOOT|TR|TD|TH|COLGROUP|COL|SPAN)$/;
 function cleanEl(el){
@@ -1526,11 +1558,18 @@ toolbar.addEventListener('click', e => {
   if(!curNote) return;
   if(b.id === 'checkBtn') toggleChecklist();
   else if(b.id === 'imgBtn') pickImages(null);
+  else if(b.id === 'quoteBtn'){ closePops(); toggleQuote(); }
   else if(b.dataset.cmd){
-    restoreSel(); snap(); document.execCommand(b.dataset.cmd, false, null);
-    if(b.dataset.cmd === 'insertUnorderedList') selNode()?.closest('ul')?.classList.remove('checklist');
-    closePops(); touchNote(); updateState();
-  } else if(b.dataset.block){ closePops(); b.dataset.block === 'blockquote' ? toggleQuote() : setBlock(b.dataset.block); }
+    const cmd = b.dataset.cmd; let target = null;
+    closePops();
+    editSel(() => {
+      if(/^(bold|italic|underline|strikeThrough)$/.test(cmd) && cellSel){   // picked cells: all on, unless they all are already
+        if(target === null) target = !document.queryCommandState(cmd);
+        if(document.queryCommandState(cmd) !== target) document.execCommand(cmd);
+      } else document.execCommand(cmd);
+      if(cmd === 'insertUnorderedList') selNode()?.closest('ul')?.classList.remove('checklist');
+    });
+  }
   else if(b.dataset.pop === 'link') openLink(null);
   else if(b.dataset.pop){ saveSel(); const p = $('#pop-' + b.dataset.pop), open = p.hidden; closePops(); if(open){ p.hidden = false; markOpts(b.dataset.pop); placePop(p, b); } }
 });
@@ -1556,16 +1595,17 @@ function applyLink(){
   let url = $('#linkUrl').value.trim(); const text = $('#linkText').value.trim();
   if(!url){ toast('請輸入網址'); $('#linkUrl').focus(); return; }
   if(!/^(https?:|mailto:|tel:)/i.test(url)) url = (/^[^\s@/]+@[^\s@]+\.[^\s@]+$/.test(url) ? 'mailto:' : 'https://') + url;
+  const sc = $('#escroll'), top = sc.scrollTop;
   closePops(); snap();
   if(linkEl && editor.contains(linkEl)){
     linkEl.setAttribute('href', url); if(text && text !== linkEl.textContent) linkEl.textContent = text;
-    editor.focus(); const r = document.createRange(); r.setStartAfter(linkEl); setRange(r.startContainer, r.startOffset);
+    editor.focus({preventScroll:true}); const r = document.createRange(); r.setStartAfter(linkEl); setRange(r.startContainer, r.startOffset);
   } else { restoreSel(); document.execCommand('insertHTML', false, `<a href="${esc(url)}">${esc(text || url)}</a>`); }
-  linkEl = null; touchNote(); updateState();
+  sc.scrollTop = top; linkEl = null; touchNote(); updateState();
 }
 function removeLink(a){ if(!a || !editor.contains(a)) return; snap(); keepSel(() => a.replaceWith(...a.childNodes)); hideLinkBar(); touchNote(); updateState(); }
 $('#linkOk').addEventListener('click', applyLink);
-$('#linkDel').addEventListener('click', () => { closePops(); removeLink(linkEl); linkEl = null; editor.focus(); });
+$('#linkDel').addEventListener('click', () => { closePops(); removeLink(linkEl); linkEl = null; editor.focus({preventScroll:true}); });
 $('#pop-link').addEventListener('keydown', e => {
   if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); applyLink(); }
   else if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); closePops(); restoreSel(); }
@@ -1586,6 +1626,13 @@ $('#lbar').addEventListener('click', e => {
   const b = e.target.closest('[data-l]'); if(!b || !barLink) return;
   if(b.dataset.l === 'edit') openLink(barLink); else removeLink(barLink);
 });
+/* run an inline edit on the selection, or once on each picked table cell */
+function editSel(fn){
+  snap();
+  if(cellSel){ editor.focus({preventScroll:true}); cellSel.cells.forEach(c => { selectIn(c); fn(); }); }
+  else { restoreSel(); fn(); }
+  touchNote(); updateState();
+}
 function toggleChecklist(){
   restoreSel(); snap();
   const ul = selNode()?.closest('ul');
@@ -1600,12 +1647,13 @@ $$('.swatches').forEach(w => {
   w.innerHTML = COLORS[kind].map(c => `<button class="sw ${c === 'none' ? 'none' : ''}" data-c="${c}" ${c === 'none' ? '' : `style="background:${c}"`} aria-label="${c === 'none' ? '移除顏色' : '顏色 ' + c}"></button>`).join('');
   w.addEventListener('click', e => {
     const s = e.target.closest('.sw'); if(!s) return;
-    restoreSel(); snap(); document.execCommand('styleWithCSS', false, true);
-    if(s.dataset.c !== 'none') document.execCommand(kind, false, s.dataset.c);
-    else if(kind === 'hiliteColor') document.execCommand(kind, false, 'transparent');
-    else { document.execCommand(kind, false, '#010203'); tidyColors(editor); }
-    document.execCommand('styleWithCSS', false, false);
-    closePops(); touchNote();
+    closePops();
+    editSel(() => {
+      document.execCommand('styleWithCSS', false, true);
+      document.execCommand(kind, false, s.dataset.c !== 'none' ? s.dataset.c : kind === 'hiliteColor' ? 'transparent' : '#010203');
+      document.execCommand('styleWithCSS', false, false);
+    });
+    if(s.dataset.c === 'none') tidyColors(editor);   // the "remove" marker colour goes
   });
 });
 
@@ -1614,8 +1662,9 @@ const HEIGHTS = [['緊', 1.3], ['標準', 0], ['寬', 2], ['特寬', 2.4]];
 $('[data-kind="size"]').innerHTML = STYLES.map(([k, l, px]) => `<button class="opt" data-v="${k}"><i class="ck"></i><span style="font-size:${Math.min(px, 20)}px;font-weight:${k === 'h1' || k === 'h2' ? 700 : 500}">${l}</span><small>${px}px</small></button>`).join('');
 $('[data-kind="lh"]').innerHTML = HEIGHTS.map(([l, v]) => `<button class="opt" data-v="${v}"><i class="ck"></i><span>${l}</span><small>${v || '預設'}</small></button>`).join('');
 $('[data-kind="size"]').addEventListener('click', e => { const o = e.target.closest('.opt'); if(o){ closePops(); setBlock(o.dataset.v); } });
-function lineEl(){   // the element whose style the caret's line uses
-  const n = savedRange?.startContainer || selNode(); if(!n || !editor.contains(n)) return null;
+function lineEl(n){   // the element carrying the style of the line the caret (or the first picked cell) is in
+  if(cellSel) return cellSel.cells[0];
+  n = n || savedRange?.startContainer; if(!n || !editor.contains(n)) return null;
   const b = topBlock(n); return b?.nodeType === 1 ? b : (n.nodeType === 1 ? n : n.parentElement)?.closest('td,li') || null;
 }
 function markOpts(kind){
@@ -1625,10 +1674,9 @@ function markOpts(kind){
 }
 $('[data-kind="lh"]').addEventListener('click', e => { const o = e.target.closest('.opt'); if(o){ closePops(); setLineHeight(+o.dataset.v); } });
 function setLineHeight(v){
-  restoreSel(); if(!getSelection().rangeCount) return; snap();
-  const r = getSelection().getRangeAt(0), a = topBlock(r.startContainer), b = topBlock(r.endContainer);
-  if(!a) return;
-  (b && b.parentNode === a.parentNode ? blocksBetween(a, b) : [a]).forEach(n => { if(n.nodeType === 1){ n.style.lineHeight = v || ''; if(!n.getAttribute('style')) n.removeAttribute('style'); } });
+  if(!cellSel) restoreSel();
+  const lines = selLines(); if(!lines.length) return; snap();
+  lines.forEach(n => { n.style.lineHeight = v || ''; if(!n.getAttribute('style')) n.removeAttribute('style'); });
   touchNote();
 }
 
@@ -1720,7 +1768,7 @@ function tableOp(op){
     splitCell(cell);
   } else if(op === 'header') table.classList.toggle('has-header');
   else if(op === 'delTable'){ const p = document.createElement('p'); p.innerHTML = '<br>'; (table.closest('.tbl-wrap') || table).replaceWith(p); focus = p; }
-  editor.focus(); caretIn(focus); touchNote(); updateState();
+  editor.focus({preventScroll:true}); caretIn(focus); touchNote(); updateState();
 }
 $('#tblbar').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if(b) tableOp(b.dataset.t); });
 /* ↑↓ go to the cell above / below (from the first / last line), ←→ to the previous / next cell (from the start / end) */
@@ -1745,7 +1793,7 @@ function arrowCell(key){
 function moveCell(step){   // Tab / Shift+Tab; Tab in the last cell adds a row
   const cells = $$('td', curCell.closest('table')), i = cells.indexOf(curCell) + step;
   if(i >= cells.length) tableOp('rowBelow');
-  else if(i >= 0){ const r = document.createRange(); r.selectNodeContents(cells[i]); setRange(r.startContainer, r.startOffset, r.endContainer, r.endOffset); }
+  else if(i >= 0) selectIn(cells[i]);
 }
 /* the table edit bar floats at the bottom of the note while the caret is in a table */
 function placeTblBar(){
@@ -1784,12 +1832,9 @@ function updateState(){
   });
   toolbar.querySelector('[data-cmd="justifyLeft"]').classList.toggle('on', !!n && !toolbar.querySelector('[data-cmd^="justify"].on'));
   $('#checkBtn').classList.toggle('on', !!n?.closest('ul.checklist'));
-  const blk = n ? topBlock(n) : null, bn = blk?.nodeName, sk = n ? styleOf(blk) : '';
-  ['h1','h2'].forEach(t => toolbar.querySelector(`[data-block="${t}"]`).classList.toggle('on', bn === t.toUpperCase()));
-  toolbar.querySelector('[data-pop="size"]').classList.toggle('on', sk === 'lg' || sk === 'sm');
-  toolbar.querySelector('[data-block="blockquote"]').classList.toggle('on', !!n?.closest('blockquote'));
+  toolbar.querySelector('[data-pop="size"]').classList.toggle('on', !!n && styleOf(lineEl(n)) !== 'p');
+  $('#quoteBtn').classList.toggle('on', !!n?.closest('blockquote'));
   toolbar.querySelector('[data-pop="link"]').classList.toggle('on', !!n?.closest('a'));
-  toolbar.querySelector('[data-block="p"]').classList.toggle('on', !!n && sk === 'p' && !['H1','H2','BLOCKQUOTE'].includes(bn) && !n.closest('ul,ol'));
   $$('.tgrp', toolbar).forEach(g => {
     if(g.classList.contains('open')) return;
     const bs = $$('.tb', g), lead = bs.find(x => x.classList.contains('on')) || bs[0];
@@ -1974,7 +2019,7 @@ function mergeSelection(){
   const { cells, r1, r2, c1, c2 } = cellSel, first = cells[0];
   first.rowSpan = r2 - r1 + 1; first.colSpan = c2 - c1 + 1;
   cells.slice(1).forEach(c => mergeInto(first, c));
-  clearCellSel(); editor.focus(); caretIn(first); touchNote(); updateState();
+  clearCellSel(); editor.focus({preventScroll:true}); caretIn(first); touchNote(); updateState();
 }
 document.addEventListener('keydown', e => {
   if(!cellSel || imeBusy(e)) return;
@@ -2257,6 +2302,19 @@ $('#signOut').addEventListener('click', async () => {
 
 const resetClear = armable($('#spClear'), '再按一次會刪除所有資料，無法復原', () => replaceAll([], [], '暫存已清除'));
 
+/* the GitHub build carries a build stamp; when a newer one is online, the ⟳ button appears (Chrome keeps the old page until reloaded) */
+const BUILD = $('meta[name="pn-build"]')?.content;
+let checkedAt = 0;
+async function checkUpdate(){
+  if(!BUILD || $('#updBtn').hidden === false || Date.now() - checkedAt < 3 * 60e3) return; checkedAt = Date.now();
+  try{
+    const html = await (await fetch(location.pathname + '?v=' + Date.now(), { cache:'no-store' })).text();
+    const live = html.match(/name="pn-build" content="(\d+)"/)?.[1];
+    if(live && live !== BUILD){ $('#updBtn').hidden = false; toast('有新版本，按右上角 ⟳ 更新'); }
+  }catch(e){}
+}
+document.addEventListener('visibilitychange', () => { if(!document.hidden) checkUpdate(); });
+$('#updBtn').addEventListener('click', async () => { syncHtml(); await saveAll(); location.reload(); });
 window.addEventListener('beforeunload', () => { if(htmlT || noteSaver.dirty) noteSaver.flush(); if(postSaver.dirty) postSaver.flush(); });
 
 /* =====================================================================
@@ -2334,6 +2392,7 @@ async function loadData(){
   try{ await Cloud.init(); }catch(e){ Cloud.sb = null; }
   await loadData();
   showView(location.hash === '#notes' ? 'notes' : 'posts');
+  setTimeout(checkUpdate, 3000);
   requestAnimationFrame(() => $$('.seg').forEach(b => placeInd(b, true)));
 })();
 })();

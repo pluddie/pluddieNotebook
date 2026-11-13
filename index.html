@@ -2,8 +2,8 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>body{margin:0}img{max-width:100%}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#efe7db" media="(prefers-color-scheme: light)">
@@ -138,7 +138,8 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .rbtn svg{width:15px;height:15px}
 .rbtn.on{background:var(--acc-soft);color:var(--acc-text)}
 .rbtn.dirty::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--acc-text);box-shadow:0 0 0 2px var(--s1)}
-.btn:not(.acc):hover,.rbtn:hover,.sp-act:hover,.tb:hover,.nitem:hover,.grp:hover,.cal-h button:hover,button.cal-d:hover,.cal-x:hover,.addthumb:hover{background:var(--hover);color:var(--fg)}
+.btn:not(.acc):hover,.rbtn:hover,.sp-act:hover,.tb:hover,.grp:hover,.cal-h button:hover,button.cal-d:hover,.cal-x:hover,.addthumb:hover{background:var(--hover);color:var(--fg)}
+.nitem:hover{background:linear-gradient(var(--hover),var(--hover)),var(--s1)}
 .btn.acc:hover,.ccopy:hover{background:var(--btn-hover);color:var(--btn-hover-fg)}
 .rbtn.del:hover,.sp-act.danger:hover{background:var(--danger-soft);color:var(--danger)}
 .armed,.armed:hover{background:var(--danger)!important;color:var(--danger-ink)!important}
@@ -165,6 +166,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .datepill input{font-variant-numeric:tabular-nums}
 .datepill input::-webkit-calendar-picker-indicator{filter:none;background:var(--cal) center/15px no-repeat;width:16px;height:16px;cursor:var(--cursor-hot)}
 .datepill.empty input::-webkit-datetime-edit{opacity:.55}
+@supports (-webkit-touch-callout:none){.datepill.empty input:not(:focus)::before{content:'日期';opacity:.55}}
 .dx{width:20px;height:20px;border-radius:50%;color:var(--tbar-text);display:grid;place-items:center;flex:none}
 .dx svg{width:10px;height:10px}
 .rel{font-size:11.5px;font-weight:600;color:var(--tbar-text);background:var(--tbar-chip);padding:4px 10px;border-radius:999px;flex:none}
@@ -202,7 +204,16 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .grp svg{width:12px;height:12px;margin-left:auto;transition:transform .2s var(--ease)}
 .grp.closed svg{transform:rotate(-90deg)}
 .nitem{display:block;width:100%;text-align:left;padding:8px 10px;border-radius:9px;margin-bottom:2px}
-.nitem.on,.nitem.on:hover{background:var(--acc-soft)}
+.row{position:relative;margin-bottom:2px;border-radius:9px;overflow:hidden}
+.row .nitem{position:relative;z-index:1;margin:0;background:var(--s1);touch-action:pan-y;transition:transform .22s var(--ease),background-color .18s var(--ease)}
+.row .nitem.open{transform:translateX(-76px)}
+.row-del{position:absolute;top:0;right:0;bottom:0;width:76px;display:grid;place-items:center;background:var(--danger);color:var(--danger-ink)}
+.row-del svg{width:18px;height:18px}
+.ctx{position:fixed;z-index:500;background:var(--float);border-radius:10px;padding:4px;box-shadow:var(--shadow)}
+.ctx button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;border-radius:7px;color:var(--danger);font-weight:600;white-space:nowrap}
+.ctx button:hover{background:var(--danger-soft)}
+.ctx svg{width:15px;height:15px}
+.nitem.on,.nitem.on:hover{background:linear-gradient(var(--acc-soft),var(--acc-soft)),var(--s1)}
 .nitem b{display:block;font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nitem b svg{width:11px;height:11px;color:var(--acc-text);margin-right:4px;vertical-align:-1px}
 .nitem span{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -325,7 +336,8 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
   .etitle{min-width:0;font-size:15px;padding:6px 4px}
   .pill{padding:2px 2px 2px 8px;gap:2px}
   .catpill input{width:52px}
-  .datepill input{width:82px;font-size:12px;padding:5px 2px}
+  .datepill input{width:8.4em;height:28px;box-sizing:border-box;font-size:12.5px;line-height:1.2;padding:4px 2px;white-space:nowrap;-webkit-appearance:none;appearance:none;text-align:left}
+  .datepill input::-webkit-date-and-time-value{text-align:left}
   .datepill input::-webkit-calendar-picker-indicator{display:none}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
@@ -390,8 +402,6 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
               <span class="rel" id="rel" hidden></span>
               <div class="pill datepill" id="datePill"><input type="date" id="pdate" aria-label="預計發文日期" title="預計發文日期"><button class="dx" id="clearDate" title="清除日期" aria-label="清除日期" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button></div>
               <button class="rbtn" id="pinPost" title="釘選到最前面" aria-label="釘選"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 5 4 4H6l4-4z"/><path d="M12 13v7"/></svg></button>
-              <button class="rbtn" id="savePost" title="儲存（⌘S）" aria-label="儲存"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></svg></button>
-              <button class="rbtn del" id="delPost" title="刪除這篇貼文" aria-label="刪除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
             </div>
             <div class="panel blk media" id="media">
               <div class="blk-h"><span class="blabel">圖片</span><span class="hint" id="imgHint"></span></div>
@@ -425,8 +435,6 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
             <label class="pill catpill" title="類別"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg><input id="ncat" type="text" list="catList" placeholder="類別" aria-label="類別" autocomplete="off"></label>
             <datalist id="catList"></datalist>
             <button class="rbtn" id="pinNote" title="釘選到列表上方" aria-label="釘選"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 5 4 4H6l4-4z"/><path d="M12 13v7"/></svg></button>
-            <button class="rbtn" id="saveNote" title="儲存（⌘S）" aria-label="儲存"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></svg></button>
-            <button class="rbtn del" id="delNote" title="刪除這則備忘錄" aria-label="刪除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
           </div>
           <div class="panel">
             <div class="toolbar" id="toolbar">
@@ -488,6 +496,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="ctx" id="ctx" hidden><button id="ctxDel"></button></div>
 
 <script id="sbLib" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script id="pnConfig" src="config.js"></script>
@@ -578,6 +587,7 @@ function parseDate(s){ if(!s) return null; const [y, m, d] = s.split('-').map(Nu
 function dateLabel(s){ const d = parseDate(s); return d ? `${d.getMonth()+1}/${d.getDate()}（${WEEK[d.getDay()]}）` : ''; }
 function dayDiff(s){ const d = parseDate(s); if(!d) return null; const t = new Date(); t.setHours(0,0,0,0); return Math.round((d - t) / 864e5); }
 function relDay(s){ const n = dayDiff(s); if(n == null) return ''; return n === 0 ? '今天' : n === 1 ? '明天' : n === -1 ? '昨天' : n > 0 ? `${n} 天後` : `已過 ${-n} 天`; }
+const row = (id, inner, on) => `<div class="row"><button class="row-del" data-del="${id}" aria-label="刪除" tabindex="-1">${ICON.trash}</button><button class="nitem ${on ? 'on' : ''}" data-id="${id}">${inner}</button></div>`;
 const byPinThenRecent = (a, b) => (!!b.pinned - !!a.pinned) || (b.updatedAt - a.updatedAt);
 
 const ICON = {
@@ -587,6 +597,7 @@ const ICON = {
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
   next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
 };
 
@@ -670,13 +681,12 @@ const Cloud = {
   }
 };
 
-/* Saves shortly after edits; flush() saves now. Signed in: only changed rows go to Supabase. Otherwise: the whole list goes to this browser.
-   A dot on the save button means there is something not saved yet. */
-function makeSaver(kind, getList, btn){
+/* Saves by itself shortly after every edit (⌘S saves at once). Signed in: only changed rows go to Supabase. Otherwise: the whole list goes to this browser. */
+function makeSaver(kind, getList){
   const changed = new Set(), removed = new Set(), files = new Set();
   let t = null, running = Promise.resolve(true);
   const pending = () => changed.size + removed.size + files.size > 0;
-  const schedule = () => { btn.classList.add('dirty'); clearTimeout(t); t = setTimeout(flush, 900); };
+  const schedule = () => { clearTimeout(t); t = setTimeout(flush, 900); };
   async function run(){
     let ok = true;
     if(Cloud.on){
@@ -695,7 +705,6 @@ function makeSaver(kind, getList, btn){
       ok = await Store.set(kind, getList());
       if(!ok) toast('瀏覽器儲存空間不足，請刪掉一些圖片再試');
     }
-    btn.classList.toggle('dirty', !ok || pending());
     return ok;
   }
   function flush(){ clearTimeout(t); running = running.then(run, run); return running; }   // one save at a time
@@ -724,7 +733,7 @@ window.addEventListener('hashchange', () => { const h = location.hash.slice(1); 
    ===================================================================== */
 const MAX_IMG = 20;   // IG / Threads carousel limit
 let posts = [], cur = null;
-const postSaver = makeSaver('posts', () => posts, $('#savePost'));
+const postSaver = makeSaver('posts', () => posts);
 
 function sortedPosts(){   // pinned first, then undated, then latest date first (the IG grid's direction)
   return posts.slice().sort((a, b) =>
@@ -747,7 +756,7 @@ function renderCalendar(){   // month calendar with post dates circled
 }
 function renderPostList(list){   // the same posts as the grid, as a list (the only view on phones)
   $('#plistLabel').textContent = dayFilter ? `${dateLabel(dayFilter)} 的貼文` : '全部貼文';
-  $('#plist').innerHTML = list.length ? list.map(d => `<button class="nitem ${d === cur ? 'on' : ''}" data-id="${d.id}"><b>${d.pinned ? ICON.pin : ''}${esc(postName(d))}</b><span><em>${d.date ? dateLabel(d.date) : '未排日期'}</em>${esc(d.caption.trim().split('\n')[d.title.trim() ? 0 : 1] || '沒有文案')}</span></button>`).join('')
+  $('#plist').innerHTML = list.length ? list.map(d => row(d.id, `<b>${d.pinned ? ICON.pin : ''}${esc(postName(d))}</b><span><em>${d.date ? dateLabel(d.date) : '未排日期'}</em>${esc(d.caption.trim().split('\n')[d.title.trim() ? 0 : 1] || '沒有文案')}</span>`, d === cur)).join('')
     : `<div class="empty-note">${posts.length ? '找不到符合的貼文' : '還沒有貼文，按 + 新增'}</div>`;
 }
 function renderPosts(){
@@ -778,7 +787,7 @@ $('#cal').addEventListener('click', e => {
   } else return;
   if(cur) closePost(); else renderPosts();
 });
-$('#plist').addEventListener('click', e => { const b = e.target.closest('.nitem'); if(b) openPost(b.dataset.id); });
+$('#plist').addEventListener('click', e => listClick(e, openPost, deletePost));
 $('#grid').addEventListener('click', e => {
   const cp = e.target.closest('[data-copy]');
   if(cp){ copyText(posts.find(d => d.id === cp.dataset.copy)?.caption); return; }
@@ -793,7 +802,7 @@ $('#newPost').addEventListener('click', () => {
 function openPost(id){
   cur = posts.find(d => d.id === id); if(!cur) return;
   $('#ptitle').value = cur.title; $('#pdate').value = cur.date; $('#caption').value = cur.caption;
-  $('#pinPost').classList.toggle('on', !!cur.pinned); resetDelPost();
+  $('#pinPost').classList.toggle('on', !!cur.pinned);
   $('#gridView').hidden = true; $('#postEdit').hidden = false; $('#posts').classList.add('editing');
   $('#postEdit').scrollTop = 0; animIn($('#postEdit'));
   renderMedia(); renderPostMeta(); renderPosts();
@@ -805,7 +814,6 @@ function closePost(){
 }
 function touchPost(){ cur.updatedAt = Date.now(); postSaver.soon(cur.id); }
 $('#backGrid').addEventListener('click', closePost);
-$('#savePost').addEventListener('click', async () => { if(await postSaver.flush()) toast('貼文已儲存'); });
 let plT;
 $('#ptitle').addEventListener('input', e => { cur.title = e.target.value; touchPost(); clearTimeout(plT); plT = setTimeout(renderPosts, 300); });
 $('#ptitle').addEventListener('keydown', e => { if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); $('#caption').focus(); } });
@@ -817,11 +825,13 @@ $('#pinPost').addEventListener('click', () => {
   cur.pinned = !cur.pinned; $('#pinPost').classList.toggle('on', cur.pinned); touchPost();
   toast(cur.pinned ? '已釘選到最前面' : '已取消釘選');
 });
-const resetDelPost = armable($('#delPost'), '再按一次刪除這篇貼文', () => !!cur, () => {
-  postSaver.removed(cur.id, cur.images.map(i => i.path).filter(Boolean));
-  posts = posts.filter(d => d !== cur); postSaver.flush(); toast('貼文已刪除'); closePost();
-});
 
+function deletePost(id){
+  const d = posts.find(x => x.id === id); if(!d) return;
+  postSaver.removed(id, d.images.map(i => i.path).filter(Boolean));
+  posts = posts.filter(x => x !== d); postSaver.flush(); toast('貼文已刪除');
+  if(cur === d) closePost(); else renderPosts();
+}
 function renderPostMeta(){
   const len = [...cur.caption].length, tags = (cur.caption.match(/#[^\s#]+/g) || []).length;
   const warn = len > 2200 ? '・超過 IG 上限 2,200' : len > 500 ? '・超過 Threads 上限 500' : '';
@@ -908,7 +918,7 @@ window.addEventListener('pointercancel', endDrag);
    ===================================================================== */
 let notes = [], curNote = null, curCell = null;
 const editor = $('#editor');
-const noteSaver = makeSaver('notes', () => notes, $('#saveNote'));
+const noteSaver = makeSaver('notes', () => notes);
 const collapsed = new Set(JSON.parse(lsGet('pn-collapsed') || lsGet('ml-collapsed') || '[]'));
 
 function htmlLines(html){
@@ -927,7 +937,7 @@ function renderNoteList(){
   const list = notes.slice().sort(byPinThenRecent)
     .filter(n => !q || (n.title + ' ' + n.category + ' ' + htmlLines(n.html).join(' ')).toLowerCase().includes(q));
   const item = n => { const [t, s] = noteLabel(n);
-    return `<button class="nitem ${n === curNote ? 'on' : ''}" data-id="${n.id}"><b>${n.pinned ? ICON.pin : ''}${esc(t)}</b><span><em>${fmtShort(n.updatedAt)}</em>${esc(s)}</span></button>`; };
+    return row(n.id, `<b>${n.pinned ? ICON.pin : ''}${esc(t)}</b><span><em>${fmtShort(n.updatedAt)}</em>${esc(s)}</span>`, n === curNote); };
   const cats = categories(), rest = list.filter(n => !n.pinned);
   const groups = [['__pin', '已釘選', list.filter(n => n.pinned)],
     ...cats.map(c => [c, c, rest.filter(n => n.category.trim() === c)]),
@@ -947,7 +957,7 @@ $('#nsearch').addEventListener('input', renderNoteList);
 $('#nitems').addEventListener('click', e => {
   const g = e.target.closest('.grp');
   if(g){ const k = g.dataset.g; collapsed.has(k) ? collapsed.delete(k) : collapsed.add(k); lsSet('pn-collapsed', JSON.stringify([...collapsed])); renderNoteList(); return; }
-  const b = e.target.closest('.nitem'); if(b) openNote(b.dataset.id);
+  listClick(e, openNote, deleteNote);
 });
 
 function openNote(id, focusTitle){
@@ -959,7 +969,7 @@ function openNote(id, focusTitle){
   $('#ntitle').disabled = $('#ncat').disabled = !curNote;
   $('#pinNote').classList.toggle('on', !!curNote?.pinned);
   $('#noteMeta').textContent = curNote ? fmtFull(curNote.updatedAt) : '沒有選取的備忘錄';
-  curCell = null; placeTblBar(); resetDelNote(); renderNoteList();
+  curCell = null; placeTblBar(); renderNoteList();
   $('#notes').classList.add('show-editor'); animIn($('#notes .ecol'));
   if(focusTitle) $('#ntitle').focus();
 }
@@ -982,14 +992,13 @@ $('#newNote').addEventListener('click', () => {
   const now = Date.now(), n = { id:uid(), title:'', category:'', pinned:false, html:'<p><br></p>', createdAt:now, updatedAt:now };
   notes.unshift(n); noteSaver.soon(n.id); openNote(n.id, true);
 });
-$('#saveNote').addEventListener('click', async () => { if(curNote) curNote.html = editor.innerHTML; if(await noteSaver.flush()) toast('備忘錄已儲存'); });
 $('#backList').addEventListener('click', () => $('#notes').classList.remove('show-editor'));
-const resetDelNote = armable($('#delNote'), '再按一次刪除這則備忘錄', () => !!curNote, () => {
-  noteSaver.removed(curNote.id);
-  notes = notes.filter(n => n !== curNote); noteSaver.flush(); toast('已刪除備忘錄');
-  const next = notes.slice().sort(byPinThenRecent)[0];
-  openNote(next?.id); if(!next) $('#notes').classList.remove('show-editor');
-});
+function deleteNote(id){
+  const n = notes.find(x => x.id === id); if(!n) return;
+  noteSaver.removed(id); notes = notes.filter(x => x !== n); noteSaver.flush(); toast('已刪除備忘錄');
+  if(curNote === n){ openNote(notes.slice().sort(byPinThenRecent)[0]?.id); $('#notes').classList.remove('show-editor'); }
+  else renderNoteList();
+}
 
 /* =====================================================================
    備忘錄 — rich-text editor
@@ -1412,6 +1421,56 @@ window.addEventListener('pointerup', () => {
   if(!rz) return; rz.guide.remove(); rz = null;
   document.body.classList.remove('resizing', 'rowr'); touchNote();
 });
+
+/* =====================================================================
+   deleting: swipe a list row to the left (touch), or right-click a row / grid card (mouse)
+   ===================================================================== */
+const closeSwipes = keep => $$('.nitem.open').forEach(x => { if(x !== keep) x.classList.remove('open'); });
+function listClick(e, open, del){
+  const d = e.target.closest('[data-del]'); if(d){ del(d.dataset.del); return; }
+  const it = e.target.closest('.nitem'); if(!it) return;
+  if(it.dataset.swiped){ delete it.dataset.swiped; return; }          // the tap that ended a swipe
+  if(it.classList.contains('open')){ it.classList.remove('open'); return; }
+  closeSwipes(); open(it.dataset.id);
+}
+let sw = null;
+document.addEventListener('pointerdown', e => {
+  const it = e.target.closest('.row .nitem');
+  if(!it){ if(!e.target.closest('.row-del')) closeSwipes(); return; }
+  if(e.pointerType === 'mouse') return;
+  closeSwipes(it); sw = { it, x:e.clientX, y:e.clientY, base:it.classList.contains('open') ? -76 : 0, dx:0, horiz:null };
+});
+document.addEventListener('pointermove', e => {
+  if(!sw) return;
+  const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+  if(sw.horiz === null){ if(Math.abs(dx) < 6 && Math.abs(dy) < 6) return; sw.horiz = Math.abs(dx) > Math.abs(dy); }
+  if(!sw.horiz){ sw = null; return; }   // vertical: it's a scroll
+  sw.dx = dx; sw.it.style.transition = 'none'; sw.it.style.transform = `translateX(${Math.min(0, Math.max(-110, sw.base + dx))}px)`;
+});
+const endSwipe = () => {
+  if(!sw) return; const { it, horiz, base, dx } = sw; sw = null;
+  it.style.transition = ''; it.style.transform = '';
+  if(horiz){ it.classList.toggle('open', base + dx < -38); it.dataset.swiped = '1'; setTimeout(() => delete it.dataset.swiped, 400); }
+};
+document.addEventListener('pointerup', endSwipe); document.addEventListener('pointercancel', endSwipe);
+
+const ctx = $('#ctx'), ctxDel = $('#ctxDel'); let ctxFor = null;
+function closeCtx(){ ctx.hidden = true; ctxFor = null; ctxDel.classList.remove('armed'); }
+document.addEventListener('contextmenu', e => {
+  const el = e.target.closest('#grid .card, #plist .nitem, #nitems .nitem'); if(!el) return;
+  e.preventDefault();
+  ctxFor = { note:!!el.closest('#nitems'), id:el.dataset.id };
+  ctxDel.classList.remove('armed'); ctxDel.innerHTML = `${ICON.trash}${ctxFor.note ? '刪除備忘錄' : '刪除貼文'}`;
+  ctx.hidden = false;
+  ctx.style.left = Math.min(e.clientX, innerWidth - ctx.offsetWidth - 8) + 'px'; ctx.style.top = Math.min(e.clientY, innerHeight - ctx.offsetHeight - 8) + 'px';
+});
+ctxDel.addEventListener('click', () => {
+  if(!ctxDel.classList.contains('armed')){ ctxDel.classList.add('armed'); ctxDel.innerHTML = `${ICON.trash}再按一次確認刪除`; return; }
+  const t = ctxFor; closeCtx(); t.note ? deleteNote(t.id) : deletePost(t.id);
+});
+document.addEventListener('mousedown', e => { if(!ctx.hidden && !e.target.closest('#ctx')) closeCtx(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && !ctx.hidden) closeCtx(); });
+document.addEventListener('wheel', () => { if(!ctx.hidden) closeCtx(); }, {passive:true});
 
 /* =====================================================================
    設定：外觀 / 匯入 / 匯出 / 清除

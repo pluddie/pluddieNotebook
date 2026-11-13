@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794573392">
+<meta name="pn-build" content="1794574771">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -163,16 +163,23 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .ebar .rbtn.on{background:var(--ebar-ink);color:var(--ebar)}
 .back{display:none!important}
 .pill{display:flex;align-items:center;gap:4px;background:var(--tbar-chip);color:var(--tbar-text);border-radius:999px;padding:2px 4px 2px 10px;flex:none;font-size:12.5px;font-weight:600}
-.pill:focus-within{box-shadow:0 0 0 2px var(--tbar-text)}
+.pill:focus-within{box-shadow:0 0 0 1.5px var(--tbar-text)}
 .pill svg{width:13px;height:13px;flex:none}
 .pill input{border:0;background:transparent;color:var(--tbar-text);font:600 12.5px var(--font);padding:5px 4px;outline:none}
 .pill input::placeholder{color:var(--tbar-text);opacity:.55}
 .catpill input{width:92px}
 .catpill input::-webkit-calendar-picker-indicator{display:none!important}
-.datepill input{font-variant-numeric:tabular-nums}
-.datepill input::-webkit-calendar-picker-indicator{filter:none;background:var(--cal) center/15px no-repeat;width:16px;height:16px;cursor:var(--cursor-hot)}
-.datepill.empty input::-webkit-datetime-edit{opacity:.55}
-@supports (-webkit-touch-callout:none){.datepill.empty input:not(:focus)::before{content:'日期';opacity:.55}}
+.vh{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.dbtn{display:flex;align-items:center;gap:6px;padding:5px 4px;font:600 12.5px var(--font);color:inherit;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dbtn svg{width:14px;height:14px}
+.dbtn:focus-visible{outline:none}   /* the pill shows a thin ring instead */
+.datepill.empty .dbtn span{opacity:.55}
+.dpop{position:fixed;z-index:450;width:272px;box-sizing:border-box;background:var(--float);border-radius:16px;padding:10px 10px 8px;box-shadow:var(--shadow)}
+.dpop:not([hidden]){animation:popin .18s var(--ease) both}
+.dpop .cal-d{cursor:var(--cursor-hot)}
+.dpop .cal-d:hover{background:var(--hover)}
+.cal-d.pick,.cal-d.pick:hover{background:var(--btn-bg);color:var(--btn-fg);font-weight:700}
+.dp-acts{display:flex;justify-content:center;padding-top:6px;border-top:1px solid var(--s3);margin-top:4px}
 .dx{width:20px;height:20px;border-radius:50%;color:var(--tbar-text);display:grid;place-items:center;flex:none}
 .dx svg{width:10px;height:10px}
 .rel{font-size:11.5px;font-weight:600;color:var(--tbar-text);background:var(--tbar-chip);padding:4px 10px;border-radius:999px;flex:none}
@@ -214,6 +221,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .search input{flex:1;min-width:0;border:0;background:transparent;color:var(--fg);font:12.5px var(--font);padding:7px 0;outline:none}
 .lbody{flex:1;overflow:auto;padding:0 6px 8px}
 .grp{display:flex;align-items:center;gap:6px;width:100%;box-sizing:border-box;padding:11px 10px 8px;border-radius:8px;font-size:12px;font-weight:600;color:var(--muted);text-align:left;cursor:var(--cursor-hot);user-select:none;-webkit-user-select:none;touch-action:pan-y}
+#nitems .grp:not(:first-child){border-top:1px solid var(--s3);border-radius:0;margin-top:6px}   /* a line between categories */
 .grp.dragging{background:var(--acc-soft);color:var(--acc-text)}
 .grp span[contenteditable=true]{background:var(--s2);color:var(--fg);border-radius:5px;padding:0 5px;outline:none;box-shadow:0 0 0 1.5px var(--acc-text);cursor:text;user-select:text;-webkit-user-select:text}
 .grp b{font-weight:600;color:var(--faint);font-variant-numeric:tabular-nums}
@@ -266,7 +274,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 #editor table.has-header tr:first-child td{background:var(--acc-soft);font-weight:600}
 #editor td.cur{background:var(--s3)}
 #editor td.csel{background:var(--acc-soft);box-shadow:inset 0 0 0 1.5px var(--acc-text)}
-#editor table.picking{user-select:none;-webkit-user-select:none}
+#editor table.picking{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 #editor.col-hover,#editor.col-hover td{cursor:col-resize}
 #editor.row-hover,#editor.row-hover td{cursor:row-resize}
 body.resizing,body.resizing *{cursor:col-resize!important;user-select:none}
@@ -400,7 +408,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .pm-row .blabel{margin-right:auto}
 .pmeta .pill{background:var(--s2);color:var(--fg)}
 .pmeta .pill input,.pmeta .dx{color:var(--fg)}
-.pmeta .pill:focus-within{box-shadow:0 0 0 2px var(--acc-text)}
+.pmeta .pill:focus-within{box-shadow:0 0 0 1.5px var(--acc-text)}
 .pmeta .rel{background:var(--s2);color:var(--muted)}
 .pmeta .rel.past{color:var(--danger)}
 .kindseg button{padding:6px 14px}
@@ -481,10 +489,11 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .etitle{min-width:0;font-size:16.5px;padding:6px 4px}
   .pill{padding:3px 3px 3px 10px;gap:3px;font-size:14px}
   .pill input{font-size:14px;padding:6px 4px}
-  .catpill input{width:80px}
-  .datepill input{width:8.4em;height:32px;box-sizing:border-box;font-size:14px;line-height:1.2;padding:4px 2px;white-space:nowrap;-webkit-appearance:none;appearance:none;text-align:left}
-  .datepill input::-webkit-date-and-time-value{text-align:left}
-  .datepill input::-webkit-calendar-picker-indicator{display:none}
+  .dbtn{font-size:14px;padding:6px 4px}
+  .dpop{width:min(320px,calc(100vw - 24px))}
+  .dpop .cal-d{width:40px;height:40px}
+  .pmeta .catpill{flex:0 1 230px;min-width:0}
+  .pmeta .catpill input{width:100%;min-width:0}
   #editor{font-size:15px;line-height:1.7;padding:8px 14px 80px}   /* phones: 大字 + 標準 by default, narrower margins */
   .main{padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
   /* settings: full-width menu dropping from the header */
@@ -575,7 +584,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <button class="rbtn metatg" id="metaToggle" title="排程與類別" aria-label="排程與類別" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
             </div>
             <div class="panel pmeta" id="pmeta">
-              <div class="pm-row"><span class="blabel">排程日期</span><span class="rel" id="rel" hidden></span><div class="pill datepill" id="datePill"><input type="date" id="pdate" aria-label="預計發文日期" title="預計發文日期"><button class="dx" id="clearDate" title="清除日期" aria-label="清除日期" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button></div></div>
+              <div class="pm-row"><span class="blabel">排程日期</span><span class="rel" id="rel" hidden></span><div class="pill datepill" id="datePill"><button class="dbtn" id="dateBtn" aria-haspopup="dialog" aria-label="預計發文日期"><span id="dateTxt">選擇日期</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></button><input type="date" id="pdate" class="vh" tabindex="-1" aria-hidden="true"><button class="dx" id="clearDate" title="清除日期" aria-label="清除日期" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button></div></div>
               <div class="pm-row"><span class="blabel">類別</span><div class="seg kindseg" id="kindSeg" role="group" aria-label="類別"><span class="ind" aria-hidden="true"></span><button data-kind="post">貼文</button><button data-kind="reels">Reels</button></div></div>
             </div>
             <div class="panel blk media" id="media">
@@ -693,6 +702,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="dpop" id="datePop" hidden><div class="cal" id="dpCal"></div><div class="dp-acts"><button class="btn" id="dpToday">今天</button></div></div>
 <div class="ctx" id="ctx" hidden><button id="ctxDel"></button></div>
 <div class="lb" id="lb" hidden><button class="lb-x" id="lbClose" aria-label="關閉"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button><button class="prev" id="lbPrev" aria-label="上一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="lb-track" id="lbTrack"></div><button class="next" id="lbNext" aria-label="下一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button><div class="lb-n" id="lbN"></div></div>
 
@@ -723,7 +733,7 @@ const DEFAULT_NAME = 'pluddieNotebook';
 /* untouched copies of the page parts, taken before anything renders, used by 匯出 */
 const PRISTINE = (() => {
   const g = id => document.getElementById(id)?.outerHTML || '';
-  return { lib:g('sbLib'), icons:g('appIcon') + g('appTouchIcon') + '\n', fonts:g('appFonts'), style:g('appStyle'), sky:g('sky'), app:g('app'), toast:g('toast') + '\n' + g('ctx') + '\n' + g('lb'), script:document.currentScript?.outerHTML || g('appScript') };
+  return { lib:g('sbLib'), icons:g('appIcon') + g('appTouchIcon') + '\n', fonts:g('appFonts'), style:g('appStyle'), sky:g('sky'), app:g('app'), toast:g('toast') + '\n' + g('datePop') + '\n' + g('ctx') + '\n' + g('lb'), script:document.currentScript?.outerHTML || g('appScript') };
 })();
 
 let toastT;
@@ -833,7 +843,7 @@ async function readLegacy(){
 /* =====================================================================
    cloud: Supabase (on when config.js has the keys and you are signed in)
    ===================================================================== */
-const BUCKET = 'post-images';
+const BUCKET = 'post-images', SETTINGS_ID = 'pn-settings';   // a hidden row in notes keeps settings shared between devices (category order)
 const noteToRow = n => ({ id:n.id, title:n.title, category:n.category, pinned:n.pinned, html:n.html, created_at:n.createdAt, updated_at:n.updatedAt });
 const noteFromRow = r => ({ id:r.id, title:r.title, category:r.category, pinned:r.pinned, html:r.html, createdAt:r.created_at, updatedAt:r.updated_at });
 const postToRow = d => ({ id:d.id, title:d.title, pinned:d.pinned, date:d.date, kind:d.kind || 'post', caption:d.caption, images:d.images.filter(i => i.path).map(i => ({ id:i.id, path:i.path })), created_at:d.createdAt, updated_at:d.updatedAt });
@@ -863,7 +873,9 @@ const Cloud = {
       const url = new Map((data || []).map(x => [x.path, x.signedUrl]));
       posts.forEach(d => d.images.forEach(i => { i.src = url.get(i.path) || ''; }));
     }
-    return { notes:n.data.map(noteFromRow), posts };
+    const notes = n.data.map(noteFromRow), si = notes.findIndex(x => x.id === SETTINGS_ID);
+    if(si >= 0){ applySettings(notes[si].html); notes.splice(si, 1); }
+    return { notes, posts };
   },
   async uploadImages(post){   // new pictures are data: URLs until they have a file in Storage
     for(const im of post.images){
@@ -873,6 +885,10 @@ const Cloud = {
       if(error) throw error;
       im.path = path;
     }
+  },
+  pushSettings(){
+    if(!this.on) return; clearTimeout(this.setT);
+    this.setT = setTimeout(() => this.push('notes', [noteToRow({ id:SETTINGS_ID, title:'', category:'', pinned:false, html:JSON.stringify({ catOrder }), createdAt:0, updatedAt:Date.now() })], [], []).catch(() => {}), 800);
   },
   async push(table, rows, removedIds, removedFiles){
     if(rows.length){
@@ -952,20 +968,23 @@ function sortedPosts(){
 }
 let calMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1), dayFilter = '';
 const postName = d => d.title.trim() || d.caption.trim().split('\n')[0] || '（沒有文案）';
-function renderCalendar(){   // month calendar with post dates circled
-  const y = calMonth.getFullYear(), m = calMonth.getMonth(), today = localISO(new Date());
+/* a month grid; cell(iso, day, baseClass) draws each day */
+function monthHtml(month, cell){
+  const y = month.getFullYear(), m = month.getMonth(), today = localISO(new Date());
+  const cells = Array.from({length:new Date(y, m, 1).getDay()}, () => '<span></span>');
+  for(let day = 1; day <= new Date(y, m + 1, 0).getDate(); day++){ const iso = localISO(new Date(y, m, day)); cells.push(cell(iso, day, `cal-d${iso === today ? ' today' : iso < today ? ' past' : ''}`)); }
+  return `<div class="cal-h"><button data-nav="-1" aria-label="上個月">${ICON.prev}</button><b>${y} 年 ${m + 1} 月</b><button data-nav="1" aria-label="下個月">${ICON.next}</button></div>
+    <div class="cal-w">${WEEK.map(w => `<span>${w}</span>`).join('')}</div><div class="cal-g">${cells.join('')}</div>`;
+}
+const addMonths = (d, k) => new Date(d.getFullYear(), d.getMonth() + k, 1);
+function renderCalendar(){   // month calendar with post dates filled in
   const count = {}, kinds = {};
   posts.forEach(d => { if(d.date){ count[d.date] = (count[d.date] || 0) + 1; (kinds[d.date] ||= new Set()).add(d.kind === 'reels' ? 'reels' : 'post'); } });
-  const cells = Array.from({length:new Date(y, m, 1).getDay()}, () => '<span></span>');
-  for(let day = 1; day <= new Date(y, m + 1, 0).getDate(); day++){
-    const iso = localISO(new Date(y, m, day)), n = count[iso] || 0;
-    const ks = kinds[iso], kc = !ks ? '' : ks.size > 1 ? ' mixed' : ks.has('reels') ? ' reels' : '';
-    const cls = `cal-d${n ? ' has' + kc : ''}${iso === today ? ' today' : iso < today ? ' past' : ''}${iso === dayFilter ? ' sel' : ''}`;
-    cells.push(n ? `<button class="${cls}" data-d="${iso}" ${n > 1 ? `data-n="${n}"` : ''} aria-label="${dateLabel(iso)} ${n} 篇貼文">${day}</button>` : `<span class="${cls}">${day}</span>`);
-  }
-  $('#cal').innerHTML = `<div class="cal-h"><button data-nav="-1" aria-label="上個月">${ICON.prev}</button><b>${y} 年 ${m + 1} 月</b><button data-nav="1" aria-label="下個月">${ICON.next}</button></div>
-    <div class="cal-w">${WEEK.map(w => `<span>${w}</span>`).join('')}</div><div class="cal-g">${cells.join('')}</div>
-    ${dayFilter ? `<button class="cal-x" data-clear>只看 ${dateLabel(dayFilter)}・顯示全部</button>` : ''}`;
+  $('#cal').innerHTML = monthHtml(calMonth, (iso, day, base) => {
+    const n = count[iso] || 0, ks = kinds[iso], kc = !ks ? '' : ks.size > 1 ? ' mixed' : ks.has('reels') ? ' reels' : '';
+    const cls = base + (n ? ' has' + kc : '') + (iso === dayFilter ? ' sel' : '');
+    return n ? `<button class="${cls}" data-d="${iso}" ${n > 1 ? `data-n="${n}"` : ''} aria-label="${dateLabel(iso)} ${n} 篇貼文">${day}</button>` : `<span class="${cls}">${day}</span>`;
+  }) + (dayFilter ? `<button class="cal-x" data-clear>只看 ${dateLabel(dayFilter)}・顯示全部</button>` : '');
 }
 function renderPostList(list){   // the same posts as the grid, as a list (the only view on phones)
   $('#plistLabel').textContent = dayFilter ? `${dateLabel(dayFilter)} 的貼文` : '全部貼文';
@@ -990,7 +1009,7 @@ function renderPosts(){
 $('#psearch').addEventListener('input', () => { if(cur) closePost(); else renderPosts(); });
 $('#cal').addEventListener('click', e => {
   const nav = e.target.closest('[data-nav]'), day = e.target.closest('[data-d]');
-  if(nav){ calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + +nav.dataset.nav, 1); renderCalendar(); return; }
+  if(nav){ calMonth = addMonths(calMonth, +nav.dataset.nav); renderCalendar(); return; }
   if(e.target.closest('[data-clear]')) dayFilter = '';
   else if(day){
     const same = posts.filter(d => d.date === day.dataset.d);
@@ -1021,7 +1040,7 @@ function openPost(id){
   renderMedia(); renderPostMeta(); renderPosts();
 }
 function closePost(){
-  exitFs(); cur = null; if(postSaver.dirty) postSaver.flush();
+  exitFs(); closeDatePop(); cur = null; if(postSaver.dirty) postSaver.flush();
   $('#postEdit').hidden = true; $('#gridView').hidden = false; $('#posts').classList.remove('editing');
   animIn($('#gridView')); renderPosts();
 }
@@ -1049,8 +1068,29 @@ $('#backGrid').addEventListener('click', closePost);
 let plT;
 $('#ptitle').addEventListener('input', e => { cur.title = e.target.value; touchPost(); clearTimeout(plT); plT = setTimeout(renderPosts, 300); });
 $('#ptitle').addEventListener('keydown', e => { if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); $('#caption').focus(); } });
-$('#pdate').addEventListener('change', e => { cur.date = e.target.value; if(cur.date) calMonth = new Date(parseDate(cur.date).getFullYear(), parseDate(cur.date).getMonth(), 1); touchPost(); renderPostMeta(); renderPosts(); });
-$('#clearDate').addEventListener('click', () => { cur.date = ''; $('#pdate').value = ''; touchPost(); renderPostMeta(); renderPosts(); });
+function setPostDate(v){
+  cur.date = v; $('#pdate').value = v; if(v) calMonth = addMonths(parseDate(v), 0);
+  closeDatePop(); touchPost(); renderPostMeta(); renderPosts();
+}
+$('#pdate').addEventListener('change', e => setPostDate(e.target.value));
+$('#clearDate').addEventListener('click', () => setPostDate(''));
+/* date pop: a small month calendar under the date pill */
+let dpMonth = new Date();
+const renderDatePop = () => { $('#dpCal').innerHTML = monthHtml(dpMonth, (iso, day, base) => `<button class="${base}${iso === cur?.date ? ' pick' : ''}" data-d="${iso}">${day}</button>`); };
+function closeDatePop(){ $('#datePop').hidden = true; }
+$('#dateBtn').addEventListener('click', () => {
+  const p = $('#datePop'); if(!p.hidden) return closeDatePop();
+  dpMonth = addMonths(parseDate(cur.date) || new Date(), 0); renderDatePop(); p.hidden = false;
+  const r = $('#datePill').getBoundingClientRect(), w = p.offsetWidth, h = p.offsetHeight;
+  p.style.left = Math.max(8, Math.min(r.right - w, innerWidth - w - 8)) + 'px';
+  p.style.top = (r.bottom + h + 14 > innerHeight ? Math.max(8, r.top - h - 6) : r.bottom + 6) + 'px';
+});
+$('#datePop').addEventListener('click', e => {
+  const nav = e.target.closest('[data-nav]'), day = e.target.closest('[data-d]');
+  if(nav){ dpMonth = addMonths(dpMonth, +nav.dataset.nav); renderDatePop(); }
+  else if(day) setPostDate(day.dataset.d);
+  else if(e.target.closest('#dpToday')) setPostDate(localISO(new Date()));
+});
 $('#caption').addEventListener('input', e => { cur.caption = e.target.value; touchPost(); renderPostMeta(); });
 $('#copyCap').addEventListener('click', () => copyText(cur.caption));
 $('#pinPost').addEventListener('click', () => {
@@ -1072,6 +1112,7 @@ function renderPostMeta(){
   const n = dayDiff(cur.date), rel = $('#rel');
   rel.hidden = n == null; rel.textContent = relDay(cur.date); rel.classList.toggle('past', n != null && n < 0);
   $('#clearDate').hidden = !cur.date; $('#datePill').classList.toggle('empty', !cur.date);
+  const d = parseDate(cur.date); $('#dateTxt').textContent = d ? (d.getFullYear() === new Date().getFullYear() ? '' : d.getFullYear() + '/') + dateLabel(cur.date) : '選擇日期';
 }
 
 /* images: add (pick / drop / paste), delete, reorder */
@@ -1185,39 +1226,45 @@ function noteLabel(n){   // [title, snippet] for the list
   return t ? [t, lines[0] || '沒有其他內容'] : [lines[0] || '新備忘錄', lines[1] || '沒有其他內容'];
 }
 let catOrder = (() => { try{ return JSON.parse(lsGet('pn-cat-order') || '[]'); }catch(e){ return []; } })();   // your drag order; new categories go after it, A→Z
-const saveCatOrder = list => { catOrder = list; lsSet('pn-cat-order', JSON.stringify(list)); };
+const saveCatOrder = (list, fromCloud) => { catOrder = list; lsSet('pn-cat-order', JSON.stringify(list)); if(!fromCloud) Cloud.pushSettings(); };
+function applySettings(json){ try{ const st = JSON.parse(json); if(Array.isArray(st.catOrder)) saveCatOrder(st.catOrder, true); }catch(e){} }
 const categories = () => [...new Set(notes.map(n => n.category.trim()).filter(Boolean))].sort((a, b) => {
   const ia = catOrder.indexOf(a), ib = catOrder.indexOf(b);
   return (ia < 0 ? 1e9 : ia) - (ib < 0 ? 1e9 : ib) || a.localeCompare(b, 'zh-Hant');
 });
 
 function renderNoteList(){
+  if($('#nitems [contenteditable=true]')) return renderNoteListSoon();   // not while a category is being renamed
   if(htmlT) syncHtml();
   const q = $('#nsearch').value.trim().toLowerCase();
   const list = notes.slice().sort(byPinThenRecent)
     .filter(n => !q || (n.title + ' ' + n.category + ' ' + htmlLines(n.html).join(' ')).toLowerCase().includes(q));
   const item = n => { const [t, s] = noteLabel(n);
     return row(n.id, `<b>${n.pinned ? ICON.pin : ''}${esc(t)}</b><span><em>${fmtShort(n.updatedAt)}</em>${esc(s)}</span>`, n === curNote ? 'on' : ''); };
-  const cats = categories(), rest = list.filter(n => !n.pinned);
-  const groups = [['__pin', '已釘選', list.filter(n => n.pinned)],
-    ...cats.map(c => [c, c, rest.filter(n => n.category.trim() === c)]),
-    ['__none', '未分類', rest.filter(n => !n.category.trim())]].filter(g => g[2].length);
+  const cats = categories();   // pinned notes sit at the top of their own category (the list is sorted that way)
+  const groups = [...cats.map(c => [c, c, list.filter(n => n.category.trim() === c)]), ['__none', '未分類', list.filter(n => !n.category.trim())]].filter(g => g[2].length);
   const box = $('#nitems');
   if(!list.length) box.innerHTML = `<div class="empty-note">${q ? '找不到符合的備忘錄' : '還沒有備忘錄，按 + 開始寫'}</div>`;
   else if(groups.length === 1 && groups[0][0] === '__none') box.innerHTML = list.map(item).join('');   // nothing to group yet
   else box.innerHTML = groups.map(([key, label, g]) => {
     const closed = !q && collapsed.has(key);
-    return `<div class="grp ${closed ? 'closed' : ''}" role="button" tabindex="0" data-g="${esc(key)}" aria-expanded="${!closed}"${key.startsWith('__') ? '' : ' title="拖曳排序・雙擊改名"'}><span>${esc(label)}</span><b>${g.length}</b>${ICON.chev}</div>${closed ? '' : g.map(item).join('')}`;
+    return `<div class="grp ${closed ? 'closed' : ''}" role="button" tabindex="0" data-g="${esc(key)}" aria-expanded="${!closed}"${key.startsWith('__') ? '' : ' title="拖曳排序・點兩下改名"'}><span>${esc(label)}</span><b>${g.length}</b>${ICON.chev}</div>${closed ? '' : g.map(item).join('')}`;
   }).join('');
   $('#catList').innerHTML = cats.map(c => `<option value="${esc(c)}">`).join('');
 }
 let listT; const renderNoteListSoon = () => { clearTimeout(listT); listT = setTimeout(renderNoteList, 600); };
 $('#nsearch').addEventListener('input', renderNoteList);
 const toggleGroup = k => { collapsed.has(k) ? collapsed.delete(k) : collapsed.add(k); lsSet('pn-collapsed', JSON.stringify([...collapsed])); renderNoteList(); };
+/* a category header: one tap folds it (after a short wait), two quick taps rename it */
+let grpTap = { key:null, at:0, timer:null };
 $('#nitems').addEventListener('click', e => {
   const g = e.target.closest('.grp');
-  if(g){ if(Date.now() - cdEnd > 300 && !g.querySelector('[contenteditable=true]')) toggleGroup(g.dataset.g); return; }
-  listClick(e, openNote, deleteNote);
+  if(!g) return listClick(e, openNote, deleteNote);
+  if(Date.now() - cdEnd < 300 || g.querySelector('[contenteditable=true]')) return;
+  const k = g.dataset.g, fixed = k.startsWith('__');
+  clearTimeout(grpTap.timer);
+  if(!fixed && grpTap.key === k && Date.now() - grpTap.at < 350){ grpTap.key = null; return renameGroup(g); }
+  grpTap = { key:k, at:Date.now(), timer:setTimeout(() => toggleGroup(k), fixed ? 0 : 350) };
 });
 $('#nitems').addEventListener('keydown', e => { const g = e.target.closest('.grp'); if(g && e.target === g && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); toggleGroup(g.dataset.g); } });
 /* drag a category header up / down to reorder (a finger long-presses first) */
@@ -1242,9 +1289,8 @@ window.addEventListener('pointermove', e => {
 });
 $('#nitems').addEventListener('touchmove', e => { if(cd?.active) e.preventDefault(); }, {passive:false});
 function endCatDrag(){ if(!cd) return; clearTimeout(cd.timer); if(cd.active) cdEnd = Date.now(); cd = null; markCatDrag(); }
-/* double-click a category header to rename it (every note in it moves along) */
-$('#nitems').addEventListener('dblclick', e => {
-  const g = e.target.closest('.grp'); if(!g || g.dataset.g.startsWith('__')) return;
+/* rename a category in place (every note in it moves along) */
+function renameGroup(g){
   const sp = g.querySelector('span'), old = g.dataset.g;
   sp.contentEditable = 'true'; sp.focus(); selectIn(sp);
   const done = keep => {
@@ -1254,7 +1300,7 @@ $('#nitems').addEventListener('dblclick', e => {
   };
   sp.addEventListener('keydown', ev => { ev.stopPropagation(); if(ev.key === 'Enter' && !imeBusy(ev)){ ev.preventDefault(); done(true); } else if(ev.key === 'Escape') done(false); });
   sp.addEventListener('blur', () => done(true), {once:true});
-});
+}
 function renameCat(old, name){
   notes.forEach(n => { if(n.category.trim() === old){ n.category = name; noteSaver.soon(n.id); } });
   saveCatOrder(catOrder.includes(name) ? catOrder.filter(c => c !== old) : catOrder.map(c => c === old ? name : c));
@@ -1921,7 +1967,7 @@ function moveCell(step){   // Tab / Shift+Tab; Tab in the last cell adds a row
 const dockState = () => document.body.classList.toggle('dock-on', !$('#tblbar').hidden || !$('#mbar').hidden);   // the toast moves up over a bottom bar
 /* the table edit bar floats at the bottom of the note while the caret is in a table */
 function placeTblBar(){
-  const live = curCell && editor.contains(curCell) && !$('#view-notes').hidden;
+  const live = curCell && editor.contains(curCell) && !$('#view-notes').hidden && !sel;   // a picked picture shows its own bar instead
   $('#tblbar').hidden = !live; dockState();
   if(live) $('#tblbar [data-t="header"]').classList.toggle('on', curCell.closest('table').classList.contains('has-header'));
   placeKnobs(live ? curCell.closest('table') : null);
@@ -2049,7 +2095,7 @@ $('#noteImgInput').addEventListener('change', async e => {
   selectImg(null); touchNote();
 });
 function tidyGal(gal){ const left = $$('img', gal); if(left.length === 1) gal.replaceWith(left[0]); else if(!left.length) gal.remove(); }   // an album of one is just a picture
-function selectImg(img){ sel = img ? { img, gal:img.closest('.gal') } : null; queueMedia(); }
+function selectImg(img){ sel = img ? { img, gal:img.closest('.gal') } : null; queueMedia(); placeTblBar(); }
 const queueMedia = () => { if(!mediaRaf) mediaRaf = requestAnimationFrame(() => { mediaRaf = 0; placeMedia(); }); };
 /* everything drawn over the note: album arrows, the selection box and the picture bar */
 function placeMedia(){
@@ -2129,7 +2175,7 @@ function endGalDrag(){
   st.ghost.remove(); unmark(st.img, 'dragging'); gdEnd = Date.now(); touchNote(); queueMedia();
 }
 window.addEventListener('pointermove', moveGalDrag);
-editor.addEventListener('touchmove', e => { if(gd?.active) e.preventDefault(); }, {passive:false});
+editor.addEventListener('touchmove', e => { if(gd?.active || cellDrag?.touch) e.preventDefault(); }, {passive:false});   // a running drag owns the finger
 editor.addEventListener('dragstart', e => { if(e.target.closest?.('.gal')) e.preventDefault(); });
 editor.addEventListener('load', queueMedia, true);   // pictures change the layout as they arrive
 editor.addEventListener('scroll', e => { if(e.target.classList?.contains('gal')) queueMedia(); }, true);
@@ -2174,7 +2220,7 @@ $('#lb').addEventListener('pointercancel', lbEnd);
 
 /* cell selection: dragging from one cell into another selects the rectangle between them,
    so dragging down one column selects just that column. Then: Delete clears, ⌘C copies, 合併 merges them. */
-let cellSel = null, cellDrag = null;
+let cellSel = null, cellDrag = null, cellPress = null;
 function clearCellSel(){ if(!cellSel) return; cellSel.cells.forEach(c => unmark(c, 'csel')); cellSel = null; }
 function selectCells(a, b){
   const table = a.closest('table'), {grid, pos} = tableMap(table), pa = pos.get(a), pb = pos.get(b);
@@ -2253,7 +2299,15 @@ editor.addEventListener('pointerdown', e => {
   clearCellSel();
   const gi = e.target.closest('.gal img');
   if(gi && e.button === 0 && editor.isContentEditable){ gd = { img:gi, gal:gi.parentNode, x:e.clientX, y:e.clientY, pid:e.pointerId, mouse:e.pointerType === 'mouse', active:false }; if(!gd.mouse) gd.timer = setTimeout(startGalDrag, 330); return; }
-  if(e.pointerType !== 'mouse' || e.button !== 0) return;   // touch resizes with the knobs; a finger on an edge just scrolls / places the caret
+  const tdT = e.target.closest('td');
+  if(e.pointerType !== 'mouse'){   // a finger: hold on a cell to start picking cells (resizing uses the knobs)
+    if(tdT && editor.isContentEditable) cellPress = { x:e.clientX, y:e.clientY, timer:setTimeout(() => {
+      cellPress = null; cellDrag = { table:tdT.closest('table'), anchor:tdT, touch:true };
+      cellDrag.table.classList.add('picking'); getSelection().removeAllRanges(); selectCells(tdT, tdT); toast('拖曳可以多選儲存格');
+    }, 420) };
+    return;
+  }
+  if(e.button !== 0) return;
   const h = edgeAt(e), td = e.target.closest('td');
   if(h) startRz(e, h.td.closest('table'), h.type === 'col' ? {type:'col', col:h.col, x:h.x} : {type:'row', row:h.td.parentElement});
   else if(td) cellDrag = { table:td.closest('table'), anchor:td };
@@ -2311,7 +2365,8 @@ function endRz(){
   if(!rz) return; rz.guide.remove(); rz = null;
   document.body.classList.remove('resizing', 'rowr'); touchNote();
 }
-function endCellDrag(){ if(cellDrag){ cellDrag.table.classList.remove('picking'); cellDrag = null; } }
+function endCellDrag(){ if(cellPress){ clearTimeout(cellPress.timer); cellPress = null; } if(cellDrag){ cellDrag.table.classList.remove('picking'); cellDrag = null; } }
+window.addEventListener('pointermove', e => { if(cellPress && Math.hypot(e.clientX - cellPress.x, e.clientY - cellPress.y) > 8) endCellDrag(); });   // moved first: it's a scroll
 
 /* =====================================================================
    deleting: swipe a list row to the left (touch), or right-click a row / grid card (mouse)
@@ -2391,6 +2446,7 @@ scrim.addEventListener('click', () => toggleSettings(false));
 /* clicks outside close whatever floats; Escape closes the topmost thing */
 document.addEventListener('mousedown', e => {
   if(!e.target.closest('.pop,[data-pop]')) closePops();
+  if(!$('#datePop').hidden && !e.target.closest('#datePop,#dateBtn')) closeDatePop();
   if(!ctx.hidden && !e.target.closest('#ctx')) closeCtx();
   if(setOpen() && !e.target.closest('#setPop,#setBtn')) toggleSettings(false);
 });
@@ -2399,7 +2455,7 @@ document.addEventListener('keydown', e => {
     if(e.key === 'Escape') closeLb(); else if(e.key === 'ArrowRight' || e.key === 'ArrowLeft') lbStep(e.key === 'ArrowRight' ? 1 : -1); else return;
     e.preventDefault(); e.stopPropagation(); return;
   }
-  if(e.key === 'Escape'){ if(!ctx.hidden) closeCtx(); else if(setOpen()) toggleSettings(false); else if(sel) selectImg(null); }
+  if(e.key === 'Escape'){ if(!$('#datePop').hidden) closeDatePop(); else if(!ctx.hidden) closeCtx(); else if(setOpen()) toggleSettings(false); else if(sel) selectImg(null); }
   if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's'){
     e.preventDefault(); saveAll().then(r => { if(r.every(Boolean)) toast('已儲存'); });
   }
@@ -2416,7 +2472,7 @@ function setMode(m, quiet){
 }
 $('#modeSeg').addEventListener('click', e => { const b = e.target.closest('button'); if(b) setMode(b.dataset.mode); });
 
-function readSeed(txt){ try{ const d = JSON.parse(txt), posts = d?.posts || d?.drafts; if(Array.isArray(d?.notes) && Array.isArray(posts)) return { notes:d.notes, posts }; }catch(e){} return null; }
+function readSeed(txt){ try{ const d = JSON.parse(txt), posts = d?.posts || d?.drafts; if(Array.isArray(d?.notes) && Array.isArray(posts)){ if(Array.isArray(d.catOrder)) saveCatOrder(d.catOrder); return { notes:d.notes, posts }; } }catch(e){} return null; }
 function rerenderAll(){
   /* fill in fields older saves may lack, so the rest of the code can rely on them */
   notes = notes.map(n => ({ title:'', category:'', pinned:false, html:'<p><br></p>', ...n }));
@@ -2443,7 +2499,7 @@ $('#spImport').addEventListener('change', async e => {
 const toDataURL = src => src.startsWith('data:') ? src : fetch(src).then(r => r.blob()).then(b => new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(b); })).catch(() => '');
 async function buildExport(){
   const out = await Promise.all(posts.map(async d => ({ ...d, images:(await Promise.all(d.images.map(async i => ({ id:i.id, src:await toDataURL(i.src) })))).filter(i => i.src) })));
-  const json = JSON.stringify({ notes, posts:out, exportedAt:new Date().toISOString() }).replace(/<\//g, '<\\/');
+  const json = JSON.stringify({ notes, posts:out, catOrder, exportedAt:new Date().toISOString() }).replace(/<\//g, '<\\/');
   return '<!DOCTYPE html>\n<html lang="zh-Hant">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<title>pluddieNotebook</title>\n' + PRISTINE.icons
     + '<style>body{margin:0}img{max-width:100%}</style>\n' + PRISTINE.fonts + '\n' + PRISTINE.style + '\n</head>\n<body>\n'
     + PRISTINE.sky + '\n' + PRISTINE.app + '\n' + PRISTINE.toast + '\n' + PRISTINE.lib + '\n<script type="application/json" id="seedData">' + json + '</scr' + 'ipt>\n' + PRISTINE.script + '\n</body>\n</html>\n';
@@ -2576,7 +2632,7 @@ async function loadData(){
       if(c.notes.length || c.posts.length){ notes = c.notes; posts = c.posts; }
       else if(notes.length || posts.length){   // first sign-in: move what this device has into the cloud
         rerenderAll(); notes.forEach(x => noteSaver.soon(x.id)); posts.forEach(x => postSaver.soon(x.id));
-        await saveAll();
+        await saveAll(); Cloud.pushSettings();
         toast('已把這台裝置的資料上傳到雲端');
       }
     }catch(e){ Cloud.failed = true; toast('連不上雲端，先顯示這台裝置的資料'); }

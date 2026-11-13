@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794560852">
+<meta name="pn-build" content="1794561641">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -231,11 +231,11 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .notes .ecol>.panel{flex:1;overflow:hidden;position:relative}
 .escroll{flex:1;overflow:auto;min-height:0;position:relative}
 .meta-line{font-size:11px;color:var(--faint);text-align:center;padding-top:8px;font-variant-numeric:tabular-nums}
-#editor{outline:none;padding:10px 28px 80px;min-height:calc(100% - 30px);font-size:13px;line-height:1.7;letter-spacing:.01em}
+#editor{outline:none;padding:10px 28px 80px;min-height:calc(100% - 30px);font-size:13px;line-height:1.3;letter-spacing:.01em}
 #editor h1,#editor .h1{font-size:24px;line-height:1.35;margin:0;font-weight:700;letter-spacing:0}
 #editor h2,#editor .h2{font-size:19px;line-height:1.4;margin:0;color:var(--acc-text);font-weight:600;letter-spacing:0}
 #editor p,#editor div{margin:0}
-#editor .lg{font-size:18px}
+#editor .lg{font-size:15px}
 #editor .gal{display:flex;gap:8px;overflow-x:auto;margin:.5em 0;padding-bottom:6px;scroll-snap-type:x proximity;user-select:none;-webkit-user-select:none}
 #editor .gal img{height:180px;width:auto;max-width:none;flex:none;margin:0;object-fit:cover;scroll-snap-align:start;cursor:grab;background:var(--s2);-webkit-user-drag:none;-webkit-touch-callout:none}
 @media (max-width:760px){#editor .gal img{height:140px}}
@@ -265,18 +265,23 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .imgbox{position:absolute;z-index:14;box-shadow:0 0 0 2px var(--acc-text);border-radius:10px;pointer-events:none}
 .imgbox .ih{position:absolute;right:-16px;bottom:-16px;width:32px;height:32px;display:grid;place-items:center;pointer-events:auto;touch-action:none;cursor:nwse-resize}
 .imgbox .ih::after{content:'';width:14px;height:14px;border-radius:50%;background:var(--acc-text);box-shadow:0 0 0 2.5px var(--s1)}
-.lb{position:fixed;inset:0;z-index:600;background:rgba(10,10,12,.92);display:flex;align-items:center;justify-content:center;touch-action:none;animation:rise .2s var(--ease) both}
-.lb img{max-width:calc(100vw - 120px);max-height:calc(100dvh - 120px);border-radius:10px;object-fit:contain;user-select:none;-webkit-user-drag:none}
-.lb button{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center}
+.lb{position:fixed;inset:0;z-index:600;background:rgba(10,10,12,.94);overflow:hidden;touch-action:none;animation:fadein .2s var(--ease) both}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.lb-track{display:flex;height:100%;transition:transform .32s var(--ease);will-change:transform}
+.lb-track.drag{transition:none}
+.lb-slide{flex:0 0 100%;height:100%;box-sizing:border-box;padding:64px 84px;display:flex;align-items:center;justify-content:center}
+.lb-slide img{max-width:100%;max-height:100%;border-radius:10px;object-fit:contain;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.lb button{position:absolute;z-index:1;transition:opacity .2s var(--ease),background-color .18s var(--ease);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center}
 .lb button:hover{background:rgba(255,255,255,.26)}
 .lb svg{width:20px;height:20px}
-.lb .prev{left:max(16px,env(safe-area-inset-left,0px))}
-.lb .next{right:max(16px,env(safe-area-inset-right,0px))}
+.lb .prev{left:max(16px,env(safe-area-inset-left,0px));top:50%;margin-top:-22px}
+.lb .off{opacity:0;pointer-events:none}
+.lb .next{right:max(16px,env(safe-area-inset-right,0px));top:50%;margin-top:-22px}
 .lb .lb-x{top:max(16px,env(safe-area-inset-top,0px));right:16px}
 .lb-n{position:absolute;bottom:max(20px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;opacity:.8}
-@media (max-width:760px){.lb img{max-width:100vw;max-height:calc(100dvh - 140px);border-radius:0}.lb .prev,.lb .next{display:none}}
+@media (max-width:760px){.lb-slide{padding:max(60px,env(safe-area-inset-top,0px)) 8px max(56px,env(safe-area-inset-bottom,0px))}.lb-slide img{border-radius:6px}.lb .prev,.lb .next{display:none}}
 .mlayer{position:absolute;inset:0 auto auto 0;width:0;height:0;z-index:16}
-.gnav{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;background:var(--float);color:var(--fg);box-shadow:var(--shadow);display:grid;place-items:center}
+.gnav{animation:fadein .2s var(--ease) both;position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;background:var(--float);color:var(--fg);box-shadow:var(--shadow);display:grid;place-items:center}
 .gnav svg{width:16px;height:16px}
 .gnav:hover{background:var(--hover-acc);color:var(--hover-acc-fg)}
 .mbar{position:absolute;z-index:17;display:flex;gap:2px;padding:3px;background:var(--float);border-radius:11px;box-shadow:var(--shadow);white-space:nowrap}
@@ -370,7 +375,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
   #postEdit>.pmeta{grid-column:1;grid-row:2}
   #postEdit>.media{grid-column:1;grid-row:3;overflow:auto;box-sizing:border-box;justify-content:flex-start}
   #postEdit>.capblk{grid-column:2;grid-row:1/4;min-height:0}
-  .metatg{display:none!important}
+  .metatg,.editbtn,#nmeta{display:none!important}
   #postEdit>.capblk textarea{min-height:0;overflow:auto}
 }
 .fsbtn{display:none!important}
@@ -460,6 +465,8 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .datepill input{width:8.4em;height:32px;box-sizing:border-box;font-size:14px;line-height:1.2;padding:4px 2px;white-space:nowrap;-webkit-appearance:none;appearance:none;text-align:left}
   .datepill input::-webkit-date-and-time-value{text-align:left}
   .datepill input::-webkit-calendar-picker-indicator{display:none}
+  #editor{font-size:15px;line-height:1.7;padding:8px 14px 80px}   /* phones: 大字 + 標準 by default, narrower margins */
+  .main{padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
   /* settings: full-width menu dropping from the header */
   .setpop{position:absolute;top:100%;left:0;right:0;bottom:auto;width:auto;max-height:calc(100dvh - 80px);border-radius:0 0 20px 20px;padding:12px max(16px,env(safe-area-inset-right,0px)) 18px max(16px,env(safe-area-inset-left,0px));transform:translateY(-10px);opacity:0;transition:transform .26s var(--ease),opacity .2s var(--ease)}
   .setpop.open{transform:none;opacity:1}
@@ -544,6 +551,7 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <button class="rbtn" id="backGrid" title="返回貼文列表" aria-label="返回貼文列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
               <input class="etitle" id="ptitle" type="text" placeholder="標題" aria-label="貼文標題" autocomplete="off">
               <button class="rbtn metatg" id="metaToggle" title="排程與類別" aria-label="排程與類別" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+              <button class="rbtn editbtn" id="capEdit" title="編輯文案" aria-label="編輯文案"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>
               <button class="rbtn" id="pinPost" title="釘選到最前面" aria-label="釘選"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 5 4 4H6l4-4z"/><path d="M12 13v7"/></svg></button>
             </div>
             <div class="panel pmeta" id="pmeta">
@@ -575,14 +583,17 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
           </div>
           <div class="lbody" id="nitems"></div>
         </aside>
-        <div class="ecol">
+        <div class="ecol" id="noteCol">
           <div class="ebar">
             <button class="rbtn back" id="backList" title="返回列表" aria-label="返回列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
             <input class="etitle" id="ntitle" type="text" placeholder="標題" aria-label="備忘錄標題" autocomplete="off">
-            <label class="pill catpill" title="類別"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg><input id="ncat" type="text" list="catList" placeholder="類別" aria-label="類別" autocomplete="off"></label>
+            <span id="catSlot"><label class="pill catpill" id="catPill" title="類別"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/></svg><input id="ncat" type="text" list="catList" placeholder="類別" aria-label="類別" autocomplete="off"></label></span>
+            <button class="rbtn metatg" id="nmetaToggle" title="類別" aria-label="類別" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+            <button class="rbtn editbtn" id="noteEdit" title="編輯" aria-label="編輯備忘錄"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button>
             <datalist id="catList"></datalist>
             <button class="rbtn" id="pinNote" title="釘選到列表上方" aria-label="釘選"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 5 4 4H6l4-4z"/><path d="M12 13v7"/></svg></button>
           </div>
+          <div class="panel pmeta" id="nmeta"><div class="pm-row"><span class="blabel">類別</span><span id="catSlotM"></span></div></div>
           <div class="panel">
             <div class="toolbar" id="toolbar">
               <button class="rbtn fsbtn" id="noteBack" title="返回" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -666,7 +677,7 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="ctx" id="ctx" hidden><button id="ctxDel"></button></div>
-<div class="lb" id="lb" hidden><button class="lb-x" id="lbClose" aria-label="關閉"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button><button class="prev" id="lbPrev" aria-label="上一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><img id="lbImg" alt=""><button class="next" id="lbNext" aria-label="下一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button><div class="lb-n" id="lbN"></div></div>
+<div class="lb" id="lb" hidden><button class="lb-x" id="lbClose" aria-label="關閉"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button><button class="prev" id="lbPrev" aria-label="上一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="lb-track" id="lbTrack"></div><button class="next" id="lbNext" aria-label="下一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button><div class="lb-n" id="lbN"></div></div>
 
 <script id="sbLib" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script id="pnConfig" src="config.js"></script>
@@ -1005,6 +1016,12 @@ $('#kindSeg').addEventListener('click', e => {
   const b = e.target.closest('button'); if(!b || !cur || cur.kind === b.dataset.kind) return;
   cur.kind = b.dataset.kind; setKind(cur.kind); touchPost(); renderPosts();
 });
+function placeCat(){ (phone.matches ? $('#catSlotM') : $('#catSlot')).append($('#catPill')); }   // phones: the 類別 field lives in the fold-out row
+placeCat();
+$('#nmetaToggle').addEventListener('click', () => {
+  const open = $('#noteCol').classList.toggle('meta-open'); $('#nmetaToggle').setAttribute('aria-expanded', open);
+  if(open) animIn($('#nmeta'));
+});
 $('#metaToggle').addEventListener('click', () => {
   const open = $('#postEdit').classList.toggle('meta-open'); $('#metaToggle').setAttribute('aria-expanded', open);
   if(open){ animIn($('#pmeta')); setKind(cur?.kind || 'post', true); }
@@ -1183,7 +1200,6 @@ function openNote(id, focusTitle){
   exitFs(); if(htmlT) syncHtml(); Hist.undo = []; Hist.redo = []; Hist.kind = ''; sel = null;
   curNote = notes.find(n => n.id === id) || null;
   editor.innerHTML = curNote ? curNote.html : '';
-  editor.contentEditable = curNote ? 'true' : 'false';
   if(curNote){   // older saves may hold stray colours, inline sizes or UI marks: tidy once, save if anything changed
     tidyColors(editor); migrateSizes(); $$('.' + UI_CLASS.join(',.'), editor).forEach(x => UI_CLASS.forEach(c => unmark(x, c)));
     const h = noteHtml(); if(h !== curNote.html){ curNote.html = h; noteSaver.soon(curNote.id); }
@@ -1192,8 +1208,9 @@ function openNote(id, focusTitle){
   $('#ntitle').disabled = $('#ncat').disabled = !curNote;
   $('#pinNote').classList.toggle('on', !!curNote?.pinned);
   $('#noteMeta').textContent = curNote ? fmtFull(curNote.updatedAt) : '沒有選取的備忘錄';
-  curCell = null; placeTblBar(); renderNoteList(); fitWraps(); queueMedia();
-  $('#notes').classList.add('show-editor'); animIn($('#notes .ecol'));
+  curCell = null; setEditable(); placeTblBar(); renderNoteList(); queueMedia();
+  $('#noteCol').classList.remove('meta-open'); $('#nmetaToggle').setAttribute('aria-expanded', false);
+  $('#notes').classList.add('show-editor'); animIn($('#notes .ecol')); requestAnimationFrame(fitWraps);
   if(focusTitle) $('#ntitle').focus();
 }
 function touchNote(fromEditor = true){
@@ -1239,7 +1256,7 @@ const ROOT_BLOCK = /^(P|H1|H2|H3|BLOCKQUOTE|DIV|UL|OL|HR|IMG|TABLE)$/;
 const isQuoteBox = n => n.nodeName === 'BLOCKQUOTE' && [...n.children].some(c => ROOT_BLOCK.test(c.nodeName));   // a quote holding several lines
 const isTextBlock = n => n.nodeType === 1 && TEXT_BLOCK.test(n.nodeName) && !n.classList.contains('tbl-wrap') && !n.classList.contains('gal') && !isQuoteBox(n);
 /* line styles: one per line, so copying / joining lines keeps a predictable look */
-const STYLES = [['h1', '標題', 24, 'h1', ''], ['h2', '副標', 19, 'h2', ''], ['lg', '大字', 18, 'p', 'lg'], ['p', '內文', 13, 'p', '']];   // key, label, px, tag, class
+const STYLES = [['h1', '標題', 24, 'h1', ''], ['h2', '副標', 19, 'h2', ''], ['lg', '大字', 15, 'p', 'lg'], ['p', '內文', 13, 'p', '']];   // key, label, px, tag, class
 const styleOf = n => n?.nodeType !== 1 ? 'p' : n.nodeName === 'H1' || n.classList.contains('h1') ? 'h1' : n.nodeName === 'H2' || n.classList.contains('h2') ? 'h2' : n.classList.contains('lg') ? 'lg' : 'p';   // list items / cells carry it as a class
 function stripSizes(root){   // inline sizes from older notes or other apps give way to the line style
   root.querySelectorAll('font[size]').forEach(f => f.replaceWith(...f.childNodes));
@@ -1253,7 +1270,7 @@ function migrateSizes(){
     for(let t; (t = w.nextNode());){ if(!t.textContent.trim()) continue; const z = t.parentElement.closest('[style*="font-size"]'); sizes.add(z && b.contains(z) ? parseFloat(z.style.fontSize) || 0 : 0); }
     if(sizes.size > 1) return;   // mixed sizes inside one line stay as they are
     const px = [...sizes][0] || 0;
-    if(b.nodeName !== 'H1' && b.nodeName !== 'H2'){ b.classList.remove('lg'); if(px > 16) b.classList.add('lg'); }
+    if(b.nodeName !== 'H1' && b.nodeName !== 'H2'){ b.classList.remove('lg'); if(px > 14) b.classList.add('lg'); }
     stripSizes(b); if(!b.className) b.removeAttribute('class');
   });
 }
@@ -1433,7 +1450,7 @@ editor.addEventListener('keydown', e => {
   nb.appendChild(frag);
   if(empty(nb)) nb.innerHTML = '<br>';
   if(empty(blk)) blk.innerHTML = '<br>';
-  blk.after(nb); caretIn(nb); nb.scrollIntoView({block:'nearest'});
+  blk.after(nb); caretIn(nb); keepCaret();
   touchNote(); updateState();
 });
 
@@ -1446,14 +1463,25 @@ const COLORS = {
 const swatch = (prop, v) => { const d = document.createElement('i'); d.style[prop] = v; return d.style[prop]; };
 let palette = null;
 const getPalette = () => palette ||= { color:new Set(COLORS.foreColor.map(c => swatch('color', c)).filter(Boolean)), backgroundColor:new Set(COLORS.hiliteColor.map(c => swatch('backgroundColor', c)).filter(Boolean)) };
+const rgbOf = c => (c.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+function hueOf([r, g, b]){ const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; if(d < 36) return null;   // grey-ish: no colour to keep
+  const h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return (h * 60 + 360) % 360; }
+function nearestSwatch(prop, c){   // a colour this editor doesn't have becomes its closest swatch, or nothing
+  const h = hueOf(rgbOf(c)); if(h == null) return '';
+  let best = '', bd = 1e9;
+  getPalette()[prop].forEach(p => { const ph = hueOf(rgbOf(p)); if(ph == null) return; const d = Math.min(Math.abs(ph - h), 360 - Math.abs(ph - h)); if(d < bd){ bd = d; best = p; } });
+  return bd <= 40 ? best : '';
+}
 function tidyColors(root){
   const P = getPalette();
+  root.querySelectorAll('mark').forEach(m => { const sp = document.createElement('span'); sp.style.backgroundColor = nearestSwatch('backgroundColor', getComputedStyle(m).backgroundColor || 'rgb(255,230,0)') || [...P.backgroundColor][1]; sp.append(...m.childNodes); m.replaceWith(sp); });
   root.querySelectorAll('font').forEach(f => {
     const c = swatch('color', f.getAttribute('color') || '');
-    if(c && P.color.has(c)){ const sp = document.createElement('span'); sp.style.color = c; sp.append(...f.childNodes); f.replaceWith(sp); } else f.replaceWith(...f.childNodes);
+    const k = c && (P.color.has(c) ? c : nearestSwatch('color', c));
+    if(k){ const sp = document.createElement('span'); sp.style.color = k; sp.append(...f.childNodes); f.replaceWith(sp); } else f.replaceWith(...f.childNodes);
   });
   root.querySelectorAll('[style]').forEach(el => {
-    ['color', 'backgroundColor'].forEach(k => { if(el.style[k] && !P[k].has(el.style[k])) el.style[k] = ''; });
+    ['color', 'backgroundColor'].forEach(k => { const v = el.style[k]; if(v && !P[k].has(v)) el.style[k] = /^(transparent|rgba\(0, 0, 0, 0\))$/.test(v) || /rgb\(1, 2, 3\)/.test(v) ? '' : nearestSwatch(k, v); });
     if(el.nodeName === 'SPAN') [...el.style].forEach(p => { if(p !== 'color' && p !== 'background-color') el.style.removeProperty(p); });   // a span only ever carries a colour
     if(!el.getAttribute('style')){ el.removeAttribute('style'); if(el.nodeName === 'SPAN') el.replaceWith(...el.childNodes); }
   });
@@ -1537,8 +1565,8 @@ editor.addEventListener('paste', e => {
   const before = topBlock(selNode() || editor);
   document.execCommand('insertHTML', false, tmp.innerHTML);
   const after = topBlock(selNode() || editor);
-  const tidy = b => { if(b?.nodeType === 1) keepSel(() => { tidyColors(b); stripSizes(b); }); };   // the browser re-adds the source's look while inserting
-  if(before && after && before.parentNode === after.parentNode && editor.contains(before)) blocksBetween(before, after).forEach(tidy); else tidy(after);
+  if(before && after && before.parentNode === after.parentNode && editor.contains(before)) blocksBetween(before, after).forEach(b => { if(b.nodeType === 1) keepSel(() => stripSizes(b)); });
+  keepSel(() => tidyColors(editor));   // the browser re-adds the source's look while inserting
   touchNote(); fitWraps();
 });
 
@@ -1658,9 +1686,10 @@ $$('.swatches').forEach(w => {
 });
 
 /* text size (on the selected text) and line height (on the selected lines) */
-const HEIGHTS = [['緊', 1.3], ['標準', 0], ['寬', 2], ['特寬', 2.4]];
+const HEIGHTS = [['緊', 1.3], ['標準', 1.7], ['寬', 2], ['特寬', 2.4]];
+const baseLH = () => phone.matches ? 1.7 : 1.3;   // the note's default: 緊 on a computer, 標準 on a phone
 $('[data-kind="size"]').innerHTML = STYLES.map(([k, l, px]) => `<button class="opt" data-v="${k}"><i class="ck"></i><span style="font-size:${Math.min(px, 20)}px;font-weight:${k === 'h1' || k === 'h2' ? 700 : 500}">${l}</span><small>${px}px</small></button>`).join('');
-$('[data-kind="lh"]').innerHTML = HEIGHTS.map(([l, v]) => `<button class="opt" data-v="${v}"><i class="ck"></i><span>${l}</span><small>${v || '預設'}</small></button>`).join('');
+$('[data-kind="lh"]').innerHTML = HEIGHTS.map(([l, v]) => `<button class="opt" data-v="${v}"><i class="ck"></i><span>${l}</span><small>${v}</small></button>`).join('');
 $('[data-kind="size"]').addEventListener('click', e => { const o = e.target.closest('.opt'); if(o){ closePops(); setBlock(o.dataset.v); } });
 function lineEl(n){   // the element carrying the style of the line the caret (or the first picked cell) is in
   if(cellSel) return cellSel.cells[0];
@@ -1670,13 +1699,13 @@ function lineEl(n){   // the element carrying the style of the line the caret (o
 function markOpts(kind){
   const el = lineEl();
   if(kind === 'size'){ const k = styleOf(el); $$('#pop-size .opt').forEach(o => o.classList.toggle('cur', o.dataset.v === k)); }
-  if(kind === 'lh'){ const v = parseFloat(el?.style.lineHeight) || 0; $$('#pop-lh .opt').forEach(o => o.classList.toggle('cur', +o.dataset.v === v)); }
+  if(kind === 'lh'){ const v = parseFloat(el?.style.lineHeight) || baseLH(); $$('#pop-lh .opt').forEach(o => o.classList.toggle('cur', +o.dataset.v === v)); }
 }
 $('[data-kind="lh"]').addEventListener('click', e => { const o = e.target.closest('.opt'); if(o){ closePops(); setLineHeight(+o.dataset.v); } });
 function setLineHeight(v){
   if(!cellSel) restoreSel();
   const lines = selLines(); if(!lines.length) return; snap();
-  lines.forEach(n => { n.style.lineHeight = v || ''; if(!n.getAttribute('style')) n.removeAttribute('style'); });
+  lines.forEach(n => { n.style.lineHeight = v === baseLH() ? '' : v; if(!n.getAttribute('style')) n.removeAttribute('style'); });
   touchNote();
 }
 
@@ -1696,7 +1725,7 @@ function insertTable(rows, cols){
   if(wrap?.classList.contains('tbl-wrap')) caretIn(wrap.querySelector('td'));
   touchNote(); updateState(); toast(coarse.matches ? '拖曳表格旁的小把手可以調整欄寬與列高' : '拖曳儲存格邊緣可以調整欄寬與列高');
 }
-function fitWraps(){ $$('.tbl-wrap', editor).forEach(w => w.classList.toggle('fit', w.scrollWidth <= w.clientWidth + 1)); }
+function fitWraps(){ $$('.tbl-wrap', editor).forEach(w => w.classList.toggle('fit', !!w.clientWidth && w.scrollWidth <= w.clientWidth + 1)); }
 const sumColWidths = table => { table.style.width = $$('col', table).reduce((s, c) => s + parseFloat(c.style.width || 100), 0) + 'px'; };
 /* grid[r][c] = the cell covering that spot, pos = each cell's top-left spot (merged cells cover several spots) */
 function tableMap(table){
@@ -1853,13 +1882,43 @@ document.addEventListener('selectionchange', () => {
 /* phones: tapping into the note body or the caption makes it full screen with a bar (‹ back, ✓ done) */
 const vv = window.visualViewport;
 function syncVV(){ if(!vv) return; const st = document.documentElement.style; st.setProperty('--vvh', vv.height + 'px'); st.setProperty('--vvt', vv.offsetTop + 'px'); }
-if(vv){ vv.addEventListener('resize', syncVV); vv.addEventListener('scroll', syncVV); syncVV(); }
-function exitFs(){
-  if(!document.body.classList.contains('fs-note') && !document.body.classList.contains('fs-cap')) return;
-  document.body.classList.remove('fs-note', 'fs-cap'); closePops(); closeGroups();
+let vvT;
+if(vv){ vv.addEventListener('resize', () => { syncVV(); clearTimeout(vvT); if(inFs()) vvT = setTimeout(keepCaret, 80); }); vv.addEventListener('scroll', syncVV); syncVV(); }
+const inFs = () => document.body.classList.contains('fs-note') || document.body.classList.contains('fs-cap');
+/* on a phone a note / caption is only editable inside full-screen editing; on a computer always */
+function setEditable(){
+  editor.contentEditable = curNote && (!phone.matches || document.body.classList.contains('fs-note')) ? 'true' : 'false';
+  $('#caption').readOnly = phone.matches && !document.body.classList.contains('fs-cap');
 }
-editor.addEventListener('focus', () => { if(phone.matches && curNote && Date.now() - galTap > 500 && !document.body.classList.contains('fs-note')){ document.body.classList.add('fs-note'); syncVV(); requestAnimationFrame(placeTblBar); queueMedia(); } });
-$('#caption').addEventListener('focus', () => { if(phone.matches && cur){ document.body.classList.add('fs-cap'); syncVV(); } });
+function exitFs(){
+  if(!inFs()) return;
+  document.body.classList.remove('fs-note', 'fs-cap'); closePops(); closeGroups(); setEditable(); requestAnimationFrame(() => { fitWraps(); queueMedia(); });
+}
+$('#noteEdit').addEventListener('click', () => {
+  if(!curNote) return;
+  const sc = $('#escroll'), sr = sc.getBoundingClientRect();
+  const first = [...editor.children].find(b => b.getBoundingClientRect().bottom > sr.top + 12) || editor.lastElementChild;   // start where you were reading
+  document.body.classList.add('fs-note'); syncVV(); setEditable();
+  editor.focus({preventScroll:true}); if(first) caretIn(first, true);
+  requestAnimationFrame(() => { placeTblBar(); fitWraps(); queueMedia(); keepCaret(); });
+});
+$('#capEdit').addEventListener('click', () => {
+  if(!cur) return; document.body.classList.add('fs-cap'); syncVV(); setEditable();
+  const ta = $('#caption'); ta.focus({preventScroll:true}); ta.setSelectionRange(ta.value.length, ta.value.length);
+});
+/* keep the caret in view by scrolling only the note — never the page — so nothing jumps when the keyboard slides in */
+function keepCaret(){
+  const s = getSelection(); if(!s.rangeCount || !editor.contains(s.anchorNode)) return;
+  const r = s.getRangeAt(0).cloneRange(); r.collapse(false);
+  const n = r.endContainer, rect = r.getClientRects()[0] || (n.nodeType === 1 ? n : n.parentElement).getBoundingClientRect();
+  const sc = $('#escroll'), sr = sc.getBoundingClientRect(), pad = 48;
+  if(rect.bottom > sr.bottom - pad) sc.scrollTop += rect.bottom - sr.bottom + pad;
+  else if(rect.top < sr.top + pad) sc.scrollTop -= sr.top + pad - rect.top;
+}
+let kcRaf = 0;
+editor.addEventListener('input', () => { if(phone.matches && !kcRaf) kcRaf = requestAnimationFrame(() => { kcRaf = 0; keepCaret(); }); });
+window.addEventListener('scroll', () => { if(inFs() && (window.scrollY || document.documentElement.scrollTop)) window.scrollTo(0, 0); }, {passive:true});   // iOS likes to push the page up
+phone.addEventListener('change', () => { exitFs(); placeCat(); setEditable(); });
 function doneNote(){
   editor.blur(); getSelection().removeAllRanges(); clearCellSel();
   if(curCell) unmark(curCell, 'cur'); curCell = null; exitFs(); placeTblBar();
@@ -1872,7 +1931,7 @@ $('#capBack').addEventListener('click', () => { $('#caption').blur(); closePost(
 /* =====================================================================
    images in a note: one picture, or an album (a swipeable row) — tap one to get its bar
    ===================================================================== */
-let pickFor = null, sel = null, imgRz = null, galTap = 0, mediaRaf = 0;   // sel = { img, gal } — gal is null for a single picture
+let pickFor = null, sel = null, imgRz = null, mediaRaf = 0;   // sel = { img, gal } — gal is null for a single picture
 function pickImages(target){ saveSel(); pickFor = target; $('#noteImgInput').click(); }
 const galHtml = srcs => `<div class="gal" contenteditable="false">${srcs.map(x => `<img src="${x}" alt="">`).join('')}</div>`;
 $('#noteImgInput').addEventListener('change', async e => {
@@ -1899,10 +1958,11 @@ const queueMedia = () => { if(!mediaRaf) mediaRaf = requestAnimationFrame(() => 
 /* everything drawn over the note: album arrows, the selection box and the picture bar */
 function placeMedia(){
   const sc = $('#escroll'), sr = sc.getBoundingClientRect(), X = x => x - sr.left, Y = y => y - sr.top + sc.scrollTop;
-  $('#mlayer').innerHTML = $$('.gal', editor).map((g, i) => {
+  const nav = $$('.gal', editor).map((g, i) => {
     const r = g.getBoundingClientRect(), mid = Y(r.top + (r.height - 6) / 2), btn = (dir, x) => `<button class="gnav" data-g="${i}" data-dir="${dir}" style="left:${X(x)}px;top:${mid}px" aria-label="${dir < 0 ? '上一張' : '下一張'}">${dir < 0 ? ICON.prev : ICON.next}</button>`;
     return (g.scrollLeft > 2 ? btn(-1, r.left + 22) : '') + (g.scrollLeft + g.clientWidth < g.scrollWidth - 2 ? btn(1, r.right - 22) : '');
   }).join('');
+  if($('#mlayer').innerHTML !== nav) $('#mlayer').innerHTML = nav;
   const box = $('#imgBox'), bar = $('#mbar');
   if(!sel || !editor.contains(sel.img)){ sel = null; box.hidden = bar.hidden = true; return; }
   let r = sel.img.getBoundingClientRect();
@@ -1975,23 +2035,43 @@ editor.addEventListener('dragstart', e => { if(e.target.closest?.('.gal')) e.pre
 editor.addEventListener('load', queueMedia, true);   // pictures change the layout as they arrive
 editor.addEventListener('scroll', e => { if(e.target.classList?.contains('gal')) queueMedia(); }, true);
 
-/* album viewer */
-let lbList = [], lbI = 0, lbX = null;
-function openLb(list, i){ lbList = list; lbI = Math.max(0, i); $('#lb').hidden = false; showLb(); }
-function showLb(){
-  $('#lbImg').src = lbList[lbI].src;
+/* album viewer: every picture side by side; drag / swipe follows the finger, arrows and keys step */
+let lbList = [], lbI = 0, lbDrag = null;
+const lbTrack = $('#lbTrack');
+function openLb(list, i){
+  lbList = list; lbI = Math.max(0, i);
+  lbTrack.innerHTML = list.map(im => `<div class="lb-slide"><img src="${im.src}" alt=""></div>`).join('');
+  $('#lb').hidden = false; showLb(false);
+}
+function showLb(animate = true){
+  lbTrack.classList.toggle('drag', !animate); lbTrack.style.transform = `translateX(${-lbI * 100}%)`;
   const many = lbList.length > 1;
   $('#lbN').textContent = many ? `${lbI + 1} / ${lbList.length}` : '';
-  $('#lbPrev').hidden = $('#lbNext').hidden = !many;
+  $('#lbPrev').classList.toggle('off', !many || lbI === 0); $('#lbNext').classList.toggle('off', !many || lbI === lbList.length - 1);
 }
-function closeLb(){ $('#lb').hidden = true; $('#lbImg').removeAttribute('src'); }
-const lbStep = d => { if(lbList.length > 1){ lbI = (lbI + d + lbList.length) % lbList.length; showLb(); } };
+function closeLb(){ $('#lb').hidden = true; lbTrack.innerHTML = ''; }
+const lbStep = d => { const i = Math.max(0, Math.min(lbList.length - 1, lbI + d)); if(i !== lbI){ lbI = i; showLb(); } };
 $('#lbClose').addEventListener('click', closeLb);
 $('#lbPrev').addEventListener('click', e => { e.stopPropagation(); lbStep(-1); });
 $('#lbNext').addEventListener('click', e => { e.stopPropagation(); lbStep(1); });
-$('#lb').addEventListener('click', e => { if(e.target === e.currentTarget) closeLb(); });
-$('#lb').addEventListener('pointerdown', e => { lbX = e.clientX; });
-$('#lb').addEventListener('pointerup', e => { if(lbX == null) return; const dx = e.clientX - lbX; lbX = null; if(Math.abs(dx) > 50) lbStep(dx < 0 ? 1 : -1); });
+$('#lb').addEventListener('pointerdown', e => {
+  if(e.target.closest('button')) return;
+  lbDrag = { x:e.clientX, t:Date.now(), dx:0 }; lbTrack.classList.add('drag');
+  try{ $('#lb').setPointerCapture(e.pointerId); }catch(err){}
+});
+$('#lb').addEventListener('pointermove', e => {
+  if(!lbDrag) return;
+  let dx = e.clientX - lbDrag.x; if((lbI === 0 && dx > 0) || (lbI === lbList.length - 1 && dx < 0)) dx *= .3;   // resist past the ends
+  lbDrag.dx = dx; lbTrack.style.transform = `translateX(calc(${-lbI * 100}% + ${dx}px))`;
+});
+const lbEnd = () => {
+  if(!lbDrag) return; const { dx, t } = lbDrag; lbDrag = null;
+  const fast = Math.abs(dx) > 20 && Date.now() - t < 250, step = Math.abs(dx) > innerWidth * .18 || fast ? (dx < 0 ? 1 : -1) : 0;
+  if(Math.abs(dx) < 6 && step === 0 && !$('#lb').hidden){ showLb(); return; }   // a tap: nothing moves
+  lbI = Math.max(0, Math.min(lbList.length - 1, lbI + step)); showLb();
+};
+$('#lb').addEventListener('pointerup', lbEnd);
+$('#lb').addEventListener('pointercancel', lbEnd);
 
 /* cell selection: dragging from one cell into another selects the rectangle between them,
    so dragging down one column selects just that column. Then: Delete clears, ⌘C copies, 合併 merges them. */
@@ -2073,8 +2153,7 @@ function startRz(e, table, h){
 editor.addEventListener('pointerdown', e => {
   clearCellSel();
   const gi = e.target.closest('.gal img');
-  if(e.target.closest('.gal')) galTap = Date.now();
-  if(gi && e.button === 0){ gd = { img:gi, gal:gi.parentNode, x:e.clientX, y:e.clientY, pid:e.pointerId, mouse:e.pointerType === 'mouse', active:false }; if(!gd.mouse) gd.timer = setTimeout(startGalDrag, 330); return; }
+  if(gi && e.button === 0 && editor.isContentEditable){ gd = { img:gi, gal:gi.parentNode, x:e.clientX, y:e.clientY, pid:e.pointerId, mouse:e.pointerType === 'mouse', active:false }; if(!gd.mouse) gd.timer = setTimeout(startGalDrag, 330); return; }
   if(e.pointerType !== 'mouse' || e.button !== 0) return;   // touch resizes with the knobs; a finger on an edge just scrolls / places the caret
   const h = edgeAt(e), td = e.target.closest('td');
   if(h) startRz(e, h.td.closest('table'), h.type === 'col' ? {type:'col', col:h.col, x:h.x} : {type:'row', row:h.td.parentElement});
@@ -2092,6 +2171,12 @@ editor.addEventListener('pointermove', e => {
   }
 });
 editor.addEventListener('click', e => {
+  if(!editor.isContentEditable){
+    const a = e.target.closest('a'), im = e.target.closest('img');
+    if(a){ e.preventDefault(); window.open(a.href, '_blank', 'noopener'); }
+    else if(im){ const list = im.closest('.gal') ? $$('img', im.parentNode) : [im]; openLb(list, list.indexOf(im)); }
+    return;
+  }
   const li = e.target.closest('ul.checklist > li');   // tick a checklist item by clicking its box
   if(li && e.clientX - li.getBoundingClientRect().left < 22){ snap(); li.classList.toggle('done'); touchNote(); return; }
   const a = e.target.closest('a');

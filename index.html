@@ -104,6 +104,14 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .stat b{font-size:30px;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .stat span{font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
 .sp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px 10px 4px;border-block:1px solid var(--s3);font-size:12px;font-weight:600;color:var(--muted)}
+.acct{display:flex;flex-direction:column;gap:6px}
+.acct-in,.acct-out{display:flex;align-items:center;gap:6px}
+.acct-out{flex-wrap:wrap}
+.acct-out input[type=email]{flex-basis:100%}
+.acct-out input{flex:1;min-width:0;border:0;background:var(--s2);color:var(--fg);border-radius:9px;padding:8px 10px;font:13px var(--font);outline:none}
+.acct-out input:focus{box-shadow:inset 0 0 0 1.5px var(--acc-text)}
+.acct-dot{width:8px;height:8px;border-radius:50%;background:#4cc38a;flex:none}
+.acct-mail{flex:1;min-width:0;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sp-acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sp-act{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--s2);color:var(--fg);padding:12px 4px 10px;border-radius:12px;font-size:12px;font-weight:600}
 .sp-act svg{width:18px;height:18px}
@@ -122,7 +130,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .rbtn svg{width:15px;height:15px}
 .rbtn.on{background:var(--acc-soft);color:var(--acc-text)}
 .rbtn.dirty::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--acc-text);box-shadow:0 0 0 2px var(--s1)}
-.btn:not(.acc):hover,.rbtn:hover,.sp-act:hover,.tb:hover,.nitem:hover,.grp:hover,.up:hover,.addthumb:hover{background:var(--hover);color:var(--fg)}
+.btn:not(.acc):hover,.rbtn:hover,.sp-act:hover,.tb:hover,.nitem:hover,.grp:hover,.cal-h button:hover,button.cal-d:hover,.cal-x:hover,.addthumb:hover{background:var(--hover);color:var(--fg)}
 .btn.acc:hover,.ccopy:hover{background:var(--btn-hover);color:var(--btn-hover-fg)}
 .rbtn.del:hover,.sp-act.danger:hover{background:var(--danger-soft);color:var(--danger)}
 .armed,.armed:hover{background:var(--danger)!important;color:var(--danger-ink)!important}
@@ -223,11 +231,20 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .tblbar .dz{color:var(--danger)}
 
 /* ===== 貼文 ===== */
-.up{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;align-items:center;width:100%;padding:7px 10px;border-radius:9px;text-align:left}
-.up .d{grid-row:span 2;width:38px;padding:4px 0;border-radius:8px;background:var(--s2);text-align:center;font-weight:700;font-size:13px;line-height:1.15;font-variant-numeric:tabular-nums}
-.up .d small{display:block;font-size:9.5px;font-weight:600;color:var(--muted)}
-.up .t{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.up .m{font-size:10.5px;color:var(--muted)}
+.cal{padding:2px 4px 6px}
+.cal-h{display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px}
+.cal-h b{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.cal-h button{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:var(--muted)}
+.cal-h svg{width:14px;height:14px}
+.cal-w,.cal-g{display:grid;grid-template-columns:repeat(7,1fr);text-align:center}
+.cal-w span{font-size:10.5px;font-weight:600;color:var(--faint);padding:2px 0}
+.cal-d{position:relative;aspect-ratio:1;margin:1px;display:grid;place-items:center;border-radius:50%;font-size:12px;font-variant-numeric:tabular-nums}
+.cal-d.past{color:var(--faint)}
+.cal-d.today{color:var(--acc-text);font-weight:700}
+.cal-d.has{box-shadow:inset 0 0 0 1.5px var(--acc-text);color:var(--fg);font-weight:600}
+.cal-d.sel{background:var(--acc-soft)}
+.cal-d[data-n]::after{content:attr(data-n);position:absolute;top:-3px;right:-3px;min-width:14px;height:14px;padding:0 3px;box-sizing:border-box;border-radius:999px;background:var(--btn-bg);color:var(--btn-fg);font-size:9px;font-weight:700;line-height:14px}
+.cal-x{display:block;margin:6px auto 0;padding:3px 10px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--acc-text)}
 .pcol{min-width:0;min-height:0;display:flex;flex-direction:column}
 .pcol>*{flex:1}
 .pmain{overflow:auto;padding:12px}
@@ -332,6 +349,10 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
         <div class="stat"><b id="stPosts">0</b><span>貼文</span></div>
         <div class="stat"><b id="stNotes">0</b><span>備忘錄</span></div>
       </div>
+      <div class="acct" id="acct" hidden>
+        <div class="acct-in" id="acctIn" hidden><span class="acct-dot"></span><span class="acct-mail" id="acctMail"></span><button class="btn" id="signOut">登出</button></div>
+        <form class="acct-out" id="acctOut"><input id="acctEmail" type="email" placeholder="Email" aria-label="Email" autocomplete="username" required><input id="acctPass" type="password" placeholder="密碼" aria-label="密碼" autocomplete="current-password" required><button class="btn acc">登入</button></form>
+      </div>
       <div class="sp-row"><span>外觀</span>
         <div class="seg modeseg" id="modeSeg" role="group" aria-label="外觀"><span class="ind" aria-hidden="true"></span>
           <button data-mode="dark" title="深色" aria-label="深色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></svg></button>
@@ -356,7 +377,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
             <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="搜尋" aria-label="搜尋貼文"></label>
             <button class="btn acc" id="newPost" title="新增貼文" aria-label="新增貼文"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
-          <div class="lbody"><div class="sec">即將發布</div><div id="upcoming"></div></div>
+          <div class="lbody"><div class="cal" id="cal"></div><div class="sec">未排日期</div><div id="undated"></div></div>
         </aside>
         <div class="pcol">
           <div class="panel pmain" id="gridView"><div class="grid" id="grid"></div></div>
@@ -459,6 +480,8 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script id="sbLib" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script id="pnConfig" src="config.js"></script>
 <script type="application/json" id="seedData">null</script>
 <script id="appScript">
 (() => {
@@ -482,7 +505,7 @@ document.documentElement.dataset.mode = (lsGet('pn-mode') || lsGet('ml-mode2')) 
 /* untouched copies of the page parts, taken before anything renders, used by 匯出 */
 const PRISTINE = (() => {
   const g = id => document.getElementById(id)?.outerHTML || '';
-  return { icons:g('appIcon') + g('appTouchIcon') + '\n', fonts:g('appFonts'), style:g('appStyle'), sky:g('sky'), app:g('app'), toast:g('toast'), script:document.currentScript?.outerHTML || g('appScript') };
+  return { lib:g('sbLib'), icons:g('appIcon') + g('appTouchIcon') + '\n', fonts:g('appFonts'), style:g('appStyle'), sky:g('sky'), app:g('app'), toast:g('toast'), script:document.currentScript?.outerHTML || g('appScript') };
 })();
 
 let toastT;
@@ -553,6 +576,8 @@ const ICON = {
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2h2"/></svg>',
   multi:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 3h11a2 2 0 012 2v11a2 2 0 01-2 2H8a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M4 7v12a2 2 0 002 2h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
   plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
+  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'
 };
 
@@ -585,17 +610,92 @@ async function readLegacy(){
              posts:(posts || []).filter(d => !/^【範例】/.test(d.caption || '')) };
   }catch(e){ return null; }
 }
-/* autosaves shortly after edits; flush() saves now. A dot on the save button means unsaved changes. */
-function makeSaver(key, getData, btn){
-  let t = null, dirty = false;
-  async function flush(){
-    clearTimeout(t);
-    const ok = await Store.set(key, getData());
-    dirty = !ok; btn.classList.toggle('dirty', !ok);
-    if(!ok) toast('瀏覽器儲存空間不足，請刪掉一些圖片再試');
+/* =====================================================================
+   cloud: Supabase (on when config.js has the keys and you are signed in)
+   ===================================================================== */
+const BUCKET = 'post-images';
+const noteToRow = n => ({ id:n.id, title:n.title, category:n.category, pinned:n.pinned, html:n.html, created_at:n.createdAt, updated_at:n.updatedAt });
+const noteFromRow = r => ({ id:r.id, title:r.title, category:r.category, pinned:r.pinned, html:r.html, createdAt:r.created_at, updatedAt:r.updated_at });
+const postToRow = d => ({ id:d.id, title:d.title, pinned:d.pinned, date:d.date, caption:d.caption, images:d.images.filter(i => i.path).map(i => ({ id:i.id, path:i.path })), created_at:d.createdAt, updated_at:d.updatedAt });
+const postFromRow = r => ({ id:r.id, title:r.title, pinned:r.pinned, date:r.date, caption:r.caption, images:(r.images || []).map(i => ({ id:i.id, path:i.path, src:'' })), createdAt:r.created_at, updatedAt:r.updated_at });
+const Cloud = {
+  sb:null, user:null, failed:false,
+  get on(){ return !!this.user && !this.failed; },
+  async init(){
+    const cfg = window.PN_CONFIG;
+    if(!cfg?.supabaseUrl || !cfg?.supabaseKey || !window.supabase) return;
+    this.sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey);
+    this.user = (await this.sb.auth.getSession()).data.session?.user || null;
+    this.sb.auth.onAuthStateChange((_, session) => {
+      const next = session?.user || null;
+      if((next?.id || null) === (this.user?.id || null)) return;
+      this.user = next; this.failed = false;
+      setTimeout(loadData);   // never await Supabase calls inside this callback
+    });
+  },
+  async load(){
+    const [n, p] = await Promise.all([this.sb.from('notes').select('*'), this.sb.from('posts').select('*')]);
+    if(n.error || p.error) throw n.error || p.error;
+    const posts = p.data.map(postFromRow);
+    const paths = posts.flatMap(d => d.images.map(i => i.path));
+    if(paths.length){
+      const { data } = await this.sb.storage.from(BUCKET).createSignedUrls(paths, 60 * 60 * 24 * 7);
+      const url = new Map((data || []).map(x => [x.path, x.signedUrl]));
+      posts.forEach(d => d.images.forEach(i => { i.src = url.get(i.path) || ''; }));
+    }
+    return { notes:n.data.map(noteFromRow), posts };
+  },
+  async uploadImages(post){   // new pictures are data: URLs until they have a file in Storage
+    for(const im of post.images){
+      if(im.path || !im.src.startsWith('data:')) continue;
+      const path = `${this.user.id}/${post.id}/${im.id}.jpg`;
+      const { error } = await this.sb.storage.from(BUCKET).upload(path, await (await fetch(im.src)).blob(), { contentType:'image/jpeg', upsert:true });
+      if(error) throw error;
+      im.path = path;
+    }
+  },
+  async push(table, rows, removedIds, removedFiles){
+    if(rows.length){ const { error } = await this.sb.from(table).upsert(rows); if(error) throw error; }
+    if(removedIds.length){ const { error } = await this.sb.from(table).delete().in('id', removedIds); if(error) throw error; }
+    if(removedFiles.length) await this.sb.storage.from(BUCKET).remove(removedFiles);
+  }
+};
+
+/* Saves shortly after edits; flush() saves now. Signed in: only changed rows go to Supabase. Otherwise: the whole list goes to this browser.
+   A dot on the save button means there is something not saved yet. */
+function makeSaver(kind, getList, btn){
+  const changed = new Set(), removed = new Set(), files = new Set();
+  let t = null, running = Promise.resolve(true);
+  const pending = () => changed.size + removed.size + files.size > 0;
+  const schedule = () => { btn.classList.add('dirty'); clearTimeout(t); t = setTimeout(flush, 900); };
+  async function run(){
+    let ok = true;
+    if(Cloud.on){
+      const ids = [...changed], del = [...removed], gone = [...files];
+      changed.clear(); removed.clear(); files.clear();
+      try{
+        const rows = getList().filter(x => ids.includes(x.id));
+        if(kind === 'posts') for(const d of rows) await Cloud.uploadImages(d);
+        await Cloud.push(kind, rows.map(kind === 'posts' ? postToRow : noteToRow), del, gone);
+      }catch(e){
+        ok = false; ids.forEach(i => changed.add(i)); del.forEach(i => removed.add(i)); gone.forEach(f => files.add(f));
+        toast('雲端同步失敗，稍後按儲存再試一次');
+      }
+    } else {
+      changed.clear(); removed.clear(); files.clear();
+      ok = await Store.set(kind, getList());
+      if(!ok) toast('瀏覽器儲存空間不足，請刪掉一些圖片再試');
+    }
+    btn.classList.toggle('dirty', !ok || pending());
     return ok;
   }
-  return { soon(){ dirty = true; btn.classList.add('dirty'); clearTimeout(t); t = setTimeout(flush, 900); }, flush, get dirty(){ return dirty; } };
+  function flush(){ clearTimeout(t); running = running.then(run, run); return running; }   // one save at a time
+  return {
+    soon(id){ if(id){ changed.add(id); removed.delete(id); } schedule(); },
+    removed(id, paths = []){ changed.delete(id); removed.add(id); paths.forEach(p => files.add(p)); schedule(); },
+    dropFiles(paths){ paths.forEach(p => files.add(p)); schedule(); },
+    flush, get dirty(){ return pending(); }
+  };
 }
 
 /* =====================================================================
@@ -621,15 +721,29 @@ function sortedPosts(){   // pinned first, then undated, then latest date first 
   return posts.slice().sort((a, b) =>
     (!!b.pinned - !!a.pinned) || (!a.date - !b.date) * -1 || (a.date < b.date ? 1 : a.date > b.date ? -1 : 0) || (b.createdAt - a.createdAt));
 }
+let calMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1), dayFilter = '';
+const postName = d => d.title.trim() || d.caption.trim().split('\n')[0] || '（沒有文案）';
+function renderSide(){   // month calendar with post dates circled, then the posts without a date
+  const y = calMonth.getFullYear(), m = calMonth.getMonth(), today = localISO(new Date());
+  const count = {}; posts.forEach(d => { if(d.date) count[d.date] = (count[d.date] || 0) + 1; });
+  const cells = Array.from({length:new Date(y, m, 1).getDay()}, () => '<span></span>');
+  for(let day = 1; day <= new Date(y, m + 1, 0).getDate(); day++){
+    const iso = localISO(new Date(y, m, day)), n = count[iso] || 0;
+    const cls = `cal-d${n ? ' has' : ''}${iso === today ? ' today' : iso < today ? ' past' : ''}${iso === dayFilter ? ' sel' : ''}`;
+    cells.push(n ? `<button class="${cls}" data-d="${iso}" ${n > 1 ? `data-n="${n}"` : ''} aria-label="${dateLabel(iso)} ${n} 篇貼文">${day}</button>` : `<span class="${cls}">${day}</span>`);
+  }
+  $('#cal').innerHTML = `<div class="cal-h"><button data-nav="-1" aria-label="上個月">${ICON.prev}</button><b>${y} 年 ${m + 1} 月</b><button data-nav="1" aria-label="下個月">${ICON.next}</button></div>
+    <div class="cal-w">${WEEK.map(w => `<span>${w}</span>`).join('')}</div><div class="cal-g">${cells.join('')}</div>
+    ${dayFilter ? `<button class="cal-x" data-clear>只看 ${dateLabel(dayFilter)}・顯示全部</button>` : ''}`;
+  const undated = posts.filter(d => !d.date).sort((a, b) => b.createdAt - a.createdAt);
+  $('#undated').innerHTML = undated.length ? undated.map(d => `<button class="nitem ${d === cur ? 'on' : ''}" data-id="${d.id}"><b>${d.pinned ? ICON.pin : ''}${esc(postName(d))}</b><span><em>${fmtShort(d.createdAt)}</em>${esc(d.caption.trim().split('\n')[d.title.trim() ? 0 : 1] || '沒有文案')}</span></button>`).join('')
+    : '<div class="empty-note">每篇貼文都排好日期了</div>';
+}
 function renderPosts(){
   const today = localISO(new Date());
-  const up = posts.filter(d => d.date && d.date >= today).sort((a, b) => a.date < b.date ? -1 : 1).slice(0, 8);
-  $('#upcoming').innerHTML = up.length ? up.map(d => { const dt = parseDate(d.date);
-    return `<button class="up" data-id="${d.id}"><span class="d">${dt.getDate()}<small>${dt.getMonth()+1}月</small></span><span class="t">${esc(d.title.trim() || d.caption.trim().split('\n')[0] || '（沒有文案）')}</span><span class="m">${dateLabel(d.date)}・${relDay(d.date)}</span></button>`; }).join('')
-    : '<div class="empty-note">還沒有排定日期的貼文</div>';
-
+  renderSide();
   const q = $('#psearch').value.trim().toLowerCase();
-  const list = sortedPosts().filter(d => !q || (d.title + ' ' + d.caption).toLowerCase().includes(q));
+  const list = sortedPosts().filter(d => (!q || (d.title + ' ' + d.caption).toLowerCase().includes(q)) && (!dayFilter || d.date === dayFilter));
   $('#grid').innerHTML = list.length ? list.map(d => {
     const cover = d.images[0] ? `<img src="${d.images[0].src}" alt="" loading="lazy">`
       : `<div class="txtcover ${d.caption.trim() ? '' : 'blank'}">${esc(d.caption.trim().slice(0, 90) || '空白貼文')}</div>`;
@@ -637,11 +751,22 @@ function renderPosts(){
       <div class="ctop">${d.title.trim() ? `<span class="ctitle">${esc(d.title)}</span>` : ''}${d.images.length > 1 ? `<span class="chip">${ICON.multi}${d.images.length}</span>` : ''}${d.pinned ? `<span class="chip pin" title="已釘選">${ICON.pin}</span>` : ''}</div>
       <div class="cfoot"><span class="${!d.date ? 'nodate' : d.date < today ? 'past' : ''}">${d.date ? dateLabel(d.date) : '未排日期'}</span>
       <button class="ccopy" data-copy="${d.id}" title="複製文案" aria-label="複製文案">${ICON.copy}</button></div></div>`;
-  }).join('') : `<div class="empty-grid">${q ? '找不到符合的貼文' : '還沒有貼文，按左上角的 + 新增'}</div>`;
+  }).join('') : `<div class="empty-grid">${q || dayFilter ? '找不到符合的貼文' : '還沒有貼文，按左上角的 + 新增'}</div>`;
   renderSettings();
 }
 $('#psearch').addEventListener('input', () => { if(cur) closePost(); else renderPosts(); });
-$('#upcoming').addEventListener('click', e => { const u = e.target.closest('.up'); if(u) openPost(u.dataset.id); });
+$('#cal').addEventListener('click', e => {
+  const nav = e.target.closest('[data-nav]'), day = e.target.closest('[data-d]');
+  if(nav){ calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + +nav.dataset.nav, 1); renderSide(); return; }
+  if(e.target.closest('[data-clear]')) dayFilter = '';
+  else if(day){
+    const same = posts.filter(d => d.date === day.dataset.d);
+    if(same.length === 1 && dayFilter !== day.dataset.d){ dayFilter = ''; openPost(same[0].id); return; }   // one post that day: open it
+    dayFilter = dayFilter === day.dataset.d ? '' : day.dataset.d;                                          // several: show only that day
+  } else return;
+  if(cur) closePost(); else renderPosts();
+});
+$('#undated').addEventListener('click', e => { const b = e.target.closest('.nitem'); if(b) openPost(b.dataset.id); });
 $('#grid').addEventListener('click', e => {
   const cp = e.target.closest('[data-copy]');
   if(cp){ copyText(posts.find(d => d.id === cp.dataset.copy)?.caption); return; }
@@ -650,7 +775,7 @@ $('#grid').addEventListener('click', e => {
 $('#grid').addEventListener('keydown', e => { if((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card')){ e.preventDefault(); openPost(e.target.dataset.id); } });
 $('#newPost').addEventListener('click', () => {
   const now = Date.now(), d = { id:uid(), title:'', pinned:false, date:'', images:[], caption:'', createdAt:now, updatedAt:now };
-  posts.push(d); postSaver.soon(); openPost(d.id); $('#ptitle').focus();
+  posts.push(d); postSaver.soon(d.id); openPost(d.id); $('#ptitle').focus();
 });
 
 function openPost(id){
@@ -659,19 +784,19 @@ function openPost(id){
   $('#pinPost').classList.toggle('on', !!cur.pinned); resetDelPost();
   $('#gridView').hidden = true; $('#postEdit').hidden = false; $('#posts').classList.add('editing');
   $('#postEdit').scrollTop = 0; animIn($('#postEdit'));
-  renderMedia(); renderPostMeta();
+  renderMedia(); renderPostMeta(); renderSide();
 }
 function closePost(){
   cur = null; if(postSaver.dirty) postSaver.flush();
   $('#postEdit').hidden = true; $('#gridView').hidden = false; $('#posts').classList.remove('editing');
   animIn($('#gridView')); renderPosts();
 }
-function touchPost(){ cur.updatedAt = Date.now(); postSaver.soon(); }
+function touchPost(){ cur.updatedAt = Date.now(); postSaver.soon(cur.id); }
 $('#backGrid').addEventListener('click', closePost);
 $('#savePost').addEventListener('click', async () => { if(await postSaver.flush()) toast('貼文已儲存'); });
-$('#ptitle').addEventListener('input', e => { cur.title = e.target.value; touchPost(); });
+$('#ptitle').addEventListener('input', e => { cur.title = e.target.value; touchPost(); if(!cur.date) renderSide(); });
 $('#ptitle').addEventListener('keydown', e => { if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); $('#caption').focus(); } });
-$('#pdate').addEventListener('change', e => { cur.date = e.target.value; touchPost(); renderPostMeta(); renderPosts(); });
+$('#pdate').addEventListener('change', e => { cur.date = e.target.value; if(cur.date) calMonth = new Date(parseDate(cur.date).getFullYear(), parseDate(cur.date).getMonth(), 1); touchPost(); renderPostMeta(); renderPosts(); });
 $('#clearDate').addEventListener('click', () => { cur.date = ''; $('#pdate').value = ''; touchPost(); renderPostMeta(); renderPosts(); });
 $('#caption').addEventListener('input', e => { cur.caption = e.target.value; touchPost(); renderPostMeta(); });
 $('#copyCap').addEventListener('click', () => copyText(cur.caption));
@@ -680,6 +805,7 @@ $('#pinPost').addEventListener('click', () => {
   toast(cur.pinned ? '已釘選到最前面' : '已取消釘選');
 });
 const resetDelPost = armable($('#delPost'), '再按一次刪除這篇貼文', () => !!cur, () => {
+  postSaver.removed(cur.id, cur.images.map(i => i.path).filter(Boolean));
   posts = posts.filter(d => d !== cur); postSaver.flush(); toast('貼文已刪除'); closePost();
 });
 
@@ -723,7 +849,8 @@ let dg = null;   // drag state: a mouse drags after 5px, a finger needs a 330ms 
 thumbs.addEventListener('contextmenu', e => { if(e.target.closest('.thumb')) e.preventDefault(); });
 thumbs.addEventListener('click', e => {
   const x = e.target.closest('[data-x]'); if(!x) return;
-  cur.images = cur.images.filter(m => m.id !== x.dataset.x); touchPost(); renderMedia();
+  const gone = cur.images.find(m => m.id === x.dataset.x); if(gone?.path) postSaver.dropFiles([gone.path]);
+  cur.images = cur.images.filter(m => m !== gone); touchPost(); renderMedia();
 });
 thumbs.addEventListener('pointerdown', e => {
   const t = e.target.closest('.thumb'); if(!t || e.target.closest('.tx') || e.button > 0) return;
@@ -814,7 +941,7 @@ function openNote(id, focusTitle){
   curNote = notes.find(n => n.id === id) || null;
   editor.innerHTML = curNote ? curNote.html : '';
   editor.contentEditable = curNote ? 'true' : 'false';
-  if(curNote){ cleanColors(false); if(editor.innerHTML !== curNote.html){ curNote.html = editor.innerHTML; noteSaver.soon(); } }
+  if(curNote){ cleanColors(false); if(editor.innerHTML !== curNote.html){ curNote.html = editor.innerHTML; noteSaver.soon(curNote.id); } }
   $('#ntitle').value = curNote?.title || ''; $('#ncat').value = curNote?.category || '';
   $('#ntitle').disabled = $('#ncat').disabled = !curNote;
   $('#pinNote').classList.toggle('on', !!curNote?.pinned);
@@ -827,7 +954,7 @@ function touchNote(fromEditor = true){
   if(!curNote) return;
   if(fromEditor){ ensureBody(); curNote.html = editor.innerHTML; }
   curNote.updatedAt = Date.now(); $('#noteMeta').textContent = fmtFull(curNote.updatedAt);
-  noteSaver.soon(); renderNoteListSoon(); placeTblBar();
+  noteSaver.soon(curNote.id); renderNoteListSoon(); placeTblBar();
 }
 editor.addEventListener('input', () => touchNote());
 $('#ntitle').addEventListener('input', e => { curNote.title = e.target.value; touchNote(false); });
@@ -840,11 +967,12 @@ $('#pinNote').addEventListener('click', () => {
 });
 $('#newNote').addEventListener('click', () => {
   const now = Date.now(), n = { id:uid(), title:'', category:'', pinned:false, html:'<p><br></p>', createdAt:now, updatedAt:now };
-  notes.unshift(n); noteSaver.soon(); openNote(n.id, true);
+  notes.unshift(n); noteSaver.soon(n.id); openNote(n.id, true);
 });
 $('#saveNote').addEventListener('click', async () => { if(curNote) curNote.html = editor.innerHTML; if(await noteSaver.flush()) toast('備忘錄已儲存'); });
 $('#backList').addEventListener('click', () => $('#notes').classList.remove('show-editor'));
 const resetDelNote = armable($('#delNote'), '再按一次刪除這則備忘錄', () => !!curNote, () => {
+  noteSaver.removed(curNote.id);
   notes = notes.filter(n => n !== curNote); noteSaver.flush(); toast('已刪除備忘錄');
   const next = notes.slice().sort(byPinThenRecent)[0];
   openNote(next?.id); if(!next) $('#notes').classList.remove('show-editor');
@@ -1169,7 +1297,7 @@ const setPop = $('#setPop');
 function renderSettings(){ $('#stPosts').textContent = posts.length; $('#stNotes').textContent = notes.length; }
 function toggleSettings(open){
   setPop.hidden = !open; $('#setBtn').setAttribute('aria-expanded', open); $('#setBtn').classList.toggle('on', open);
-  if(open) requestAnimationFrame(() => placeInd($('#modeSeg'), true)); else resetClear();
+  if(open){ renderAccount(); requestAnimationFrame(() => placeInd($('#modeSeg'), true)); } else resetClear();
 }
 $('#setBtn').addEventListener('click', () => toggleSettings(setPop.hidden));
 document.addEventListener('mousedown', e => { if(!setPop.hidden && !e.target.closest('#setPop,#setBtn')) toggleSettings(false); });
@@ -1201,9 +1329,12 @@ function rerenderAll(){
   renderPosts();
 }
 async function replaceAll(n, d, msg){
-  notes = n; posts = d;
-  await Promise.all([Store.set('notes', notes), Store.set('posts', posts)]);
-  rerenderAll(); toast(msg); toggleSettings(false);
+  notes.forEach(x => noteSaver.removed(x.id));
+  posts.forEach(x => postSaver.removed(x.id, x.images.map(i => i.path).filter(Boolean)));
+  notes = n; posts = d; rerenderAll();
+  notes.forEach(x => noteSaver.soon(x.id)); posts.forEach(x => postSaver.soon(x.id));
+  await Promise.all([noteSaver.flush(), postSaver.flush()]);
+  toast(msg); toggleSettings(false);
 }
 $('#spImport').addEventListener('change', async e => {
   const f = e.target.files[0]; e.target.value = ''; if(!f) return;
@@ -1212,15 +1343,17 @@ $('#spImport').addEventListener('change', async e => {
   if(data) replaceAll(data.notes, data.posts, `已匯入 ${data.posts.length} 篇貼文、${data.notes.length} 則備忘錄`);
   else toast('這個檔案裡沒有可讀取的資料');
 });
-function buildExport(){
-  const json = JSON.stringify({ notes, posts, exportedAt:new Date().toISOString() }).replace(/<\//g, '<\\/');
+const toDataURL = src => src.startsWith('data:') ? src : fetch(src).then(r => r.blob()).then(b => new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(b); })).catch(() => '');
+async function buildExport(){
+  const out = await Promise.all(posts.map(async d => ({ ...d, images:(await Promise.all(d.images.map(async i => ({ id:i.id, src:await toDataURL(i.src) })))).filter(i => i.src) })));
+  const json = JSON.stringify({ notes, posts:out, exportedAt:new Date().toISOString() }).replace(/<\//g, '<\\/');
   return '<!DOCTYPE html>\n<html lang="zh-Hant">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<title>pluddieNotebook</title>\n' + PRISTINE.icons
     + '<style>body{margin:0}img{max-width:100%}</style>\n' + PRISTINE.fonts + '\n' + PRISTINE.style + '\n</head>\n<body>\n'
-    + PRISTINE.sky + '\n' + PRISTINE.app + '\n' + PRISTINE.toast + '\n<script type="application/json" id="seedData">' + json + '</scr' + 'ipt>\n' + PRISTINE.script + '\n</body>\n</html>\n';
+    + PRISTINE.sky + '\n' + PRISTINE.app + '\n' + PRISTINE.toast + '\n' + PRISTINE.lib + '\n<script type="application/json" id="seedData">' + json + '</scr' + 'ipt>\n' + PRISTINE.script + '\n</body>\n</html>\n';
 }
 $('#spExport').addEventListener('click', async () => {
   if(curNote) curNote.html = editor.innerHTML;
-  const blob = new Blob([buildExport()], {type:'text/html'}), name = `pluddieNotebook-${localISO(new Date())}.html`;
+  const blob = new Blob([await buildExport()], {type:'text/html'}), name = `pluddieNotebook-${localISO(new Date())}.html`;
   const dl = window.claude?.use ? await window.claude.use('downloads').catch(() => null) : null;   // inside claude.ai the save goes through the viewer
   try{
     if(dl) await dl.save({ filename:name, data:blob });
@@ -1229,6 +1362,25 @@ $('#spExport').addEventListener('click', async () => {
   }catch(err){ if(err?.code !== 'declined') toast('這裡沒辦法下載檔案'); }
   toggleSettings(false);
 });
+function renderAccount(){
+  $('#acct').hidden = !Cloud.sb;
+  $('#acctIn').hidden = !Cloud.user; $('#acctOut').hidden = !!Cloud.user;
+  const fixed = window.PN_CONFIG?.email;   // config.js may name the account, then only the password is asked
+  if(fixed){ $('#acctEmail').value = fixed; $('#acctEmail').hidden = true; }
+  if(Cloud.user) $('#acctMail').textContent = Cloud.failed ? '連不上雲端' : `已同步・${Cloud.user.email}`;
+}
+$('#acctOut').addEventListener('submit', async e => {
+  e.preventDefault();
+  const { error } = await Cloud.sb.auth.signInWithPassword({ email:$('#acctEmail').value.trim(), password:$('#acctPass').value });
+  if(error){ toast('Email 或密碼不正確'); return; }
+  $('#acctPass').value = ''; toggleSettings(false);
+});
+$('#signOut').addEventListener('click', async () => {
+  if(curNote) curNote.html = editor.innerHTML;
+  await Promise.all([noteSaver.flush(), postSaver.flush()]);
+  await Cloud.sb.auth.signOut(); toggleSettings(false);
+});
+
 const resetClear = armable($('#spClear'), '再按一次會刪除所有資料，無法復原', () => true, () => replaceAll([], [], '暫存已清除'));
 
 window.addEventListener('beforeunload', () => { if(noteSaver.dirty) noteSaver.flush(); if(postSaver.dirty) postSaver.flush(); });
@@ -1267,17 +1419,37 @@ window.addEventListener('resize', () => {
 /* =====================================================================
    boot
    ===================================================================== */
+async function loadLocal(){
+  let n = await Store.get('notes'), p = await Store.get('posts');
+  if(!Array.isArray(n) && !Array.isArray(p)){   // nothing stored under the new name yet: bring over old data, or data embedded in an exported file
+    const old = await readLegacy() || readSeed($('#seedData').textContent);
+    if(old){ n = old.notes; p = old.posts; Store.set('notes', n); Store.set('posts', p); }
+  }
+  return { notes:Array.isArray(n) ? n : [], posts:Array.isArray(p) ? p : [] };
+}
+async function loadData(){
+  const local = await loadLocal();
+  notes = local.notes; posts = local.posts;
+  if(Cloud.user){
+    try{
+      const c = await Cloud.load();
+      if(c.notes.length || c.posts.length){ notes = c.notes; posts = c.posts; }
+      else if(notes.length || posts.length){   // first sign-in: move what this device has into the cloud
+        rerenderAll(); notes.forEach(x => noteSaver.soon(x.id)); posts.forEach(x => postSaver.soon(x.id));
+        await Promise.all([noteSaver.flush(), postSaver.flush()]);
+        toast('已把這台裝置的資料上傳到雲端');
+      }
+    }catch(e){ Cloud.failed = true; toast('連不上雲端，先顯示這台裝置的資料'); }
+  }
+  rerenderAll(); renderAccount();
+}
+
 (async function boot(){
   setMode(document.documentElement.dataset.mode, true);
   if(!reduced) requestAnimationFrame(loop);
   await Store.init();
-  notes = await Store.get('notes'); posts = await Store.get('posts');
-  if(!Array.isArray(notes) && !Array.isArray(posts)){   // nothing stored under the new name yet: bring over old data, or data embedded in an exported file
-    const old = await readLegacy() || readSeed($('#seedData').textContent);
-    if(old){ notes = old.notes; posts = old.posts; Store.set('notes', notes); Store.set('posts', posts); }
-  }
-  notes = Array.isArray(notes) ? notes : []; posts = Array.isArray(posts) ? posts : [];
-  rerenderAll();
+  try{ await Cloud.init(); }catch(e){ Cloud.sb = null; }
+  await loadData();
   showView(location.hash === '#notes' ? 'notes' : 'posts');
   requestAnimationFrame(() => $$('.seg').forEach(b => placeInd(b, true)));
 })();

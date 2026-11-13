@@ -236,7 +236,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 #editor .lg{font-size:18px}
 #editor .sm{font-size:13px}
 #editor .gal{display:flex;gap:8px;overflow-x:auto;margin:.5em 0;padding-bottom:6px;scroll-snap-type:x proximity;user-select:none;-webkit-user-select:none}
-#editor .gal img{height:180px;width:auto;max-width:none;flex:none;margin:0;object-fit:cover;scroll-snap-align:start;cursor:zoom-in;background:var(--s2)}
+#editor .gal img{height:180px;width:auto;max-width:none;flex:none;margin:0;object-fit:cover;scroll-snap-align:start;cursor:grab;background:var(--s2);-webkit-user-drag:none;-webkit-touch-callout:none}
 @media (max-width:760px){#editor .gal img{height:140px}}
 #editor blockquote{margin:.2em 0;padding:.35em .9em;background:var(--s2);border-radius:10px}
 #editor hr{border:0;height:2px;border-radius:2px;background:var(--s3);margin:.6em 0}
@@ -280,6 +280,13 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .gnav:hover{background:var(--hover-acc);color:var(--hover-acc-fg)}
 .mbar{position:absolute;z-index:17;display:flex;gap:2px;padding:3px;background:var(--float);border-radius:11px;box-shadow:var(--shadow);white-space:nowrap}
 .mbar .tb{height:28px;font-size:12px}
+.lbar .lurl{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 8px;font-size:12px;color:var(--acc-text);align-self:center;text-decoration:underline}
+.lpop{width:260px;display:flex;flex-direction:column;gap:8px}
+.lf{display:flex;flex-direction:column;gap:4px;font-size:11.5px;font-weight:600;color:var(--muted)}
+.lf input{border:0;background:var(--s2);color:var(--fg);border-radius:8px;padding:8px 10px;font:13px var(--font);outline:none}
+.lf input:focus{box-shadow:inset 0 0 0 1.5px var(--acc-text)}
+.lacts{display:flex;justify-content:flex-end;gap:6px}
+#editor .gal img.dragging{opacity:.3}
 .mbar .dz{color:var(--danger)}
 .rzh-box{position:absolute;inset:0 auto auto 0;width:0;height:0;z-index:15}
 .rzh{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;display:grid;place-items:center;touch-action:none}
@@ -421,7 +428,8 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .meta-line{font-size:12px}
   .sp-row{font-size:14px}
   .sp-act{font-size:13.5px}
-  .acct-out input{font-size:16px;padding:10px 12px}
+  .acct-out input,.lf input{font-size:16px;padding:10px 12px}
+  .lpop{width:min(300px,calc(100vw - 40px))}
   .acct-mail{font-size:13.5px}
   .btn{padding:9px 12px}
   .opt{padding:9px 12px 9px 10px;font-size:15px}
@@ -604,13 +612,11 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               </div>
               <span class="sep"></span>
               <div class="tgrp">
-              <button class="tb" id="imgBtn" title="插入圖片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg></button>
-              </div>
-              <span class="sep"></span>
-              <div class="tgrp">
+              <button class="tb" data-pop="link" title="連結"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 006.4 0l3-3a4.5 4.5 0 00-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 00-6.4 0l-3 3a4.5 4.5 0 006.4 6.4l1.2-1.2"/></svg></button>
               <button class="tb" data-block="blockquote" title="引言"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 7H6a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6zM20 7h-4a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6z"/></svg></button>
               <button class="tb" data-cmd="insertHorizontalRule" title="分隔線"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12h18"/></svg></button>
               <button class="tb" data-pop="table" title="插入表格"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9.5h18M3 15h18M9 4v16M15 4v16"/></svg></button>
+              <button class="tb" id="imgBtn" title="插入圖片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg></button>
               </div>
               </div>
               <button class="rbtn fsbtn ok" id="noteDone" title="完成" aria-label="完成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
@@ -618,6 +624,11 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div class="pop" id="pop-hilite" hidden><div class="swatches" data-kind="hiliteColor"></div></div>
               <div class="pop" id="pop-size" hidden><div class="opts" data-kind="size"></div></div>
               <div class="pop" id="pop-lh" hidden><div class="opts" data-kind="lh"></div></div>
+              <div class="pop lpop" id="pop-link" hidden>
+                <label class="lf"><span>顯示文字</span><input id="linkText" type="text" autocomplete="off" placeholder="不填就顯示網址"></label>
+                <label class="lf"><span>網址</span><input id="linkUrl" type="url" inputmode="url" autocomplete="off" placeholder="https://"></label>
+                <div class="lacts"><button class="btn" id="linkDel">移除連結</button><button class="btn acc" id="linkOk">確定</button></div>
+              </div>
               <div class="pop" id="pop-table" hidden><div class="tpick" id="tpick"></div><div class="tpick-l" id="tpickL">選擇表格大小</div></div>
             </div>
             <div class="escroll" id="escroll">
@@ -627,6 +638,7 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div class="imgbox" id="imgBox" hidden><i class="ih" id="imgHandle"></i></div>
               <div class="mlayer" id="mlayer"></div>
               <div class="mbar" id="mbar" hidden></div>
+              <div class="mbar lbar" id="lbar" hidden></div>
             </div>
             <div class="tblbar" id="tblbar" hidden>
               <span class="gl">表格</span>
@@ -1166,7 +1178,7 @@ function openNote(id, focusTitle){
   curNote = notes.find(n => n.id === id) || null;
   editor.innerHTML = curNote ? curNote.html : '';
   editor.contentEditable = curNote ? 'true' : 'false';
-  if(curNote){ cleanColors(false); migrateSizes(); if(editor.innerHTML !== curNote.html){ curNote.html = editor.innerHTML; noteSaver.soon(curNote.id); } }
+  if(curNote){ tidyColors(editor); migrateSizes(); if(editor.innerHTML !== curNote.html){ curNote.html = editor.innerHTML; noteSaver.soon(curNote.id); } }
   $('#ntitle').value = curNote?.title || ''; $('#ncat').value = curNote?.category || '';
   $('#ntitle').disabled = $('#ncat').disabled = !curNote;
   $('#pinNote').classList.toggle('on', !!curNote?.pinned);
@@ -1187,6 +1199,7 @@ editor.addEventListener('beforeinput', e => {
   if(e.inputType === 'historyRedo'){ e.preventDefault(); redo(); return; }
   snap(e.inputType === 'insertText' || e.inputType === 'insertCompositionText' ? 'type' : e.inputType.startsWith('delete') ? 'del' : 'op');
   if(sel) selectImg(null);
+  if(barLink) hideLinkBar();
 });
 $('#ntitle').addEventListener('input', e => { curNote.title = e.target.value; touchNote(false); });
 $('#ntitle').addEventListener('keydown', e => { if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); editor.focus(); caretIn(editor.firstElementChild || editor); } });
@@ -1392,32 +1405,98 @@ editor.addEventListener('keydown', e => {
   touchNote(); updateState();
 });
 
-/* inline text colours that only read on one background (near-white / near-black, or the "remove colour" marker) are dropped */
-function lum(c){ const m = c.match(/\d+(\.\d+)?/g); if(!m || m.length < 3) return null; const [r, g, b] = m.map(Number); return (0.2126*r + 0.7152*g + 0.0722*b) / 255; }
-function cleanColors(markerOnly){
-  $$('[style]', editor).forEach(el => {
-    const c = el.style.color; if(!c) return;
-    const L = lum(c);
-    if(/rgb\(1, 2, 3\)/.test(c) || (!markerOnly && L != null && (L > .7 || L < .12))){ el.style.removeProperty('color'); if(!el.getAttribute('style')) el.removeAttribute('style'); }
+/* mid-tone colours that stay readable on both the dark and the light background */
+const COLORS = {
+  foreColor:['#e0782f','#d9a21b','#3f9a5b','#2f8f9d','#3b7fe0','#7a5be0','#d0478f','#d9474f','#9a7b5f','#8a8a93','none'],
+  hiliteColor:['rgba(245,162,93,.35)','rgba(240,207,80,.38)','rgba(94,214,199,.32)','rgba(130,180,255,.32)','rgba(208,71,143,.25)','none']
+};
+/* colours: only the swatches this editor offers survive (pasted colours, near-white / near-black text, the "remove" marker go) */
+const swatch = (prop, v) => { const d = document.createElement('i'); d.style[prop] = v; return d.style[prop]; };
+let palette = null;
+const getPalette = () => palette ||= { color:new Set(COLORS.foreColor.map(c => swatch('color', c)).filter(Boolean)), backgroundColor:new Set(COLORS.hiliteColor.map(c => swatch('backgroundColor', c)).filter(Boolean)) };
+function tidyColors(root){
+  const P = getPalette();
+  root.querySelectorAll('font').forEach(f => {
+    const c = swatch('color', f.getAttribute('color') || '');
+    if(c && P.color.has(c)){ const sp = document.createElement('span'); sp.style.color = c; sp.append(...f.childNodes); f.replaceWith(sp); } else f.replaceWith(...f.childNodes);
+  });
+  root.querySelectorAll('[style]').forEach(el => {
+    ['color', 'backgroundColor'].forEach(k => { if(el.style[k] && !P[k].has(el.style[k])) el.style[k] = ''; });
+    if(el.nodeName === 'SPAN') [...el.style].forEach(p => { if(p !== 'color' && p !== 'background-color') el.style.removeProperty(p); });   // a span only ever carries a colour
+    if(!el.getAttribute('style')){ el.removeAttribute('style'); if(el.nodeName === 'SPAN') el.replaceWith(...el.childNodes); }
+  });
+  root.querySelectorAll('span:not([style])').forEach(x => x.replaceWith(...x.childNodes));
+}
+
+/* paste: anything this editor can't make is turned into something it can, or dropped */
+const KEEP_CLASS = ['lg', 'sm', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
+const RENAME = { H3:'h2', H4:'h2', H5:'h2', H6:'h2', PRE:'p', DT:'p', DD:'p', ADDRESS:'p', STRONG:'b', EM:'i', DEL:'s', STRIKE:'s', INS:'u' };
+const ALLOWED = /^(P|DIV|H1|H2|BR|B|I|U|S|A|UL|OL|LI|BLOCKQUOTE|HR|IMG|TABLE|THEAD|TBODY|TFOOT|TR|TD|TH|COLGROUP|COL|SPAN)$/;
+function cleanEl(el){
+  let tag = RENAME[el.nodeName] || el.nodeName.toLowerCase();
+  if(el.nodeName === 'DIV' && !el.classList.contains('gal') && !el.classList.contains('tbl-wrap')) tag = el.querySelector('p,div,h1,h2,h3,ul,ol,table,blockquote,hr') ? '' : 'p';   // lines from other apps are <div>s
+  if(!tag || !ALLOWED.test(tag.toUpperCase())){ el.replaceWith(...el.childNodes); return; }
+  if(tag.toUpperCase() !== el.nodeName){ const n = document.createElement(tag); [...el.attributes].forEach(x => n.setAttribute(x.name, x.value)); n.append(...el.childNodes); el.replaceWith(n); el = n; }
+  const T = el.nodeName, st = el.style, keep = {};
+  if(/^(P|H1|H2|LI)$/.test(T)){ if(/center|right/.test(st.textAlign)) keep.textAlign = st.textAlign; if(/^[\d.]+$/.test(st.lineHeight)) keep.lineHeight = st.lineHeight; }
+  if(T === 'SPAN'){ if(st.color) keep.color = st.color; if(st.backgroundColor) keep.backgroundColor = st.backgroundColor; }   // already limited to the swatches
+  if(/^(COL|TABLE|IMG)$/.test(T) && /px$/.test(st.width)) keep.width = st.width;
+  const cls = [...el.classList].filter(c => KEEP_CLASS.includes(c)), href = el.getAttribute('href') || '', src = el.getAttribute('src') || '', cs = el.colSpan, rs = el.rowSpan;
+  [...el.attributes].forEach(x => el.removeAttribute(x.name));
+  Object.assign(el.style, keep);
+  if(cls.length) el.className = cls.join(' ');
+  if(T === 'A'){ if(/^(https?:|mailto:|tel:)/i.test(href)) el.setAttribute('href', href); else return void el.replaceWith(...el.childNodes); }
+  if(T === 'IMG'){ if(!/^(data:image|https?:)/.test(src)) return void el.remove(); el.src = src; el.alt = ''; }
+  if((T === 'TD' || T === 'TH') && cs > 1) el.colSpan = cs;
+  if((T === 'TD' || T === 'TH') && rs > 1) el.rowSpan = rs;
+  if(T === 'SPAN' && !el.getAttribute('style')) el.replaceWith(...el.childNodes);
+  else if(el.classList.contains('gal')) el.contentEditable = 'false';
+}
+/* any table becomes this editor's table: column widths, header row, a scroll wrapper, one line of text per cell line */
+function cellHtml(c){
+  const parts = []; let run = '';
+  const push = h => { h = h.replace(/^(<br>)+|(<br>)+$/g, ''); if(h.replace(/<br>/g, '').trim() || h.includes('<img')) parts.push(h); };
+  c.childNodes.forEach(n => {
+    if(n.nodeType === 1 && /^(P|DIV|H1|H2|LI|BLOCKQUOTE)$/.test(n.nodeName)){ push(run); run = ''; push(n.innerHTML); }
+    else if(n.nodeType === 1 && /^(UL|OL)$/.test(n.nodeName)){ push(run); run = ''; [...n.children].forEach(li => push(li.innerHTML)); }
+    else run += n.nodeType === 1 ? n.outerHTML : esc(n.textContent);
+  });
+  push(run);
+  return parts.join('<br>') || '<br>';
+}
+function adoptTables(root){
+  root.querySelectorAll('table').forEach(t => {
+    const wrap0 = t.parentElement?.classList.contains('tbl-wrap') ? t.parentElement : t;
+    const widths = $$('col', t).map(c => parseFloat(c.style.width)).filter(Boolean);
+    const nt = document.createElement('table'), tb = document.createElement('tbody');
+    if(t.querySelector('th') || t.tHead || t.classList.contains('has-header')) nt.className = 'has-header';
+    [...t.rows].forEach(r => {
+      const tr = document.createElement('tr');
+      [...r.cells].forEach(c => { const td = document.createElement('td'); if(c.colSpan > 1) td.colSpan = c.colSpan; if(c.rowSpan > 1) td.rowSpan = c.rowSpan; td.innerHTML = cellHtml(c); tr.append(td); });
+      if(tr.cells.length) tb.append(tr);
+    });
+    nt.append(tb);
+    const n = tableMap(nt).grid.reduce((m, r) => Math.max(m, r.length), 0);
+    if(!n) return void wrap0.remove();
+    const w = widths.length === n ? widths : Array(n).fill(Math.max(90, Math.min(200, Math.floor(620 / n))));
+    nt.prepend(Object.assign(document.createElement('colgroup'), { innerHTML:w.map(x => `<col style="width:${x}px">`).join('') }));
+    nt.style.width = w.reduce((a, b) => a + b, 0) + 'px';
+    const wrap = document.createElement('div'); wrap.className = 'tbl-wrap'; wrap.append(nt); wrap0.replaceWith(wrap);
   });
 }
-/* paste: keep the structure, drop colours / fonts / sizes from other apps */
+function adoptHtml(html){
+  const tmp = document.createElement('div'); tmp.innerHTML = html;
+  tmp.querySelectorAll('script,style,meta,link,title,svg,iframe,embed,video,audio,canvas,input,button,select,textarea,form,noscript').forEach(n => n.remove());
+  tidyColors(tmp);
+  [...tmp.querySelectorAll('*')].reverse().forEach(cleanEl);   // children first, so unwrapping never skips a node
+  adoptTables(tmp);
+  tmp.querySelectorAll('blockquote').forEach(q => { if(!isQuoteBox(q)){ const p = document.createElement('p'); p.append(...q.childNodes); q.append(p); } });   // a quote is a box of lines
+  return tmp;
+}
 editor.addEventListener('paste', e => {
   const html = e.clipboardData?.getData('text/html'); if(!html) return;
   e.preventDefault();
-  const tmp = document.createElement('div'); tmp.innerHTML = html;
-  tmp.querySelectorAll('script,style,meta,link,title').forEach(n => n.remove());
-  const KEEP = ['lg', 'sm', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
-  tmp.querySelectorAll('*').forEach(el => {
-    const align = el.style?.textAlign, lh = el.style?.lineHeight, w = el.nodeName === 'COL' || el.nodeName === 'IMG' || el.nodeName === 'TABLE' ? el.style.width : '';
-    const keep = [...el.classList].filter(c => KEEP.includes(c));
-    ['class', 'id', 'style', 'color', 'face', 'size', 'contenteditable'].forEach(a => el.removeAttribute(a));
-    if(keep.length) el.className = keep.join(' ');
-    if(TEXT_BLOCK.test(el.nodeName)){ if(align) el.style.textAlign = align; if(lh) el.style.lineHeight = lh; }
-    if(w) el.style.width = w;
-    if(el.classList.contains('gal')) el.contentEditable = 'false';
-    if(el.nodeName === 'FONT' || el.nodeName === 'SPAN') el.replaceWith(...el.childNodes);
-  });
+  const tmp = adoptHtml(html);
   const inQuote = !!selNode()?.closest('blockquote');
   let kids = [...tmp.children];
   while(kids.length === 1 && kids[0].nodeName === 'BLOCKQUOTE' && (inQuote || kids[0].children.length <= 1)){ tmp.innerHTML = kids[0].innerHTML; kids = [...tmp.children]; }
@@ -1426,9 +1505,9 @@ editor.addEventListener('paste', e => {
   const before = topBlock(selNode() || editor);
   document.execCommand('insertHTML', false, tmp.innerHTML);
   const after = topBlock(selNode() || editor);
-  if(before && after && before.parentNode === after.parentNode && editor.contains(before)) blocksBetween(before, after).forEach(b => { if(b.nodeType === 1) keepSel(() => stripSizes(b)); });
-  else if(after?.nodeType === 1) keepSel(() => stripSizes(after));
-  touchNote();
+  const tidy = b => { if(b?.nodeType === 1) keepSel(() => { tidyColors(b); stripSizes(b); }); };   // the browser re-adds the source's look while inserting
+  if(before && after && before.parentNode === after.parentNode && editor.contains(before)) blocksBetween(before, after).forEach(tidy); else tidy(after);
+  touchNote(); fitWraps();
 });
 
 /* toolbar */
@@ -1452,12 +1531,60 @@ toolbar.addEventListener('click', e => {
     if(b.dataset.cmd === 'insertUnorderedList') selNode()?.closest('ul')?.classList.remove('checklist');
     closePops(); touchNote(); updateState();
   } else if(b.dataset.block){ closePops(); b.dataset.block === 'blockquote' ? toggleQuote() : setBlock(b.dataset.block); }
-  else if(b.dataset.pop){
-    saveSel(); const p = $('#pop-' + b.dataset.pop), open = p.hidden; closePops(); p.hidden = !open; markOpts(b.dataset.pop);
-    const tr = toolbar.getBoundingClientRect(), br = b.getBoundingClientRect();
-    p.style.left = Math.max(4, Math.min(br.left - tr.left, toolbar.clientWidth - p.offsetWidth - 4)) + 'px';
-    p.style.top = (br.bottom - tr.top + 6) + 'px';
-  }
+  else if(b.dataset.pop === 'link') openLink(null);
+  else if(b.dataset.pop){ saveSel(); const p = $('#pop-' + b.dataset.pop), open = p.hidden; closePops(); if(open){ p.hidden = false; markOpts(b.dataset.pop); placePop(p, b); } }
+});
+function placePop(p, b){   // under its toolbar button (or the toolbar's left edge when that button is folded away on a phone)
+  const tr = toolbar.getBoundingClientRect(), br = b?.offsetParent ? b.getBoundingClientRect() : { left:tr.left + 8, bottom:tr.bottom - 6 };
+  p.style.left = Math.max(4, Math.min(br.left - tr.left, toolbar.clientWidth - p.offsetWidth - 4)) + 'px';
+  p.style.top = (br.bottom - tr.top + 6) + 'px';
+}
+
+/* 連結: insert, or edit the text and address of the link the caret is in */
+let linkEl = null;
+function openLink(a){
+  saveSel(); closePops(); hideLinkBar();
+  linkEl = a || savedRange && (savedRange.startContainer.nodeType === 1 ? savedRange.startContainer : savedRange.startContainer.parentElement)?.closest('a') || null;
+  if(linkEl && !editor.contains(linkEl)) linkEl = null;
+  $('#linkText').value = linkEl ? linkEl.textContent : (savedRange?.toString() || '');
+  $('#linkUrl').value = linkEl?.getAttribute('href') || '';
+  $('#linkDel').hidden = !linkEl;
+  const p = $('#pop-link'); p.hidden = false; placePop(p, toolbar.querySelector('[data-pop="link"]'));
+  ($('#linkUrl').value ? $('#linkText') : $('#linkUrl')).focus();
+}
+function applyLink(){
+  let url = $('#linkUrl').value.trim(); const text = $('#linkText').value.trim();
+  if(!url){ toast('請輸入網址'); $('#linkUrl').focus(); return; }
+  if(!/^(https?:|mailto:|tel:)/i.test(url)) url = (/^[^\s@/]+@[^\s@]+\.[^\s@]+$/.test(url) ? 'mailto:' : 'https://') + url;
+  closePops(); snap();
+  if(linkEl && editor.contains(linkEl)){
+    linkEl.setAttribute('href', url); if(text && text !== linkEl.textContent) linkEl.textContent = text;
+    editor.focus(); const r = document.createRange(); r.setStartAfter(linkEl); setRange(r.startContainer, r.startOffset);
+  } else { restoreSel(); document.execCommand('insertHTML', false, `<a href="${esc(url)}">${esc(text || url)}</a>`); }
+  linkEl = null; touchNote(); updateState();
+}
+function removeLink(a){ if(!a || !editor.contains(a)) return; snap(); keepSel(() => a.replaceWith(...a.childNodes)); hideLinkBar(); touchNote(); updateState(); }
+$('#linkOk').addEventListener('click', applyLink);
+$('#linkDel').addEventListener('click', () => { closePops(); removeLink(linkEl); linkEl = null; editor.focus(); });
+$('#pop-link').addEventListener('keydown', e => {
+  if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); applyLink(); }
+  else if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); closePops(); restoreSel(); }
+});
+/* clicking a link shows where it goes, with 編輯 / 移除; ⌘ / Ctrl-click opens it */
+let barLink = null;
+function showLinkBar(a){
+  barLink = a; const bar = $('#lbar'), sc = $('#escroll'), sr = sc.getBoundingClientRect(), r = a.getBoundingClientRect();
+  const href = a.getAttribute('href') || '';
+  bar.innerHTML = `<a class="lurl" href="${esc(href)}" target="_blank" rel="noopener">${esc(href.replace(/^https?:\/\//, ''))}</a><button class="tb" data-l="edit">編輯</button><button class="tb dz" data-l="del">移除</button>`;
+  bar.hidden = false;
+  bar.style.left = Math.max(6, Math.min(r.left - sr.left, sc.clientWidth - bar.offsetWidth - 6)) + 'px';
+  bar.style.top = (r.bottom - sr.top + sc.scrollTop + 6) + 'px';
+}
+function hideLinkBar(){ barLink = null; $('#lbar').hidden = true; }
+$('#lbar').addEventListener('mousedown', e => { if(!e.target.closest('.lurl')) e.preventDefault(); });
+$('#lbar').addEventListener('click', e => {
+  const b = e.target.closest('[data-l]'); if(!b || !barLink) return;
+  if(b.dataset.l === 'edit') openLink(barLink); else removeLink(barLink);
 });
 function toggleChecklist(){
   restoreSel(); snap();
@@ -1468,11 +1595,6 @@ function toggleChecklist(){
   touchNote(); updateState();
 }
 
-/* mid-tone colours that stay readable on both the dark and the light background */
-const COLORS = {
-  foreColor:['#e0782f','#d9a21b','#3f9a5b','#2f8f9d','#3b7fe0','#7a5be0','#d0478f','#d9474f','#9a7b5f','#8a8a93','none'],
-  hiliteColor:['rgba(245,162,93,.35)','rgba(240,207,80,.38)','rgba(94,214,199,.32)','rgba(130,180,255,.32)','rgba(208,71,143,.25)','none']
-};
 $$('.swatches').forEach(w => {
   const kind = w.dataset.kind;
   w.innerHTML = COLORS[kind].map(c => `<button class="sw ${c === 'none' ? 'none' : ''}" data-c="${c}" ${c === 'none' ? '' : `style="background:${c}"`} aria-label="${c === 'none' ? '移除顏色' : '顏色 ' + c}"></button>`).join('');
@@ -1481,7 +1603,7 @@ $$('.swatches').forEach(w => {
     restoreSel(); snap(); document.execCommand('styleWithCSS', false, true);
     if(s.dataset.c !== 'none') document.execCommand(kind, false, s.dataset.c);
     else if(kind === 'hiliteColor') document.execCommand(kind, false, 'transparent');
-    else { document.execCommand(kind, false, '#010203'); cleanColors(true); }
+    else { document.execCommand(kind, false, '#010203'); tidyColors(editor); }
     document.execCommand('styleWithCSS', false, false);
     closePops(); touchNote();
   });
@@ -1543,6 +1665,7 @@ function tableMap(table){
   return {grid, pos};
 }
 const newCell = () => { const td = document.createElement('td'); td.innerHTML = '<br>'; return td; };
+const unmark = (el, c) => { el.classList.remove(c); if(!el.classList.length) el.removeAttribute('class'); };   // no empty class="" left in the saved note
 const hasContent = el => el.textContent.trim() || el.querySelector('img');
 function splitCell(cell){
   const table = cell.closest('table'), {pos} = tableMap(table), {r, c} = pos.get(cell), rs = cell.rowSpan, cs = cell.colSpan;
@@ -1665,6 +1788,7 @@ function updateState(){
   ['h1','h2'].forEach(t => toolbar.querySelector(`[data-block="${t}"]`).classList.toggle('on', bn === t.toUpperCase()));
   toolbar.querySelector('[data-pop="size"]').classList.toggle('on', sk === 'lg' || sk === 'sm');
   toolbar.querySelector('[data-block="blockquote"]').classList.toggle('on', !!n?.closest('blockquote'));
+  toolbar.querySelector('[data-pop="link"]').classList.toggle('on', !!n?.closest('a'));
   toolbar.querySelector('[data-block="p"]').classList.toggle('on', !!n && sk === 'p' && !['H1','H2','BLOCKQUOTE'].includes(bn) && !n.closest('ul,ol'));
   $$('.tgrp', toolbar).forEach(g => {
     if(g.classList.contains('open')) return;
@@ -1672,7 +1796,7 @@ function updateState(){
     bs.forEach(x => x.classList.toggle('lead', x === lead));
   });
   const cell = n?.closest('td') || cellSel?.cells[0] || null;
-  if(curCell !== cell){ curCell?.classList.remove('cur'); cell?.classList.add('cur'); curCell = cell; }
+  if(curCell !== cell){ if(curCell) unmark(curCell, 'cur'); cell?.classList.add('cur'); curCell = cell; }
   placeTblBar();
 }
 let usRaf = 0;
@@ -1693,7 +1817,7 @@ editor.addEventListener('focus', () => { if(phone.matches && curNote && Date.now
 $('#caption').addEventListener('focus', () => { if(phone.matches && cur){ document.body.classList.add('fs-cap'); syncVV(); } });
 function doneNote(){
   editor.blur(); getSelection().removeAllRanges(); clearCellSel();
-  curCell?.classList.remove('cur'); curCell = null; exitFs(); placeTblBar();
+  if(curCell) unmark(curCell, 'cur'); curCell = null; exitFs(); placeTblBar();
 }
 $('#noteDone').addEventListener('click', doneNote);
 $('#noteBack').addEventListener('click', () => { doneNote(); $('#notes').classList.remove('show-editor'); });
@@ -1724,6 +1848,7 @@ $('#noteImgInput').addEventListener('change', async e => {
   }
   selectImg(null); touchNote();
 });
+function tidyGal(gal){ const left = $$('img', gal); if(left.length === 1) gal.replaceWith(left[0]); else if(!left.length) gal.remove(); }   // an album of one is just a picture
 function selectImg(img){ sel = img ? { img, gal:img.closest('.gal') } : null; queueMedia(); }
 const queueMedia = () => { if(!mediaRaf) mediaRaf = requestAnimationFrame(() => { mediaRaf = 0; placeMedia(); }); };
 /* everything drawn over the note: album arrows, the selection box and the picture bar */
@@ -1740,8 +1865,8 @@ function placeMedia(){
   Object.assign(box.style, { left:X(r.left) + 'px', top:Y(r.top) + 'px', width:r.width + 'px', height:r.height + 'px' });
   box.classList.toggle('g', !!sel.gal); box.hidden = false;
   bar.innerHTML = sel.gal
-    ? '<button class="tb" data-m="add">＋ 加照片</button><button class="tb" data-m="view">放大</button><button class="tb" data-m="split">拆成單張</button><button class="tb dz" data-m="del">－ 移除這張</button>'
-    : '<button class="tb" data-m="add">＋ 加照片（變相簿）</button><button class="tb" data-m="view">放大</button><button class="tb dz" data-m="del">刪除</button>';
+    ? '<button class="tb" data-m="add">＋ 加照片</button><button class="tb" data-m="split">拆成單張</button><button class="tb dz" data-m="del">－ 移除這張</button>'
+    : '<button class="tb" data-m="add">＋ 加照片（變相簿）</button><button class="tb dz" data-m="del">刪除</button>';
   bar.hidden = false;
   bar.style.left = Math.max(6, Math.min(X(r.left), sc.clientWidth - bar.offsetWidth - 6)) + 'px';
   bar.style.top = Math.max(sc.scrollTop + 4, Y(r.top) - bar.offsetHeight - 6) + 'px';
@@ -1756,10 +1881,9 @@ $('#mbar').addEventListener('click', e => {
   const b = e.target.closest('[data-m]'); if(!b || !sel) return;
   const { img, gal } = sel, act = b.dataset.m;
   if(act === 'add') return pickImages(sel);
-  if(act === 'view'){ const list = gal ? $$('img', gal) : [img]; return openLb(list, list.indexOf(img)); }
   snap();
-  if(act === 'split') gal.replaceWith(...$$('img', gal));
-  else if(gal){ img.remove(); const left = $$('img', gal); if(left.length === 1) gal.replaceWith(left[0]); else if(!left.length) gal.remove(); }   // an album of one is just a picture
+  if(act === 'split'){ gal.after(img); tidyGal(gal); }   // only this picture leaves, placed right under the album
+  else if(gal){ img.remove(); tidyGal(gal); }
   else { const p = img.parentElement; img.remove(); if(p !== editor && !p.childNodes.length) p.innerHTML = '<br>'; }
   selectImg(null); touchNote();
 });
@@ -1775,6 +1899,34 @@ $('#imgHandle').addEventListener('pointermove', e => {
 const endImgRz = () => { if(!imgRz) return; imgRz = null; touchNote(); };
 $('#imgHandle').addEventListener('pointerup', endImgRz);
 $('#imgHandle').addEventListener('pointercancel', endImgRz);
+/* reorder an album by dragging a picture (a finger long-presses first, like the post images) */
+let gd = null, gdEnd = 0;
+function startGalDrag(){
+  if(!gd) return; gd.active = true; snap();
+  const g = document.createElement('div'); g.className = 'drag-ghost'; g.innerHTML = `<img src="${gd.img.src}" alt="">`;
+  g.style.left = gd.x + 'px'; g.style.top = gd.y + 'px'; document.body.appendChild(g); gd.ghost = g;
+  gd.img.classList.add('dragging'); selectImg(null); try{ navigator.vibrate?.(12); }catch(e){}
+}
+function moveGalDrag(e){
+  if(!gd || e.pointerId !== gd.pid) return;
+  if(!gd.active){
+    const dist = Math.hypot(e.clientX - gd.x, e.clientY - gd.y);
+    if(gd.mouse && dist > 5) startGalDrag(); else if(!gd.mouse && dist > 8){ clearTimeout(gd.timer); gd = null; }   // the finger moved first: it's a scroll
+    return;
+  }
+  gd.ghost.style.left = e.clientX + 'px'; gd.ghost.style.top = e.clientY + 'px';
+  const gr = gd.gal.getBoundingClientRect();
+  if(e.clientX < gr.left + 40) gd.gal.scrollLeft -= 12; else if(e.clientX > gr.right - 40) gd.gal.scrollLeft += 12;
+  const over = document.elementFromPoint(e.clientX, e.clientY)?.closest('img');
+  if(over && over !== gd.img && over.parentNode === gd.gal){ const r = over.getBoundingClientRect(); gd.gal.insertBefore(gd.img, e.clientX > r.left + r.width / 2 ? over.nextSibling : over); }
+}
+function endGalDrag(){
+  if(!gd) return; clearTimeout(gd.timer); const st = gd; gd = null; if(!st.active) return;
+  st.ghost.remove(); unmark(st.img, 'dragging'); gdEnd = Date.now(); touchNote(); queueMedia();
+}
+window.addEventListener('pointermove', moveGalDrag);
+editor.addEventListener('touchmove', e => { if(gd?.active) e.preventDefault(); }, {passive:false});
+editor.addEventListener('dragstart', e => { if(e.target.closest?.('.gal')) e.preventDefault(); });
 editor.addEventListener('load', queueMedia, true);   // pictures change the layout as they arrive
 editor.addEventListener('scroll', e => { if(e.target.classList?.contains('gal')) queueMedia(); }, true);
 
@@ -1799,7 +1951,7 @@ $('#lb').addEventListener('pointerup', e => { if(lbX == null) return; const dx =
 /* cell selection: dragging from one cell into another selects the rectangle between them,
    so dragging down one column selects just that column. Then: Delete clears, ⌘C copies, 合併 merges them. */
 let cellSel = null, cellDrag = null;
-function clearCellSel(){ if(!cellSel) return; cellSel.cells.forEach(c => c.classList.remove('csel')); cellSel = null; }
+function clearCellSel(){ if(!cellSel) return; cellSel.cells.forEach(c => unmark(c, 'csel')); cellSel = null; }
 function selectCells(a, b){
   const table = a.closest('table'), {grid, pos} = tableMap(table), pa = pos.get(a), pb = pos.get(b);
   let r1 = Math.min(pa.r, pb.r), r2 = Math.max(pa.r, pb.r), c1 = Math.min(pa.c, pb.c), c2 = Math.max(pa.c, pb.c), grew = true;
@@ -1875,7 +2027,9 @@ function startRz(e, table, h){
 }
 editor.addEventListener('pointerdown', e => {
   clearCellSel();
+  const gi = e.target.closest('.gal img');
   if(e.target.closest('.gal')) galTap = Date.now();
+  if(gi && e.button === 0){ gd = { img:gi, gal:gi.parentNode, x:e.clientX, y:e.clientY, pid:e.pointerId, mouse:e.pointerType === 'mouse', active:false }; if(!gd.mouse) gd.timer = setTimeout(startGalDrag, 330); return; }
   if(e.pointerType !== 'mouse' || e.button !== 0) return;   // touch resizes with the knobs; a finger on an edge just scrolls / places the caret
   const h = edgeAt(e), td = e.target.closest('td');
   if(h) startRz(e, h.td.closest('table'), h.type === 'col' ? {type:'col', col:h.col, x:h.x} : {type:'row', row:h.td.parentElement});
@@ -1895,11 +2049,14 @@ editor.addEventListener('pointermove', e => {
 editor.addEventListener('click', e => {
   const li = e.target.closest('ul.checklist > li');   // tick a checklist item by clicking its box
   if(li && e.clientX - li.getBoundingClientRect().left < 22){ snap(); li.classList.toggle('done'); touchNote(); return; }
+  const a = e.target.closest('a');
+  if(a){ if(e.metaKey || e.ctrlKey) window.open(a.href, '_blank', 'noopener'); else showLinkBar(a); } else if(barLink) hideLinkBar();
+  if(Date.now() - gdEnd < 300) return;   // the click that ends an album drag
   const im = e.target.closest('img');
-  if(im && sel?.img === im && sel.gal) openLb($$('img', sel.gal), $$('img', sel.gal).indexOf(im));   // second tap on an album picture opens it
+  if(im && sel?.img === im && sel.gal) openLb($$('img', sel.gal), $$('img', sel.gal).indexOf(im));   // a second tap on an album picture opens it
   else selectImg(im);
 });
-editor.addEventListener('dblclick', e => { const im = e.target.closest('img'); if(im && !im.closest('.gal')) openLb([im], 0); });
+editor.addEventListener('dblclick', e => { const im = e.target.closest('img'); if(im){ const list = im.closest('.gal') ? $$('img', im.parentNode) : [im]; openLb(list, list.indexOf(im)); } });
 editor.addEventListener('contextmenu', e => { const im = e.target.closest('img'); if(im){ e.preventDefault(); selectImg(im); } });
 $('#rzh').addEventListener('pointerdown', e => {
   const k = e.target.closest('.rzh'), table = $('#rzh')._table; if(!k || !table) return;
@@ -1962,7 +2119,7 @@ const endSwipe = () => {
   if(horiz){ setSwiped(it, base + dx < -38); it.dataset.swiped = '1'; setTimeout(() => delete it.dataset.swiped, 400); }
 };
 /* every drag in the app ends here */
-const endPointer = () => { endDrag(); endCellDrag(); endRz(); endSwipe(); };
+const endPointer = () => { endDrag(); endGalDrag(); endCellDrag(); endRz(); endSwipe(); };
 window.addEventListener('pointerup', endPointer);
 window.addEventListener('pointercancel', endPointer);
 

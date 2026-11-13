@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794561641">
+<meta name="pn-build" content="1794562356">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -299,13 +299,15 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .rzh::after{content:"";border-radius:4px;background:var(--acc-text);box-shadow:0 0 0 2.5px var(--s1)}
 .rzh.c::after{width:6px;height:18px}
 .rzh.r::after{width:18px;height:6px}
-.tblbar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100% - 24px);box-sizing:border-box;overflow-x:auto;scrollbar-width:none;z-index:20;display:flex;align-items:center;gap:2px;padding:3px;background:var(--float);border-radius:12px;box-shadow:var(--shadow);white-space:nowrap}
+.tblbar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100% - 24px);box-sizing:border-box;overflow-x:auto;scrollbar-width:none;z-index:20;display:flex;align-items:center;gap:2px;padding:3px;background:var(--fg);color:var(--bg);border-radius:12px;box-shadow:var(--shadow);white-space:nowrap}
 .tblbar::-webkit-scrollbar{display:none}
 .tblbar:not([hidden]){animation:barup .2s var(--ease) both}
 @keyframes barup{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translateX(-50%)}}
-.tblbar .gl{font-size:11px;color:var(--acc-text);padding:0 6px 0 4px;font-weight:600}
-.tblbar .tb{height:26px;font-size:11.5px;min-width:0}
-.tblbar .dz{color:var(--danger)}
+.tblbar .gl{font-size:11px;color:var(--acc);padding:0 6px 0 6px;font-weight:700;flex:none}
+.tblbar .tb{height:26px;font-size:11.5px;min-width:0;padding:0 8px;color:inherit;flex:none}
+.tblbar .tb:hover{background:rgba(128,128,128,.28);color:inherit}
+.tblbar .dz{color:#ff8a98}
+.mbar .tb{flex:none}
 
 /* ===== 貼文 ===== */
 .cal{padding:2px 4px 6px}
@@ -442,7 +444,8 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .acct-mail{font-size:13.5px}
   .btn{padding:9px 12px}
   .opt{padding:9px 12px 9px 10px;font-size:15px}
-  .tblbar .tb,.mbar .tb{height:32px;font-size:13px}
+  .tblbar .tb,.mbar .tb{height:34px;font-size:13px;padding:0 10px}
+  .tblbar{max-width:calc(100% - 16px);bottom:10px}
   .toast{font-size:14px}
   .topbar{gap:8px}
   .brand{gap:7px;min-width:0}
@@ -1553,7 +1556,30 @@ function adoptHtml(html){
   tmp.querySelectorAll('blockquote').forEach(q => { if(!isQuoteBox(q)){ const p = document.createElement('p'); p.append(...q.childNodes); q.append(p); } });   // a quote is a box of lines
   return tmp;
 }
+/* cells copied as a block (from here or a spreadsheet) paste back cell by cell, starting at the picked / current cell */
+function pasteCells(cd){
+  const start = cellSel ? cellSel.cells[0] : selNode()?.closest('td'); if(!start) return false;
+  const html = cd.getData('text/html'), text = cd.getData('text/plain');
+  let rows = null;
+  if(/<table/i.test(html)){ const t = adoptHtml(html).querySelector('table'); if(t) rows = [...t.rows].map(r => [...r.cells].map(c => c.innerHTML)); }
+  else if(/\t|\n./.test(text.trim())) rows = text.replace(/\r/g, '').replace(/\n$/, '').split('\n').map(l => l.split('\t').map(x => esc(x) || '<br>'));
+  if(!rows || rows.flat().length < 2) return false;   // a single value pastes as normal text
+  const table = start.closest('table'); snap(); clearCellSel();
+  let {grid, pos} = tableMap(table); const p0 = pos.get(start), cols = $$('col', table).length;
+  if(p0.r + rows.length > table.rows.length){   // more lines than the table has: add rows for them
+    for(let k = table.rows.length; k < p0.r + rows.length; k++){ const tr = document.createElement('tr'); for(let j = 0; j < cols; j++) tr.appendChild(newCell()); table.tBodies[0].appendChild(tr); }
+    ({grid, pos} = tableMap(table));
+  }
+  let last = start;
+  rows.forEach((row, i) => row.forEach((h, j) => {
+    const x = grid[p0.r + i]?.[p0.c + j];
+    if(x && pos.get(x).r === p0.r + i && pos.get(x).c === p0.c + j){ x.innerHTML = h || '<br>'; last = x; }   // skip spots covered by a merged cell
+  }));
+  selectCells(start, last); touchNote(); fitWraps();
+  return true;
+}
 editor.addEventListener('paste', e => {
+  if((cellSel || selNode()?.closest('td')) && pasteCells(e.clipboardData)){ e.preventDefault(); return; }
   const html = e.clipboardData?.getData('text/html'); if(!html) return;
   e.preventDefault();
   const tmp = adoptHtml(html);

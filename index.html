@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794574771">
+<meta name="pn-build" content="1794575733">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -69,7 +69,7 @@ html,body{height:100%;background:var(--bg);color:var(--fg)}
 body{font-family:var(--font);font-size:13px;line-height:1.5;cursor:var(--cursor);overflow:hidden;-webkit-font-smoothing:antialiased}
 button,label[for],[role=button],a{cursor:var(--cursor-hot)}
 [contenteditable=true],textarea,input[type=search],input[type=text]{cursor:text}
-button{font-family:inherit;color:inherit;font-size:inherit;border:0;background:transparent;padding:0}
+button{font-family:inherit;color:inherit;font-size:inherit;border:0;background:transparent;padding:0;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:2px solid var(--acc-text);outline-offset:2px}
 
 /* motion: short, transform / opacity / colour only */
@@ -513,9 +513,10 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .tgrp.open .tb:not(.lead){animation:tgin .2s var(--ease) both}
   .toolbar .sep{margin:0 3px;flex:none}
   /* full-screen editing: the content panel covers the page; the bar slides in on top */
-  body.fs-note .notes .ecol>.panel,body.fs-cap .capblk{position:fixed;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100%);z-index:200;border-radius:0;margin:0}
+  body.fs-note .notes .ecol>.panel,body.fs-cap .capblk{position:fixed;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100%);z-index:200;border-radius:0;margin:0;background:var(--s1)}
   body.fs-note .notes .toolbar{display:flex;animation:barin .24s var(--ease) backwards}
-  body.fs-note #noteBack,body.fs-note #noteDone,body.fs-cap #capBack,body.fs-cap #capDone{display:grid!important}
+  body.fs-note #noteBack,body.fs-note #noteUndo,body.fs-note #noteDone,body.fs-cap #capBack,body.fs-cap #capUndo,body.fs-cap #capDone{display:grid!important}
+  .fsbtn.off{opacity:.35}
   body.fs-cap .capblk{padding-top:max(10px,env(safe-area-inset-top,0px))}
   body.fs-cap .capblk .blk-h{animation:barin .24s var(--ease) backwards}
   .fsbtn{width:32px;height:32px;flex:none}
@@ -594,7 +595,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
             </div>
             <div class="panel blk capblk">
               <div class="blk-h"><button class="rbtn fsbtn" id="capBack" title="返回" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><label class="blabel" for="caption">文案</label><span class="capmeta"><span id="capCount"></span><span id="tagCount"></span></span>
-                <button class="rbtn" id="copyCap" title="複製文案" aria-label="複製文案"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2h2"/></svg></button><button class="rbtn fsbtn ok" id="capDone" title="完成" aria-label="完成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button></div>
+                <button class="rbtn" id="copyCap" title="複製文案" aria-label="複製文案"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2h2"/></svg></button><button class="rbtn fsbtn" id="capUndo" title="上一步" aria-label="上一步"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 010 11H11"/></svg></button><button class="rbtn fsbtn ok" id="capDone" title="完成" aria-label="完成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button></div>
               <textarea id="caption" placeholder="寫下這篇貼文的文案、hashtag⋯"></textarea>
             </div>
           </div>
@@ -661,6 +662,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <button class="tb" id="imgBtn" title="插入圖片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg></button>
               </div>
               </div>
+              <button class="rbtn fsbtn" id="noteUndo" title="上一步" aria-label="上一步"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 010 11H11"/></svg></button>
               <button class="rbtn fsbtn ok" id="noteDone" title="完成" aria-label="完成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
               <div class="pop" id="pop-color" hidden><div class="swatches" data-kind="foreColor"></div></div>
               <div class="pop" id="pop-hilite" hidden><div class="swatches" data-kind="hiliteColor"></div></div>
@@ -946,11 +948,9 @@ function makeSaver(kind, getList){
 function showView(v){
   $$('#nav button').forEach(b => { const on = b.dataset.view === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
   $('#view-notes').hidden = v !== 'notes'; $('#view-posts').hidden = v !== 'posts';
-  try{ if(location.hash !== '#' + v) history.replaceState(null, '', '#' + v); }catch(e){}
   exitFs(); placeInd($('#nav')); placeTblBar(); animIn($('#view-' + v));
 }
 $('#nav').addEventListener('click', e => { const b = e.target.closest('button'); if(b) showView(b.dataset.view); });
-window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if(h === 'notes' || h === 'posts') showView(h); });
 
 /* =====================================================================
    貼文
@@ -1032,7 +1032,7 @@ $('#newPost').addEventListener('click', () => {
 
 function openPost(id){
   cur = posts.find(d => d.id === id); if(!cur) return;
-  $('#ptitle').value = cur.title; $('#pdate').value = cur.date; $('#caption').value = cur.caption;
+  $('#ptitle').value = cur.title; $('#pdate').value = cur.date; $('#caption').value = cur.caption; capReset();
   $('#pinPost').classList.toggle('on', !!cur.pinned); setKind(cur.kind || 'post', true);
   exitFs(); $('#postEdit').classList.remove('meta-open'); $('#metaToggle').setAttribute('aria-expanded', false);
   $('#gridView').hidden = true; $('#postEdit').hidden = false; $('#posts').classList.add('editing');
@@ -1091,7 +1091,19 @@ $('#datePop').addEventListener('click', e => {
   else if(day) setPostDate(day.dataset.d);
   else if(e.target.closest('#dpToday')) setPostDate(localISO(new Date()));
 });
-$('#caption').addEventListener('input', e => { cur.caption = e.target.value; touchPost(); renderPostMeta(); });
+const capHist = { list:[], prev:'', at:0 };
+const capReset = () => { capHist.list = []; capHist.prev = cur?.caption || ''; capHist.at = 0; $('#capUndo').classList.add('off'); };
+$('#caption').addEventListener('input', e => {
+  if(Date.now() - capHist.at > 900){ capHist.list.push(capHist.prev); if(capHist.list.length > 60) capHist.list.shift(); }
+  capHist.at = Date.now(); capHist.prev = e.target.value; $('#capUndo').classList.remove('off');
+  cur.caption = e.target.value; touchPost(); renderPostMeta();
+});
+$('#capUndo').addEventListener('mousedown', e => e.preventDefault());
+$('#capUndo').addEventListener('click', () => {
+  if(!capHist.list.length) return toast('沒有可以復原的步驟');
+  const v = capHist.list.pop(), ta = $('#caption'); ta.value = cur.caption = capHist.prev = v; capHist.at = 0;
+  $('#capUndo').classList.toggle('off', !capHist.list.length); touchPost(); renderPostMeta(); ta.focus({preventScroll:true});
+});
 $('#copyCap').addEventListener('click', () => copyText(cur.caption));
 $('#pinPost').addEventListener('click', () => {
   cur.pinned = !cur.pinned; $('#pinPost').classList.toggle('on', cur.pinned); touchPost();
@@ -1201,28 +1213,31 @@ function snap(kind = 'op'){   // call right before a change; typing / deleting r
   Hist.kind = kind; Hist.at = now; if(group) return;
   const st = histState(), top = Hist.undo[Hist.undo.length - 1];
   if(top && top.html === st.html) return;
-  Hist.undo.push(st); if(Hist.undo.length > 60) Hist.undo.shift(); Hist.redo.length = 0;
+  Hist.undo.push(st); if(Hist.undo.length > 60) Hist.undo.shift(); Hist.redo.length = 0; undoState();
 }
 function applyHist(st){
   editor.innerHTML = st.html; editor.focus({preventScroll:true}); Hist.kind = '';
   setOffsets(st.sel);
   curCell = null; cellSel = null; sel = null; touchNote(); fitWraps(); updateState(); queueMedia();
 }
-function undo(){ const prev = Hist.undo.pop(); if(!prev){ toast('沒有可以復原的步驟'); return; } Hist.redo.push(histState()); applyHist(prev); }
+function undo(){ const prev = Hist.undo.pop(); if(!prev){ toast('沒有可以復原的步驟'); return; } Hist.redo.push(histState()); applyHist(prev); undoState(); }
+const undoState = () => $('#noteUndo').classList.toggle('off', !Hist.undo.length);   // the phone's ↶ dims when there is nothing to undo
 function redo(){ const next = Hist.redo.pop(); if(!next) return; Hist.undo.push(histState()); applyHist(next); }
 let htmlT = null;
 function syncHtml(){ clearTimeout(htmlT); htmlT = null; if(curNote) curNote.html = noteHtml(); }   // the note's HTML is read from the editor lazily, not on every key
 const saveAll = () => Promise.all([noteSaver.flush(), postSaver.flush()]);
 const noteSaver = makeSaver('notes', () => { syncHtml(); return notes; });
-const collapsed = new Set(JSON.parse(lsGet('pn-collapsed') || lsGet('ml-collapsed') || '[]'));
+const collapsed = new Set();   // categories start unfolded every time the app opens
 
 function htmlLines(html){
   const ta = document.createElement('textarea');
   ta.innerHTML = html.replace(/<\/(p|div|h1|h2|h3|li|tr|blockquote)>|<br\s*\/?>/gi, '\n').replace(/<\/td>/gi, ' ').replace(/<[^>]+>/g, '');
   return ta.value.split('\n').map(s => s.trim()).filter(Boolean);
 }
+const linesCache = new Map();   // note id → { html, lines }: reading every note's HTML on each list render is the slow part
+function noteLines(n){ const c = linesCache.get(n.id); if(c?.html === n.html) return c.lines; const lines = htmlLines(n.html); linesCache.set(n.id, { html:n.html, lines }); return lines; }
 function noteLabel(n){   // [title, snippet] for the list
-  const lines = htmlLines(n.html), t = n.title.trim();
+  const lines = noteLines(n), t = n.title.trim();
   return t ? [t, lines[0] || '沒有其他內容'] : [lines[0] || '新備忘錄', lines[1] || '沒有其他內容'];
 }
 let catOrder = (() => { try{ return JSON.parse(lsGet('pn-cat-order') || '[]'); }catch(e){ return []; } })();   // your drag order; new categories go after it, A→Z
@@ -1238,35 +1253,44 @@ function renderNoteList(){
   if(htmlT) syncHtml();
   const q = $('#nsearch').value.trim().toLowerCase();
   const list = notes.slice().sort(byPinThenRecent)
-    .filter(n => !q || (n.title + ' ' + n.category + ' ' + htmlLines(n.html).join(' ')).toLowerCase().includes(q));
-  const item = n => { const [t, s] = noteLabel(n);
-    return row(n.id, `<b>${n.pinned ? ICON.pin : ''}${esc(t)}</b><span><em>${fmtShort(n.updatedAt)}</em>${esc(s)}</span>`, n === curNote ? 'on' : ''); };
+    .filter(n => !q || (n.title + ' ' + n.category + ' ' + noteLines(n).join(' ')).toLowerCase().includes(q));
+  const item = (n, hide) => { const [t, s] = noteLabel(n);
+    return (hide ? '<div hidden>' : '') + row(n.id, `<b>${n.pinned ? ICON.pin : ''}${esc(t)}</b><span><em>${fmtShort(n.updatedAt)}</em>${esc(s)}</span>`, n === curNote ? 'on' : '') + (hide ? '</div>' : ''); };
   const cats = categories();   // pinned notes sit at the top of their own category (the list is sorted that way)
   const groups = [...cats.map(c => [c, c, list.filter(n => n.category.trim() === c)]), ['__none', '未分類', list.filter(n => !n.category.trim())]].filter(g => g[2].length);
   const box = $('#nitems');
   if(!list.length) box.innerHTML = `<div class="empty-note">${q ? '找不到符合的備忘錄' : '還沒有備忘錄，按 + 開始寫'}</div>`;
-  else if(groups.length === 1 && groups[0][0] === '__none') box.innerHTML = list.map(item).join('');   // nothing to group yet
+  else if(groups.length === 1 && groups[0][0] === '__none') box.innerHTML = list.map(n => item(n)).join('');   // nothing to group yet
   else box.innerHTML = groups.map(([key, label, g]) => {
     const closed = !q && collapsed.has(key);
-    return `<div class="grp ${closed ? 'closed' : ''}" role="button" tabindex="0" data-g="${esc(key)}" aria-expanded="${!closed}"${key.startsWith('__') ? '' : ' title="拖曳排序・點兩下改名"'}><span>${esc(label)}</span><b>${g.length}</b>${ICON.chev}</div>${closed ? '' : g.map(item).join('')}`;
+    return `<div class="grp ${closed ? 'closed' : ''}" role="button" tabindex="0" data-g="${esc(key)}" aria-expanded="${!closed}"${key.startsWith('__') ? '' : ' title="拖曳排序・點兩下改名"'}><span>${esc(label)}</span><b>${g.length}</b>${ICON.chev}</div>${g.map(n => item(n, closed)).join('')}`;
   }).join('');
   $('#catList').innerHTML = cats.map(c => `<option value="${esc(c)}">`).join('');
 }
 let listT; const renderNoteListSoon = () => { clearTimeout(listT); listT = setTimeout(renderNoteList, 600); };
 $('#nsearch').addEventListener('input', renderNoteList);
-const toggleGroup = k => { collapsed.has(k) ? collapsed.delete(k) : collapsed.add(k); lsSet('pn-collapsed', JSON.stringify([...collapsed])); renderNoteList(); };
-/* a category header: one tap folds it (after a short wait), two quick taps rename it */
-let grpTap = { key:null, at:0, timer:null };
+function toggleGroup(g){   // fold / unfold in place: the rows are already there, just hidden
+  const k = g.dataset.g, closed = !collapsed.has(k);
+  closed ? collapsed.add(k) : collapsed.delete(k);
+  g.classList.toggle('closed', closed); g.setAttribute('aria-expanded', !closed);
+  for(let n = g.nextElementSibling, next; n && !n.classList.contains('grp'); n = next){
+    next = n.nextElementSibling;
+    if(closed && n.classList.contains('row')){ const w = document.createElement('div'); w.hidden = true; n.replaceWith(w); w.append(n); }
+    else if(!closed && n.hidden) n.replaceWith(...n.childNodes);
+  }
+}
+/* a category header: a tap folds it right away; a second quick tap unfolds it again and renames */
+let grpTap = { key:null, at:0 };
 $('#nitems').addEventListener('click', e => {
   const g = e.target.closest('.grp');
   if(!g) return listClick(e, openNote, deleteNote);
   if(Date.now() - cdEnd < 300 || g.querySelector('[contenteditable=true]')) return;
-  const k = g.dataset.g, fixed = k.startsWith('__');
-  clearTimeout(grpTap.timer);
-  if(!fixed && grpTap.key === k && Date.now() - grpTap.at < 350){ grpTap.key = null; return renameGroup(g); }
-  grpTap = { key:k, at:Date.now(), timer:setTimeout(() => toggleGroup(k), fixed ? 0 : 350) };
+  const k = g.dataset.g;
+  toggleGroup(g);
+  if(!k.startsWith('__') && grpTap.key === k && Date.now() - grpTap.at < 350){ grpTap.key = null; renameGroup(g); }
+  else grpTap = { key:k, at:Date.now() };
 });
-$('#nitems').addEventListener('keydown', e => { const g = e.target.closest('.grp'); if(g && e.target === g && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); toggleGroup(g.dataset.g); } });
+$('#nitems').addEventListener('keydown', e => { const g = e.target.closest('.grp'); if(g && e.target === g && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); toggleGroup(g); } });
 /* drag a category header up / down to reorder (a finger long-presses first) */
 let cd = null, cdEnd = 0;
 const markCatDrag = () => $$('#nitems .grp').forEach(g => g.classList.toggle('dragging', g.dataset.g === cd?.key));
@@ -1304,13 +1328,13 @@ function renameGroup(g){
 function renameCat(old, name){
   notes.forEach(n => { if(n.category.trim() === old){ n.category = name; noteSaver.soon(n.id); } });
   saveCatOrder(catOrder.includes(name) ? catOrder.filter(c => c !== old) : catOrder.map(c => c === old ? name : c));
-  if(collapsed.delete(old)){ collapsed.add(name); lsSet('pn-collapsed', JSON.stringify([...collapsed])); }
+  if(collapsed.delete(old)) collapsed.add(name);
   if(curNote) $('#ncat').value = curNote.category;
   renderNoteList(); toast(`類別已改名為「${name}」`);
 }
 
 function openNote(id, focusTitle){
-  exitFs(); if(htmlT) syncHtml(); Hist.undo = []; Hist.redo = []; Hist.kind = ''; sel = null;
+  exitFs(); if(htmlT) syncHtml(); Hist.undo = []; Hist.redo = []; Hist.kind = ''; sel = null; undoState();
   curNote = notes.find(n => n.id === id) || null;
   editor.innerHTML = curNote ? curNote.html : '';
   if(curNote){   // older saves may hold stray colours, inline sizes or UI marks: tidy once, save if anything changed
@@ -1356,7 +1380,7 @@ $('#backList').addEventListener('click', () => { exitFs(); $('#notes').classList
 function deleteNote(id){
   const n = notes.find(x => x.id === id); if(!n) return;
   noteSaver.removed(id); notes = notes.filter(x => x !== n); noteSaver.flush(); toast('已刪除備忘錄');
-  if(curNote === n){ openNote(notes.slice().sort(byPinThenRecent)[0]?.id); $('#notes').classList.remove('show-editor'); }
+  if(curNote === n){ openNote(firstNoteId()); $('#notes').classList.remove('show-editor'); }
   else renderNoteList();
 }
 
@@ -2066,6 +2090,8 @@ function doneNote(){
   if(curCell) unmark(curCell, 'cur'); curCell = null; exitFs(); placeTblBar();
 }
 $('#noteDone').addEventListener('click', doneNote);
+$('#noteUndo').addEventListener('mousedown', e => e.preventDefault());
+$('#noteUndo').addEventListener('click', () => { undo(); editor.focus({preventScroll:true}); });
 $('#noteBack').addEventListener('click', () => { doneNote(); $('#notes').classList.remove('show-editor'); });
 $('#capDone').addEventListener('click', () => { $('#caption').blur(); exitFs(); });
 $('#capBack').addEventListener('click', () => { $('#caption').blur(); closePost(); });
@@ -2477,10 +2503,29 @@ function rerenderAll(){
   /* fill in fields older saves may lack, so the rest of the code can rely on them */
   notes = notes.map(n => ({ title:'', category:'', pinned:false, html:'<p><br></p>', ...n }));
   posts = posts.map(d => ({ title:'', pinned:false, date:'', kind:'post', images:[], caption:'', ...d }));
-  if(cur) closePost();
-  openNote(notes.slice().sort(byPinThenRecent)[0]?.id); $('#notes').classList.remove('show-editor');
-  renderPosts();
+  resetUI();
 }
+/* the first note in list order: first category's first note (pinned first), else the first uncategorized */
+function firstNoteId(){
+  const sorted = notes.slice().sort(byPinThenRecent);
+  for(const c of categories()){ const n = sorted.find(x => x.category.trim() === c); if(n) return n.id; }
+  return sorted[0]?.id;
+}
+/* the default state, used on every launch and after a long time away:
+   posts → grid (computer) / this month's calendar + list (phone); notes → first note open (computer) / the list (phone); nothing folded */
+function resetUI(){
+  exitFs(); closeDatePop(); collapsed.clear(); dayFilter = ''; calMonth = addMonths(new Date(), 0);
+  $('#psearch').value = ''; $('#nsearch').value = '';
+  if(cur) closePost(); else renderPosts();
+  openNote(firstNoteId()); $('#notes').classList.remove('show-editor');
+  $$('.lbody, #gridView').forEach(x => { x.scrollTop = 0; });
+  showView('posts');
+}
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden){ hiddenAt = Date.now(); return; }
+  if(hiddenAt && Date.now() - hiddenAt > 10 * 60e3 && !inFs()) resetUI();   // back after 10+ minutes: start fresh (an open edit is kept)
+});
 async function replaceAll(n, d, msg){
   notes.forEach(x => noteSaver.removed(x.id));
   posts.forEach(x => postSaver.removed(x.id, x.images.map(i => i.path).filter(Boolean)));
@@ -2646,7 +2691,6 @@ async function loadData(){
   await Store.init();
   try{ await Cloud.init(); }catch(e){ Cloud.sb = null; }
   await loadData();
-  showView(location.hash === '#notes' ? 'notes' : 'posts');
   setTimeout(checkUpdate, 3000);
   requestAnimationFrame(() => $$('.seg').forEach(b => placeInd(b, true)));
 })();

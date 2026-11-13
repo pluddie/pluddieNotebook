@@ -30,7 +30,7 @@
   --acc:#42a7c6; --acc-ink:#04202a; --acc-text:#6cc4de; --acc-soft:rgba(66,167,198,.18);   /* dark: hat blue */
   --btn-bg:#42a7c6; --btn-fg:#04202a; --btn-hover:#9182f9; --btn-hover-fg:#ffffff;          /* hover: pencil purple */
   --hover:rgba(145,130,249,.2); --hover-acc:#9182f9; --hover-acc-fg:#ffffff;
-  --bar:#26262c; --tbar-text:#04202a; --tbar-chip:rgba(255,255,255,.3);
+  --tbar-text:#04202a; --tbar-chip:rgba(255,255,255,.88);
   --danger:#ff7d8c; --danger-soft:rgba(255,125,140,.14); --danger-ink:#1a0508; --past:#ff9fb5;
   --onimg-bg:rgba(12,12,14,.66); --onimg-fg:#f2f2f4;
   --foot:linear-gradient(transparent,rgba(0,0,0,.72)); --foot-fg:#f2f2f4;
@@ -50,7 +50,7 @@
   --acc:#ffe08a; --acc-ink:#3a2a08; --acc-text:#8f6400; --acc-soft:rgba(232,182,40,.2);
   --btn-bg:#f5c542; --btn-fg:#3a2a08; --btn-hover:#e3913a; --btn-hover-fg:#2b1405;
   --hover:rgba(214,138,58,.16); --hover-acc:#e3913a; --hover-acc-fg:#2b1405;
-  --bar:#ebe0cd; --tbar-text:#6e4c00; --tbar-chip:rgba(255,255,255,.55);
+  --tbar-text:#6e4c00; --tbar-chip:#ffffff;
   --danger:#d6455a; --danger-soft:rgba(214,69,90,.12); --danger-ink:#ffffff; --past:#c2410c;
   --onimg-bg:rgba(255,252,247,.92); --onimg-fg:#2b2118;
   --foot:linear-gradient(rgba(255,250,238,0),rgba(255,250,238,.95) 70%); --foot-fg:#2b2118;
@@ -150,7 +150,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .etitle{flex:1;min-width:60px;box-sizing:border-box;text-overflow:ellipsis;border:0;background:transparent;color:var(--acc-ink);font:600 16px var(--font);padding:6px;outline:none;border-radius:8px}
 .etitle::placeholder{color:var(--acc-ink);opacity:.45}
 .etitle:focus{background:rgba(255,255,255,.3)}
-.ebar .rbtn{background:rgba(0,0,0,.09);color:var(--acc-ink)}
+.ebar .rbtn{background:var(--tbar-chip);color:var(--tbar-text)}
 .ebar .rbtn:hover,.dx:hover{background:var(--hover-acc);color:var(--hover-acc-fg)}
 .ebar .rbtn.on{background:var(--acc-ink);color:var(--acc)}
 .ebar .rbtn.del:hover{background:var(--danger);color:var(--danger-ink)}
@@ -174,8 +174,8 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .blabel{font-size:12px;font-weight:600;color:var(--muted);padding-left:4px}
 .sec{font-size:10.5px;font-weight:600;color:var(--faint);letter-spacing:.08em;padding:8px 10px 4px}
 
-.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:6px 10px;background:var(--bar);border-radius:14px 14px 0 0;position:relative;flex:none}
-.toolbar .sep{width:8px}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:6px 10px;background:var(--s1);border-bottom:1px solid var(--s3);border-radius:14px 14px 0 0;position:relative;flex:none}
+.toolbar .sep{width:1px;height:18px;margin:0 6px;background:var(--s3);flex:none}
 .tb{min-width:28px;height:28px;padding:0 6px;border-radius:7px;color:var(--fg);display:inline-flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:600}
 .tb.on{background:var(--btn-bg);color:var(--btn-fg)}
 .tb svg{width:15px;height:15px}
@@ -225,12 +225,12 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .escroll{flex:1;overflow:auto;min-height:0;position:relative}
 .meta-line{font-size:11px;color:var(--faint);text-align:center;padding-top:8px;font-variant-numeric:tabular-nums}
 #editor{outline:none;padding:10px 28px 80px;min-height:calc(100% - 30px);font-size:15px;line-height:1.65;letter-spacing:.01em}
-#editor h1{font-size:24px;line-height:1.35;margin:.5em 0 .25em;font-weight:700;letter-spacing:0}
-#editor h2{font-size:19px;line-height:1.4;margin:.8em 0 .2em;color:var(--acc-text);font-weight:600;letter-spacing:0}
+#editor h1{font-size:24px;line-height:1.35;margin:0;font-weight:700;letter-spacing:0}
+#editor h2{font-size:19px;line-height:1.4;margin:0;color:var(--acc-text);font-weight:600;letter-spacing:0}
 #editor p,#editor div{margin:0}
-#editor blockquote{margin:.6em 0;padding:.5em 1em;background:var(--s2);border-radius:10px}
-#editor hr{border:0;height:2px;border-radius:2px;background:var(--s3);margin:1.4em 0}
-#editor ul,#editor ol{padding-left:1.5em;margin:.3em 0}
+#editor blockquote{margin:.2em 0;padding:.35em .9em;background:var(--s2);border-radius:10px}
+#editor hr{border:0;height:2px;border-radius:2px;background:var(--s3);margin:.6em 0}
+#editor ul,#editor ol{padding-left:1.5em;margin:0}
 #editor ul.checklist{list-style:none;padding-left:.2em}
 #editor ul.checklist li{position:relative;padding-left:28px}
 #editor ul.checklist li::before{content:"";position:absolute;left:2px;top:.38em;width:15px;height:15px;border-radius:5px;background:var(--s3);cursor:var(--cursor-hot)}
@@ -238,17 +238,20 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 #editor ul.checklist li.done{color:var(--muted);text-decoration:line-through}
 #editor a{color:var(--acc-text);text-decoration:underline;text-underline-offset:2px}
 #editor img{max-width:100%;border-radius:10px;display:block;margin:.6em 0}
-.tbl-wrap{overflow-x:auto;margin:2.6em 0 .8em;padding-bottom:6px}
+#editor .tbl-wrap{overflow-x:auto;margin:.3em 0;padding-bottom:4px}
+#editor .tbl-wrap.active{margin-top:44px}   /* room for the table bar only while editing that table */
 #editor table{border-collapse:separate;border-spacing:2px;table-layout:fixed;font-size:13px}
-#editor td{background:var(--s2);border-radius:4px;padding:6px 10px;vertical-align:top;min-width:40px;word-break:break-word}
+#editor td{background:var(--s2);border-radius:4px;padding:2px 8px;line-height:1.45;vertical-align:top;min-width:40px;word-break:break-word}
 #editor table.has-header tr:first-child td{background:var(--acc-soft);font-weight:600}
 #editor td.cur{background:var(--s3)}
+#editor td.csel{background:var(--acc-soft);box-shadow:inset 0 0 0 1.5px var(--acc-text)}
+#editor table.picking{user-select:none;-webkit-user-select:none}
 #editor.col-hover,#editor.col-hover td{cursor:col-resize}
 #editor.row-hover,#editor.row-hover td{cursor:row-resize}
 body.resizing,body.resizing *{cursor:col-resize!important;user-select:none}
 body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .rz-guide{position:fixed;z-index:50;background:var(--acc-text);border-radius:2px;pointer-events:none}
-.tblbar{position:absolute;z-index:20;display:flex;align-items:center;gap:2px;padding:3px;background:var(--float);border-radius:10px;box-shadow:var(--shadow);white-space:nowrap}
+.tblbar{position:absolute;z-index:20;display:flex;align-items:center;gap:2px;padding:2px;background:var(--float);border-radius:10px;box-shadow:var(--shadow);white-space:nowrap}
 .tblbar .gl{font-size:11px;color:var(--acc-text);padding:0 6px 0 4px;font-weight:600}
 .tblbar .tb{height:26px;font-size:11.5px;min-width:0}
 .tblbar .dz{color:var(--danger)}
@@ -264,8 +267,8 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .cal-d{position:relative;width:30px;height:30px;margin:1px auto;display:grid;place-items:center;border-radius:50%;font-size:12px;font-variant-numeric:tabular-nums}
 .cal-d.past{color:var(--faint)}
 .cal-d.today{color:var(--acc-text);font-weight:700}
-.cal-d.has{box-shadow:inset 0 0 0 1.5px var(--acc-text);color:var(--fg);font-weight:600}
-.cal-d.sel{background:var(--acc-soft)}
+.cal-d.has{background:var(--acc);color:var(--acc-ink);font-weight:600}
+.cal-d.sel{box-shadow:0 0 0 2px var(--s1),0 0 0 3.5px var(--acc-text)}
 .cal-d[data-n]::after{content:attr(data-n);position:absolute;top:-3px;right:-3px;min-width:14px;height:14px;padding:0 3px;box-sizing:border-box;border-radius:999px;background:var(--btn-bg);color:var(--btn-fg);font-size:9px;font-weight:700;line-height:14px}
 .cal-x{display:block;margin:6px auto 0;padding:3px 10px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--acc-text)}
 .pcol{min-width:0;min-height:0;display:flex;flex-direction:column}
@@ -446,6 +449,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
               <button class="tb" data-cmd="italic" title="斜體 ⌘I"><i style="font-family:Georgia,serif">I</i></button>
               <button class="tb" data-cmd="underline" title="底線 ⌘U"><u>U</u></button>
               <button class="tb" data-cmd="strikeThrough" title="刪除線"><s>S</s></button>
+              <span class="sep"></span>
               <button class="tb" data-pop="size" title="文字大小"><span style="font-size:11px">A</span><span style="font-size:15px;margin-left:-2px">A</span></button>
               <button class="tb" data-pop="lh" title="行高"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6h10M11 12h10M11 18h10M5 4v16M2.5 6.5L5 4l2.5 2.5M2.5 17.5L5 20l2.5-2.5"/></svg></button>
               <button class="tb" data-pop="color" title="文字顏色"><svg viewBox="0 0 24 24"><path d="M7 16L12 4l5 12M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="18.5" width="14" height="3" rx="1.5" fill="#3b7fe0"/></svg></button>
@@ -1288,6 +1292,8 @@ function splitCell(cell){
 function mergeInto(cell, other){ if(hasContent(other)){ if(!hasContent(cell)) cell.innerHTML = ''; else cell.append(document.createElement('br')); cell.append(...other.childNodes); } other.remove(); }
 function tableOp(op){
   const cell = curCell; if(!cell) return;
+  if(cellSel && (op === 'mergeRight' || op === 'mergeDown')){ if(cellSel.cells.length > 1) mergeSelection(); return; }
+  clearCellSel();
   const table = cell.closest('table'), cols = $$('col', table);
   if((op === 'delRow' && table.rows.length <= 1) || (op === 'delCol' && cols.length <= 1)) op = 'delTable';
   let {grid, pos} = tableMap(table), {r, c} = pos.get(cell), focus = cell;
@@ -1338,10 +1344,12 @@ function moveCell(step){   // Tab / Shift+Tab; Tab in the last cell adds a row
 }
 /* the table edit bar sits right above the active table */
 function placeTblBar(){
-  const bar = $('#tblbar');
-  if(!curCell || !editor.contains(curCell) || $('#view-notes').hidden){ bar.hidden = true; return; }
-  const sc = $('#escroll'), sr = sc.getBoundingClientRect(), wr = (curCell.closest('.tbl-wrap') || curCell.closest('table')).getBoundingClientRect();
-  bar.hidden = false;
+  const bar = $('#tblbar'), live = curCell && editor.contains(curCell) && !$('#view-notes').hidden;
+  const box = live ? (curCell.closest('.tbl-wrap') || curCell.closest('table')) : null;
+  $$('.tbl-wrap.active', editor).forEach(w => { if(w !== box) w.classList.remove('active'); });
+  if(!box){ bar.hidden = true; return; }
+  box.classList.add('active'); bar.hidden = false;
+  const sc = $('#escroll'), sr = sc.getBoundingClientRect(), wr = box.getBoundingClientRect();
   bar.style.top = (wr.top - sr.top + sc.scrollTop - bar.offsetHeight - 6) + 'px';
   bar.style.left = Math.max(6, Math.min(wr.left - sr.left, sc.clientWidth - bar.offsetWidth - 6)) + 'px';
 }
@@ -1360,7 +1368,7 @@ function updateState(){
   ['h1','h2'].forEach(t => toolbar.querySelector(`[data-block="${t}"]`).classList.toggle('on', bn === t.toUpperCase()));
   toolbar.querySelector('[data-block="blockquote"]').classList.toggle('on', !!n?.closest('blockquote'));
   toolbar.querySelector('[data-block="p"]').classList.toggle('on', !!n && !['H1','H2','BLOCKQUOTE'].includes(bn) && !n.closest('ul,ol'));
-  const cell = n?.closest('td') || null;
+  const cell = n?.closest('td') || cellSel?.cells[0] || null;
   if(curCell !== cell){ curCell?.classList.remove('cur'); cell?.classList.add('cur'); curCell = cell; }
   placeTblBar();
 }
@@ -1372,6 +1380,66 @@ $('#noteImgInput').addEventListener('change', async e => {
   const f = e.target.files[0]; e.target.value = ''; if(!f) return;
   try{ const src = await readImage(f, 1400); restoreSel(); document.execCommand('insertHTML', false, `<img src="${src}" alt=""><p><br></p>`); touchNote(); }
   catch(err){ toast('這張圖讀不到，請換個格式'); }
+});
+
+/* cell selection: dragging from one cell into another selects the rectangle between them,
+   so dragging down one column selects just that column. Then: Delete clears, ⌘C copies, 合併 merges them. */
+let cellSel = null, cellDrag = null;
+function clearCellSel(){ if(!cellSel) return; cellSel.cells.forEach(c => c.classList.remove('csel')); cellSel = null; }
+function selectCells(a, b){
+  const table = a.closest('table'), {grid, pos} = tableMap(table), pa = pos.get(a), pb = pos.get(b);
+  let r1 = Math.min(pa.r, pb.r), r2 = Math.max(pa.r, pb.r), c1 = Math.min(pa.c, pb.c), c2 = Math.max(pa.c, pb.c), grew = true;
+  while(grew){   // widen the box until no merged cell sticks out of it
+    grew = false;
+    for(let r = r1; r <= r2; r++) for(let c = c1; c <= c2; c++){
+      const x = grid[r]?.[c]; if(!x) continue; const p = pos.get(x);
+      if(p.r < r1){ r1 = p.r; grew = true; } if(p.c < c1){ c1 = p.c; grew = true; }
+      if(p.r + x.rowSpan - 1 > r2){ r2 = p.r + x.rowSpan - 1; grew = true; } if(p.c + x.colSpan - 1 > c2){ c2 = p.c + x.colSpan - 1; grew = true; }
+    }
+  }
+  clearCellSel();
+  const cells = [...new Set(grid.slice(r1, r2 + 1).flatMap(row => row.slice(c1, c2 + 1)))].filter(Boolean);
+  cells.forEach(c => c.classList.add('csel'));
+  cellSel = { table, cells, r1, r2, c1, c2 };
+  updateState();
+}
+function mergeSelection(){
+  const { cells, r1, r2, c1, c2 } = cellSel, first = cells[0];
+  first.rowSpan = r2 - r1 + 1; first.colSpan = c2 - c1 + 1;
+  cells.slice(1).forEach(c => mergeInto(first, c));
+  clearCellSel(); editor.focus(); caretIn(first); touchNote(); updateState();
+}
+editor.addEventListener('pointerdown', e => {
+  clearCellSel();
+  const td = e.target.closest('td');
+  if(td && e.pointerType === 'mouse' && e.button === 0 && !edgeAt(e)) cellDrag = { table:td.closest('table'), anchor:td };
+});
+editor.addEventListener('pointermove', e => {
+  if(!cellDrag) return;
+  const td = document.elementFromPoint(e.clientX, e.clientY)?.closest('td');
+  if(!td || td.closest('table') !== cellDrag.table || (td === cellDrag.anchor && !cellSel)) return;   // inside one cell: normal text selection
+  cellDrag.table.classList.add('picking'); getSelection().removeAllRanges();
+  selectCells(cellDrag.anchor, td);
+});
+window.addEventListener('pointerup', () => { if(cellDrag){ cellDrag.table.classList.remove('picking'); cellDrag = null; } });
+document.addEventListener('keydown', e => {
+  if(!cellSel || imeBusy(e)) return;
+  if(e.key === 'Backspace' || e.key === 'Delete'){ e.preventDefault(); cellSel.cells.forEach(c => { c.innerHTML = '<br>'; }); touchNote(); }
+  else if(e.key === 'Escape') clearCellSel();
+  else if(!e.metaKey && !e.ctrlKey && e.key.length === 1) clearCellSel();
+});
+document.addEventListener('copy', e => {
+  if(!cellSel) return;
+  e.preventDefault();
+  const {grid} = tableMap(cellSel.table), rows = [];
+  for(let r = cellSel.r1; r <= cellSel.r2; r++){
+    const seen = new Set(), line = [];
+    for(let c = cellSel.c1; c <= cellSel.c2; c++){ const x = grid[r][c]; if(x && !seen.has(x)){ seen.add(x); line.push(x); } }
+    rows.push(line);
+  }
+  e.clipboardData.setData('text/plain', rows.map(l => l.map(x => x.innerText.replace(/\s*\n\s*/g, ' ').trim()).join('\t')).join('\n'));
+  e.clipboardData.setData('text/html', '<table>' + rows.map(l => '<tr>' + l.map(x => `<td>${x.innerHTML}</td>`).join('') + '</tr>').join('') + '</table>');
+  toast('已複製選取的儲存格');
 });
 
 /* column / row resizing: drag a cell's right or bottom edge */
@@ -1413,7 +1481,7 @@ window.addEventListener('pointermove', e => {
     const w = Math.max(48, rz.start + e.clientX - rz.from); rz.col.style.width = w + 'px'; sumColWidths(rz.table);
     rz.guide.style.left = (rz.x + w - rz.start) + 'px';
   } else {
-    rz.row.style.height = Math.max(30, rz.start + e.clientY - rz.from) + 'px';
+    rz.row.style.height = Math.max(18, rz.start + e.clientY - rz.from) + 'px';
     rz.guide.style.top = rz.row.getBoundingClientRect().bottom + 'px';
   }
 });

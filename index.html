@@ -30,14 +30,15 @@
   --acc:#42a7c6; --acc-ink:#04202a; --acc-text:#6cc4de; --acc-soft:rgba(66,167,198,.18);   /* dark: hat blue */
   --btn-bg:#42a7c6; --btn-fg:#04202a; --btn-hover:#9182f9; --btn-hover-fg:#ffffff;          /* hover: pencil purple */
   --hover:rgba(145,130,249,.2); --hover-acc:#9182f9; --hover-acc-fg:#ffffff;
-  --tbar-text:#04202a; --tbar-chip:rgba(255,255,255,.88);
+  --ebar:#1a333c; --ebar-ink:#d3edf5; --tbar-text:#d3edf5; --tbar-chip:rgba(255,255,255,.1);   /* title bar: quiet teal */
+  --reels:#9182f9; --reels-ink:#120c33;
   --danger:#ff7d8c; --danger-soft:rgba(255,125,140,.14); --danger-ink:#1a0508; --past:#ff9fb5;
   --onimg-bg:rgba(12,12,14,.66); --onimg-fg:#f2f2f4;
   --foot:linear-gradient(transparent,rgba(0,0,0,.72)); --foot-fg:#f2f2f4;
   --cover-bg:linear-gradient(160deg,#1f3440,#161619 75%); --cover-fg:#e8e8ec;
   --thumb:rgba(108,196,222,.35); --shadow:0 16px 44px rgba(0,0,0,.55);
   --sky-opacity:1;
-  --cal:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2304202a' stroke-width='2' stroke-linecap='round'%3E%3Crect x='4' y='5' width='16' height='15' rx='3'/%3E%3Cpath d='M4 10h16M9 3v4M15 3v4'/%3E%3C/svg%3E");
+  --cal:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d3edf5' stroke-width='2' stroke-linecap='round'%3E%3Crect x='4' y='5' width='16' height='15' rx='3'/%3E%3Cpath d='M4 10h16M9 3v4M15 3v4'/%3E%3C/svg%3E");
   --cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='24' viewBox='0 0 24 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='1' stop-color='%2342a7c6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12 3.5Q13.3 14.6 20.5 16Q13.3 17.4 12 28.5Q10.7 17.4 3.5 16Q10.7 14.6 12 3.5Z' fill='url(%23g)' stroke='url(%23g)' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") 9 12, auto;
   --cursor-hot:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='27' viewBox='0 0 24 32'%3E%3Cpath d='M12 3.5Q13.3 14.6 20.5 16Q13.3 17.4 12 28.5Q10.7 17.4 3.5 16Q10.7 14.6 12 3.5Z' fill='%239182f9' stroke='%239182f9' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") 10 13, pointer;
   --ease:cubic-bezier(.25,.8,.25,1);
@@ -50,7 +51,8 @@
   --acc:#ffe08a; --acc-ink:#3a2a08; --acc-text:#8f6400; --acc-soft:rgba(232,182,40,.2);
   --btn-bg:#f5c542; --btn-fg:#3a2a08; --btn-hover:#e3913a; --btn-hover-fg:#2b1405;
   --hover:rgba(214,138,58,.16); --hover-acc:#e3913a; --hover-acc-fg:#2b1405;
-  --tbar-text:#6e4c00; --tbar-chip:#ffffff;
+  --ebar:#f8cf5a; --ebar-ink:#3a2a08; --tbar-text:#6e4c00; --tbar-chip:#ffffff;   /* title bar: deeper honey so it stands off the beige */
+  --reels:#d4c8ff; --reels-ink:#2e2168;
   --danger:#d6455a; --danger-soft:rgba(214,69,90,.12); --danger-ink:#ffffff; --past:#c2410c;
   --onimg-bg:rgba(255,252,247,.92); --onimg-fg:#2b2118;
   --foot:linear-gradient(rgba(255,250,238,0),rgba(255,250,238,.95) 70%); --foot-fg:#2b2118;
@@ -76,9 +78,9 @@ button,label[for],[role=button]{transition:background-color .18s var(--ease),col
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes popin{from{opacity:0;transform:translateY(-4px) scale(.97)}to{opacity:1;transform:none}}
 .anim-in{animation:rise .26s var(--ease) both}
-.setpop:not([hidden]),.pop:not([hidden]){animation:popin .18s var(--ease) both}
+.pop:not([hidden]){animation:popin .18s var(--ease) both}
 html.theming,html.theming *{transition:background-color .35s ease,color .35s ease,fill .35s ease!important}
-.ind{position:absolute;left:0;top:0;border-radius:8px;background:var(--acc-soft);pointer-events:none;transition:transform .3s var(--ease),width .3s var(--ease),height .3s var(--ease)}
+.ind{position:absolute;left:0;top:0;border-radius:0;background:var(--acc);pointer-events:none;transition:transform .3s var(--ease),width .3s var(--ease),height .3s var(--ease)}
 .ind.noanim{transition:none}
 
 /* scrollbars: no track, themed thumb, only while hovering the scroller */
@@ -96,17 +98,21 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .brand{display:flex;align-items:center;gap:9px}
 .brand img{width:28px;height:28px;border-radius:8px;flex:none}
 .brand b{font-size:17px;font-weight:700;letter-spacing:-.01em;white-space:nowrap}
-.seg{position:relative;display:flex;gap:2px;background:var(--s2);padding:3px;border-radius:11px}
-.seg button{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--muted);border-radius:8px;font-weight:600;font-size:12.5px}
+.seg{position:relative;display:flex;background:var(--s2);border-radius:10px;overflow:hidden;isolation:isolate}
+.seg button{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--muted);border-radius:0;font-weight:600;font-size:12.5px}
 .seg button:not(.on):hover{color:var(--fg);background:var(--hover)}
-.seg button.on{color:var(--acc-text)}
+.seg button.on{color:var(--acc-ink)}
 .seg svg{width:15px;height:15px;flex:none}
 .nav{margin-left:auto}
-.nav button{padding:6px 14px}
-.modeseg button{width:40px;height:30px}
+.nav button{padding:8px 16px}
+.modeseg button{width:44px;height:32px}
 .modeseg svg{width:16px;height:16px}
 
-.setpop{position:absolute;top:calc(100% + 6px);right:max(16px,env(safe-area-inset-right,0px));width:280px;max-width:calc(100vw - 32px);background:var(--float);border-radius:16px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transform-origin:top right}
+.setpop{position:fixed;top:0;right:0;bottom:0;z-index:2;width:340px;max-width:100vw;box-sizing:border-box;overflow:auto;background:var(--float);border-radius:18px 0 0 18px;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 16px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;transform:translateX(105%);transition:transform .32s var(--ease)}
+.setpop.open{transform:none}
+.sp-head{display:flex;align-items:center;justify-content:space-between;font-size:16px;font-weight:700;padding:0 0 2px 4px}
+.scrim{position:fixed;inset:0;z-index:1;background:rgba(0,0,0,.22);opacity:0;transition:opacity .3s var(--ease)}
+.scrim.open{opacity:1}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stat{display:flex;flex-direction:column;background:var(--s2);border-radius:12px;padding:10px 12px 12px}
 .stat b{font-size:30px;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
@@ -146,15 +152,15 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 
 /* ===== editor chrome shared by 貼文 and 備忘錄 ===== */
 .ecol{min-width:0;min-height:0;display:flex;flex-direction:column;gap:10px}
-.ebar{display:flex;align-items:center;gap:8px;min-height:50px;box-sizing:border-box;padding:8px 8px 8px 10px;background:var(--acc);border-radius:14px;flex:none}
-.etitle{flex:1;min-width:60px;box-sizing:border-box;text-overflow:ellipsis;border:0;background:transparent;color:var(--acc-ink);font:600 16px var(--font);padding:6px;outline:none;border-radius:8px}
-.etitle::placeholder{color:var(--acc-ink);opacity:.45}
-.etitle:focus{background:rgba(255,255,255,.3)}
+.ebar{display:flex;align-items:center;gap:8px;min-height:50px;box-sizing:border-box;padding:8px 8px 8px 10px;background:var(--ebar);border-radius:14px;flex:none}
+.etitle{flex:1;min-width:60px;box-sizing:border-box;text-overflow:ellipsis;border:0;background:transparent;color:var(--ebar-ink);font:600 16px var(--font);padding:6px;outline:none;border-radius:8px}
+.etitle::placeholder{color:var(--ebar-ink);opacity:.45}
+.etitle:focus{background:rgba(255,255,255,.18)}
 .ebar .rbtn{background:var(--tbar-chip);color:var(--tbar-text)}
 .ebar .rbtn:hover,.dx:hover{background:var(--hover-acc);color:var(--hover-acc-fg)}
-.ebar .rbtn.on{background:var(--acc-ink);color:var(--acc)}
+.ebar .rbtn.on{background:var(--ebar-ink);color:var(--ebar)}
 .ebar .rbtn.del:hover{background:var(--danger);color:var(--danger-ink)}
-.ebar .rbtn.dirty::after{background:var(--acc-ink);box-shadow:0 0 0 2px var(--acc)}
+.ebar .rbtn.dirty::after{background:var(--ebar-ink);box-shadow:0 0 0 2px var(--ebar)}
 .back{display:none!important}
 .pill{display:flex;align-items:center;gap:4px;background:var(--tbar-chip);color:var(--tbar-text);border-radius:999px;padding:2px 4px 2px 10px;flex:none;font-size:12.5px;font-weight:600}
 .pill:focus-within{box-shadow:0 0 0 2px var(--tbar-text)}
@@ -174,8 +180,11 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .blabel{font-size:12px;font-weight:600;color:var(--muted);padding-left:4px}
 .sec{font-size:10.5px;font-weight:600;color:var(--faint);letter-spacing:.08em;padding:8px 10px 4px}
 
-.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:6px 10px;background:var(--s1);border-bottom:1px solid var(--s3);border-radius:14px 14px 0 0;position:relative;flex:none}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:6px 10px;background:var(--s1);border-bottom:1px solid var(--s3);border-radius:14px 14px 0 0;position:relative;z-index:5;flex:none}
 .toolbar .sep{width:1px;height:18px;margin:0 6px;background:var(--s3);flex:none}
+.tools,.tgrp{display:contents}
+@keyframes tgin{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+@keyframes barin{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:none}}
 .tb{min-width:28px;height:28px;padding:0 6px;border-radius:7px;color:var(--fg);display:inline-flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:600}
 .tb.on{background:var(--btn-bg);color:var(--btn-fg)}
 .tb svg{width:15px;height:15px}
@@ -221,7 +230,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .empty-note{color:var(--muted);font-size:12px;padding:20px 10px;text-align:center}
 
 /* ===== 備忘錄 editor ===== */
-.notes .ecol>.panel{flex:1;overflow:hidden}
+.notes .ecol>.panel{flex:1;overflow:hidden;position:relative}
 .escroll{flex:1;overflow:auto;min-height:0;position:relative}
 .meta-line{font-size:11px;color:var(--faint);text-align:center;padding-top:8px;font-variant-numeric:tabular-nums}
 #editor{outline:none;padding:10px 28px 80px;min-height:calc(100% - 30px);font-size:15px;line-height:1.65;letter-spacing:.01em}
@@ -238,8 +247,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 #editor ul.checklist li.done{color:var(--muted);text-decoration:line-through}
 #editor a{color:var(--acc-text);text-decoration:underline;text-underline-offset:2px}
 #editor img{max-width:100%;border-radius:10px;display:block;margin:.6em 0}
-#editor .tbl-wrap{overflow-x:auto;margin:.3em 0;padding-bottom:4px}
-#editor .tbl-wrap.active{margin-top:44px}   /* room for the table bar only while editing that table */
+#editor .tbl-wrap{overflow-x:auto;overflow-y:hidden;margin:.3em 0;padding-bottom:4px}
 #editor table{border-collapse:separate;border-spacing:2px;table-layout:fixed;font-size:13px}
 #editor td{background:var(--s2);border-radius:4px;padding:2px 8px;line-height:1.45;vertical-align:top;min-width:40px;word-break:break-word}
 #editor table.has-header tr:first-child td{background:var(--acc-soft);font-weight:600}
@@ -250,8 +258,16 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 #editor.row-hover,#editor.row-hover td{cursor:row-resize}
 body.resizing,body.resizing *{cursor:col-resize!important;user-select:none}
 body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
-.rz-guide{position:fixed;z-index:50;background:var(--acc-text);border-radius:2px;pointer-events:none}
-.tblbar{position:absolute;z-index:20;display:flex;align-items:center;gap:2px;padding:2px;background:var(--float);border-radius:10px;box-shadow:var(--shadow);white-space:nowrap}
+.rz-guide{position:fixed;z-index:250;background:var(--acc-text);border-radius:2px;pointer-events:none}
+.rzh-box{position:absolute;inset:0 auto auto 0;width:0;height:0;z-index:15}
+.rzh{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;display:grid;place-items:center;touch-action:none}
+.rzh::after{content:"";border-radius:4px;background:var(--acc-text);box-shadow:0 0 0 2.5px var(--s1)}
+.rzh.c::after{width:6px;height:18px}
+.rzh.r::after{width:18px;height:6px}
+.tblbar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100% - 24px);box-sizing:border-box;overflow-x:auto;scrollbar-width:none;z-index:20;display:flex;align-items:center;gap:2px;padding:3px;background:var(--float);border-radius:12px;box-shadow:var(--shadow);white-space:nowrap}
+.tblbar::-webkit-scrollbar{display:none}
+.tblbar:not([hidden]){animation:barup .2s var(--ease) both}
+@keyframes barup{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translateX(-50%)}}
 .tblbar .gl{font-size:11px;color:var(--acc-text);padding:0 6px 0 4px;font-weight:600}
 .tblbar .tb{height:26px;font-size:11.5px;min-width:0}
 .tblbar .dz{color:var(--danger)}
@@ -281,7 +297,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .txtcover{position:absolute;inset:0;padding:44px 14px 40px;font-size:12.5px;line-height:1.7;color:var(--cover-fg);background:var(--cover-bg);overflow:hidden;white-space:pre-line;word-break:break-word}
 .txtcover.blank{color:var(--muted);background:var(--s2)}
 .ctop{position:absolute;top:8px;left:8px;right:8px;display:flex;align-items:flex-start;gap:6px}
-.ctitle,.chip{background:var(--onimg-bg);color:var(--onimg-fg);backdrop-filter:blur(6px);border-radius:999px;font-weight:700}
+.ctitle,.chip{background:var(--onimg-bg);color:var(--onimg-fg);border-radius:999px;font-weight:700}
 .ctitle{min-width:0;font-size:13px;padding:3px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chip{margin-left:auto;display:flex;align-items:center;gap:3px;font-size:11px;padding:3px 8px;font-variant-numeric:tabular-nums;flex:none}
 .chip+.chip{margin-left:0}
@@ -317,10 +333,40 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .drag-ghost{position:fixed;z-index:300;width:80px;aspect-ratio:4/5;border-radius:10px;overflow:hidden;pointer-events:none;box-shadow:var(--shadow);transform:translate(-50%,-50%) rotate(-4deg) scale(1.08)}
 .drag-ghost img{width:100%;height:100%;object-fit:cover}
 .capblk{flex:1 0 auto;min-height:300px}
+@media (min-width:761px){
+  #postEdit:not([hidden]){display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);grid-template-rows:auto auto minmax(0,1fr);gap:10px;overflow:hidden;padding:0}
+  #postEdit>.ebar{grid-column:1;grid-row:1}
+  #postEdit>.pmeta{grid-column:1;grid-row:2}
+  #postEdit>.media{grid-column:1;grid-row:3;overflow:auto;box-sizing:border-box;justify-content:flex-start}
+  #postEdit>.capblk{grid-column:2;grid-row:1/4;min-height:0}
+  .metatg{display:none!important}
+  #postEdit>.capblk textarea{min-height:0;overflow:auto}
+}
+.fsbtn{display:none!important}
+.pmeta{flex:none;padding:2px 12px}
+.pm-row{display:flex;align-items:center;gap:8px;min-height:46px}
+.pm-row+.pm-row{border-top:1px solid var(--s3)}
+.pm-row .blabel{margin-right:auto}
+.pmeta .pill{background:var(--s2);color:var(--fg)}
+.pmeta .pill input,.pmeta .dx{color:var(--fg)}
+.pmeta .pill:focus-within{box-shadow:0 0 0 2px var(--acc-text)}
+.pmeta .rel{background:var(--s2);color:var(--muted)}
+.pmeta .rel.past{color:var(--danger)}
+.kindseg button{padding:6px 14px}
+.kindseg button[data-kind="reels"].on{color:var(--reels-ink)}
+.kindseg.reels .ind{background:var(--reels)}
+.metatg svg{transition:transform .22s var(--ease)}
+.meta-open .metatg svg{transform:rotate(180deg)}
+.cal-d.has.reels{background:var(--reels);color:var(--reels-ink)}
+.cal-d.has.mixed{background:linear-gradient(135deg,var(--acc) 50%,var(--reels) 50%);color:var(--acc-ink)}
+.ktag{display:inline-block;font-style:normal;font-size:10px;font-weight:700;line-height:15px;padding:0 5px;margin-right:5px;border-radius:5px;background:var(--reels);color:var(--reels-ink);vertical-align:1px}
+.chip.reels{background:var(--reels);color:var(--reels-ink)}
 .capblk textarea{flex:1;width:100%;box-sizing:border-box;min-height:240px;resize:none;background:transparent;border:0;color:var(--fg);font:15px/1.65 var(--font);padding:4px 6px;outline:none}
 
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(16px);opacity:0;z-index:400;background:var(--float);color:var(--fg);padding:9px 16px;border-radius:999px;font-size:12.5px;font-weight:600;transition:opacity .22s var(--ease),transform .22s var(--ease);pointer-events:none;box-shadow:var(--shadow)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+#editor .tbl-wrap.fit{overflow-x:hidden}
 
 @media (max-width:760px){
   .topbar{gap:8px}
@@ -333,7 +379,8 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
   .notes.show-editor .ecol,.posts.editing .pcol{display:flex}
   .back{display:grid!important}
   .thumbs{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .rel{display:none!important}
+  .pmeta{display:none}
+  .meta-open .pmeta{display:block}
   .ebar{gap:5px;padding:7px 7px 7px 8px}
   .ebar .rbtn{width:30px;height:30px}
   .etitle{min-width:0;font-size:15px;padding:6px 4px}
@@ -342,6 +389,30 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
   .datepill input{width:8.4em;height:28px;box-sizing:border-box;font-size:12.5px;line-height:1.2;padding:4px 2px;white-space:nowrap;-webkit-appearance:none;appearance:none;text-align:left}
   .datepill input::-webkit-date-and-time-value{text-align:left}
   .datepill input::-webkit-calendar-picker-indicator{display:none}
+  /* settings: full-width menu dropping from the header */
+  .setpop{position:absolute;top:100%;left:0;right:0;bottom:auto;width:auto;max-height:calc(100dvh - 80px);border-radius:0 0 20px 20px;padding:12px max(16px,env(safe-area-inset-right,0px)) 18px max(16px,env(safe-area-inset-left,0px));transform:translateY(-10px);opacity:0;transition:transform .26s var(--ease),opacity .2s var(--ease)}
+  .setpop.open{transform:none;opacity:1}
+  .sp-head{display:none}
+  .scrim{position:absolute;inset:100% 0 auto 0;height:100dvh}
+  /* notes toolbar: one button per group, tap to open it to the right */
+  .notes .toolbar{display:none;flex-wrap:nowrap;gap:4px;padding:6px 8px;padding-top:max(6px,env(safe-area-inset-top,0px));border-radius:0}
+  .tools{display:flex;flex:1;min-width:0;align-items:center;gap:2px;overflow-x:auto;scrollbar-width:none}
+  .tools::-webkit-scrollbar{display:none}
+  .tgrp{display:flex;align-items:center;gap:2px;flex:none}
+  .tgrp .tb{flex:none;min-width:32px;height:32px}
+  .tgrp .lead{order:-1}
+  .tgrp:not(.open) .tb:not(.lead){display:none}
+  .tgrp.open{background:var(--s2);border-radius:9px}
+  .tgrp.open .tb:not(.lead){animation:tgin .2s var(--ease) both}
+  .toolbar .sep{margin:0 3px;flex:none}
+  /* full-screen editing: the content panel covers the page; the bar slides in on top */
+  body.fs-note .notes .ecol>.panel,body.fs-cap .capblk{position:fixed;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100%);z-index:200;border-radius:0;margin:0}
+  body.fs-note .notes .toolbar{display:flex;animation:barin .24s var(--ease) backwards}
+  body.fs-note #noteBack,body.fs-note #noteDone,body.fs-cap #capBack,body.fs-cap #capDone{display:grid!important}
+  body.fs-cap .capblk{padding-top:max(10px,env(safe-area-inset-top,0px))}
+  body.fs-cap .capblk .blk-h{animation:barin .24s var(--ease) backwards}
+  .fsbtn{width:32px;height:32px;flex:none}
+  .fsbtn.ok{background:var(--btn-bg);color:var(--btn-fg)}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>
@@ -361,7 +432,9 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
       <button role="tab" id="tab-notes" data-view="notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7"/></svg>備忘錄</button>
     </nav>
     <button class="rbtn" id="setBtn" title="設定" aria-label="設定" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg></button>
+    <div class="scrim" id="setScrim" hidden></div>
     <div class="setpop" id="setPop" hidden>
+      <div class="sp-head"><span>設定</span><button class="rbtn" id="setClose" title="關閉" aria-label="關閉設定"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button></div>
       <div class="stats">
         <div class="stat"><b id="stPosts">0</b><span>貼文</span></div>
         <div class="stat"><b id="stNotes">0</b><span>備忘錄</span></div>
@@ -402,9 +475,12 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
             <div class="ebar">
               <button class="rbtn" id="backGrid" title="返回貼文列表" aria-label="返回貼文列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
               <input class="etitle" id="ptitle" type="text" placeholder="標題" aria-label="貼文標題" autocomplete="off">
-              <span class="rel" id="rel" hidden></span>
-              <div class="pill datepill" id="datePill"><input type="date" id="pdate" aria-label="預計發文日期" title="預計發文日期"><button class="dx" id="clearDate" title="清除日期" aria-label="清除日期" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button></div>
+              <button class="rbtn metatg" id="metaToggle" title="排程與類別" aria-label="排程與類別" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
               <button class="rbtn" id="pinPost" title="釘選到最前面" aria-label="釘選"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 5 4 4H6l4-4z"/><path d="M12 13v7"/></svg></button>
+            </div>
+            <div class="panel pmeta" id="pmeta">
+              <div class="pm-row"><span class="blabel">排程日期</span><span class="rel" id="rel" hidden></span><div class="pill datepill" id="datePill"><input type="date" id="pdate" aria-label="預計發文日期" title="預計發文日期"><button class="dx" id="clearDate" title="清除日期" aria-label="清除日期" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button></div></div>
+              <div class="pm-row"><span class="blabel">類別</span><div class="seg kindseg" id="kindSeg" role="group" aria-label="類別"><span class="ind" aria-hidden="true"></span><button data-kind="post">貼文</button><button data-kind="reels">Reels</button></div></div>
             </div>
             <div class="panel blk media" id="media">
               <div class="blk-h"><span class="blabel">圖片</span><span class="hint" id="imgHint"></span></div>
@@ -412,8 +488,8 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
               <input type="file" id="postImgInput" accept="image/*" multiple hidden>
             </div>
             <div class="panel blk capblk">
-              <div class="blk-h"><label class="blabel" for="caption">文案</label><span class="capmeta"><span id="capCount"></span><span id="tagCount"></span></span>
-                <button class="rbtn" id="copyCap" title="複製文案" aria-label="複製文案"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2h2"/></svg></button></div>
+              <div class="blk-h"><button class="rbtn fsbtn" id="capBack" title="返回" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><label class="blabel" for="caption">文案</label><span class="capmeta"><span id="capCount"></span><span id="tagCount"></span></span>
+                <button class="rbtn" id="copyCap" title="複製文案" aria-label="複製文案"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2h2"/></svg></button><button class="rbtn fsbtn ok" id="capDone" title="完成" aria-label="完成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button></div>
               <textarea id="caption" placeholder="寫下這篇貼文的文案、hashtag⋯"></textarea>
             </div>
           </div>
@@ -441,32 +517,48 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
           </div>
           <div class="panel">
             <div class="toolbar" id="toolbar">
+              <button class="rbtn fsbtn" id="noteBack" title="返回" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+              <div class="tools">
+              <div class="tgrp">
               <button class="tb" data-block="h1" title="標題">標題</button>
               <button class="tb" data-block="h2" title="副標題">副標</button>
               <button class="tb" data-block="p" title="內文">內文</button>
+              </div>
               <span class="sep"></span>
+              <div class="tgrp">
               <button class="tb" data-cmd="bold" title="粗體 ⌘B"><b>B</b></button>
               <button class="tb" data-cmd="italic" title="斜體 ⌘I"><i style="font-family:Georgia,serif">I</i></button>
               <button class="tb" data-cmd="underline" title="底線 ⌘U"><u>U</u></button>
               <button class="tb" data-cmd="strikeThrough" title="刪除線"><s>S</s></button>
+              </div>
               <span class="sep"></span>
+              <div class="tgrp">
               <button class="tb" data-pop="size" title="文字大小"><span style="font-size:11px">A</span><span style="font-size:15px;margin-left:-2px">A</span></button>
               <button class="tb" data-pop="lh" title="行高"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6h10M11 12h10M11 18h10M5 4v16M2.5 6.5L5 4l2.5 2.5M2.5 17.5L5 20l2.5-2.5"/></svg></button>
               <button class="tb" data-pop="color" title="文字顏色"><svg viewBox="0 0 24 24"><path d="M7 16L12 4l5 12M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="18.5" width="14" height="3" rx="1.5" fill="#3b7fe0"/></svg></button>
               <button class="tb" data-pop="hilite" title="螢光筆"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14 4l6 6-8 8H6v-6z"/><path d="M3 21h8" stroke="#d9a21b" stroke-width="3" stroke-linecap="round"/></svg></button>
+              </div>
               <span class="sep"></span>
+              <div class="tgrp">
               <button class="tb" data-cmd="justifyLeft" title="置左"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg></button>
               <button class="tb" data-cmd="justifyCenter" title="置中"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg></button>
               <button class="tb" data-cmd="justifyRight" title="置右"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg></button>
+              </div>
               <span class="sep"></span>
+              <div class="tgrp">
               <button class="tb" data-cmd="insertUnorderedList" title="項目符號"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/></svg></button>
               <button class="tb" data-cmd="insertOrderedList" title="編號清單"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 4.5l1.5-.5v4M3.5 14h3l-3 4h3" stroke-width="1.6"/></svg></button>
               <button class="tb" id="checkBtn" title="核取清單"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="6" height="6" rx="1.5"/><path d="M4.5 7l1.2 1.2L8 5.8" stroke-width="1.6"/><rect x="3" y="14" width="6" height="6" rx="1.5"/><path d="M12 7h9M12 17h9"/></svg></button>
               <button class="tb" data-block="blockquote" title="引言"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 7H6a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6zM20 7h-4a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6z"/></svg></button>
               <button class="tb" data-cmd="insertHorizontalRule" title="分隔線"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12h18"/></svg></button>
+              </div>
               <span class="sep"></span>
+              <div class="tgrp">
               <button class="tb" data-pop="table" title="插入表格"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9.5h18M3 15h18M9 4v16M15 4v16"/></svg></button>
               <button class="tb" id="imgBtn" title="插入圖片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg></button>
+              </div>
+              </div>
+              <button class="rbtn fsbtn ok" id="noteDone" title="完成" aria-label="完成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
               <div class="pop" id="pop-color" hidden><div class="swatches" data-kind="foreColor"></div></div>
               <div class="pop" id="pop-hilite" hidden><div class="swatches" data-kind="hiliteColor"></div></div>
               <div class="pop" id="pop-size" hidden><div class="opts" data-kind="size"></div></div>
@@ -476,20 +568,21 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
             <div class="escroll" id="escroll">
               <div class="meta-line" id="noteMeta"></div>
               <div id="editor" contenteditable="true" spellcheck="false" aria-label="備忘錄內容"></div>
-              <div class="tblbar" id="tblbar" hidden>
-                <span class="gl">表格</span>
-                <button class="tb" data-t="rowAbove">＋上列</button>
-                <button class="tb" data-t="rowBelow">＋下列</button>
-                <button class="tb" data-t="colLeft">＋左欄</button>
-                <button class="tb" data-t="colRight">＋右欄</button>
-                <button class="tb" data-t="delRow">刪列</button>
-                <button class="tb" data-t="delCol">刪欄</button>
-                <button class="tb" data-t="mergeRight">合併右</button>
-                <button class="tb" data-t="mergeDown">合併下</button>
-                <button class="tb" data-t="split">取消合併</button>
-                <button class="tb" data-t="header">表頭</button>
-                <button class="tb dz" data-t="delTable">刪除表格</button>
-              </div>
+              <div class="rzh-box" id="rzh" hidden></div>
+            </div>
+            <div class="tblbar" id="tblbar" hidden>
+              <span class="gl">表格</span>
+              <button class="tb" data-t="rowAbove">＋上列</button>
+              <button class="tb" data-t="rowBelow">＋下列</button>
+              <button class="tb" data-t="colLeft">＋左欄</button>
+              <button class="tb" data-t="colRight">＋右欄</button>
+              <button class="tb" data-t="delRow">刪列</button>
+              <button class="tb" data-t="delCol">刪欄</button>
+              <button class="tb" data-t="mergeRight">合併右</button>
+              <button class="tb" data-t="mergeDown">合併下</button>
+              <button class="tb" data-t="split">取消合併</button>
+              <button class="tb" data-t="header">表頭</button>
+              <button class="tb dz" data-t="delTable">刪除表格</button>
             </div>
           </div>
         </div>
@@ -517,6 +610,7 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const coarse = matchMedia('(pointer:coarse)'), phone = matchMedia('(max-width:760px)');
 const WEEK = ['日','一','二','三','四','五','六'];
 const lsGet = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
 const lsSet = (k, v) => { try{ localStorage.setItem(k, v); }catch(e){} };
@@ -527,12 +621,13 @@ document.documentElement.dataset.mode = (lsGet('pn-mode') || lsGet('ml-mode2')) 
 /* untouched copies of the page parts, taken before anything renders, used by 匯出 */
 const PRISTINE = (() => {
   const g = id => document.getElementById(id)?.outerHTML || '';
-  return { lib:g('sbLib'), icons:g('appIcon') + g('appTouchIcon') + '\n', fonts:g('appFonts'), style:g('appStyle'), sky:g('sky'), app:g('app'), toast:g('toast'), script:document.currentScript?.outerHTML || g('appScript') };
+  return { lib:g('sbLib'), icons:g('appIcon') + g('appTouchIcon') + '\n', fonts:g('appFonts'), style:g('appStyle'), sky:g('sky'), app:g('app'), toast:g('toast') + '\n' + g('ctx'), script:document.currentScript?.outerHTML || g('appScript') };
 })();
 
 let toastT;
 function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800); }
-function animIn(el){ el.classList.remove('anim-in'); void el.offsetWidth; el.classList.add('anim-in'); }
+/* the class comes off when done: a lingering transform animation would trap position:fixed children (full-screen editing) */
+function animIn(el){ el.classList.remove('anim-in'); void el.offsetWidth; el.classList.add('anim-in'); el.addEventListener('animationend', function f(e){ if(e.target === el){ el.classList.remove('anim-in'); el.removeEventListener('animationend', f); } }); }
 
 /* sliding highlight behind the selected button of a .seg */
 function placeInd(box, instant){
@@ -640,8 +735,8 @@ async function readLegacy(){
 const BUCKET = 'post-images';
 const noteToRow = n => ({ id:n.id, title:n.title, category:n.category, pinned:n.pinned, html:n.html, created_at:n.createdAt, updated_at:n.updatedAt });
 const noteFromRow = r => ({ id:r.id, title:r.title, category:r.category, pinned:r.pinned, html:r.html, createdAt:r.created_at, updatedAt:r.updated_at });
-const postToRow = d => ({ id:d.id, title:d.title, pinned:d.pinned, date:d.date, caption:d.caption, images:d.images.filter(i => i.path).map(i => ({ id:i.id, path:i.path })), created_at:d.createdAt, updated_at:d.updatedAt });
-const postFromRow = r => ({ id:r.id, title:r.title, pinned:r.pinned, date:r.date, caption:r.caption, images:(r.images || []).map(i => ({ id:i.id, path:i.path, src:'' })), createdAt:r.created_at, updatedAt:r.updated_at });
+const postToRow = d => ({ id:d.id, title:d.title, pinned:d.pinned, date:d.date, kind:d.kind || 'post', caption:d.caption, images:d.images.filter(i => i.path).map(i => ({ id:i.id, path:i.path })), created_at:d.createdAt, updated_at:d.updatedAt });
+const postFromRow = r => ({ id:r.id, title:r.title, pinned:r.pinned, date:r.date, kind:r.kind || 'post', caption:r.caption, images:(r.images || []).map(i => ({ id:i.id, path:i.path, src:'' })), createdAt:r.created_at, updatedAt:r.updated_at });
 const Cloud = {
   sb:null, user:null, failed:false,
   get on(){ return !!this.user && !this.failed; },
@@ -679,7 +774,15 @@ const Cloud = {
     }
   },
   async push(table, rows, removedIds, removedFiles){
-    if(rows.length){ const { error } = await this.sb.from(table).upsert(rows); if(error) throw error; }
+    if(rows.length){
+      const strip = list => list.map(({ kind, ...r }) => r);
+      let { error } = await this.sb.from(table).upsert(table === 'posts' && this.noKind ? strip(rows) : rows);
+      if(error && table === 'posts' && !this.noKind && /kind/.test(error.message || '')){   // the posts table has no 類別 column yet
+        this.noKind = true; toast('要同步「類別」請在 Supabase 加上 kind 欄位');
+        ({ error } = await this.sb.from(table).upsert(strip(rows)));
+      }
+      if(error) throw error;
+    }
     if(removedIds.length){ const { error } = await this.sb.from(table).delete().in('id', removedIds); if(error) throw error; }
     if(removedFiles.length) await this.sb.storage.from(BUCKET).remove(removedFiles);
   }
@@ -690,7 +793,7 @@ function makeSaver(kind, getList){
   const changed = new Set(), removed = new Set(), files = new Set();
   let t = null, running = Promise.resolve(true);
   const pending = () => changed.size + removed.size + files.size > 0;
-  const schedule = () => { clearTimeout(t); t = setTimeout(flush, 900); };
+  const schedule = () => { clearTimeout(t); t = setTimeout(flush, 1200); };
   async function run(){
     let ok = true;
     if(Cloud.on){
@@ -727,7 +830,7 @@ function showView(v){
   $$('#nav button').forEach(b => { const on = b.dataset.view === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
   $('#view-notes').hidden = v !== 'notes'; $('#view-posts').hidden = v !== 'posts';
   try{ if(location.hash !== '#' + v) history.replaceState(null, '', '#' + v); }catch(e){}
-  placeInd($('#nav')); placeTblBar(); animIn($('#view-' + v));
+  exitFs(); placeInd($('#nav')); placeTblBar(); animIn($('#view-' + v));
 }
 $('#nav').addEventListener('click', e => { const b = e.target.closest('button'); if(b) showView(b.dataset.view); });
 window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if(h === 'notes' || h === 'posts') showView(h); });
@@ -747,11 +850,13 @@ let calMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1), day
 const postName = d => d.title.trim() || d.caption.trim().split('\n')[0] || '（沒有文案）';
 function renderCalendar(){   // month calendar with post dates circled
   const y = calMonth.getFullYear(), m = calMonth.getMonth(), today = localISO(new Date());
-  const count = {}; posts.forEach(d => { if(d.date) count[d.date] = (count[d.date] || 0) + 1; });
+  const count = {}, kinds = {};
+  posts.forEach(d => { if(d.date){ count[d.date] = (count[d.date] || 0) + 1; (kinds[d.date] ||= new Set()).add(d.kind === 'reels' ? 'reels' : 'post'); } });
   const cells = Array.from({length:new Date(y, m, 1).getDay()}, () => '<span></span>');
   for(let day = 1; day <= new Date(y, m + 1, 0).getDate(); day++){
     const iso = localISO(new Date(y, m, day)), n = count[iso] || 0;
-    const cls = `cal-d${n ? ' has' : ''}${iso === today ? ' today' : iso < today ? ' past' : ''}${iso === dayFilter ? ' sel' : ''}`;
+    const ks = kinds[iso], kc = !ks ? '' : ks.size > 1 ? ' mixed' : ks.has('reels') ? ' reels' : '';
+    const cls = `cal-d${n ? ' has' + kc : ''}${iso === today ? ' today' : iso < today ? ' past' : ''}${iso === dayFilter ? ' sel' : ''}`;
     cells.push(n ? `<button class="${cls}" data-d="${iso}" ${n > 1 ? `data-n="${n}"` : ''} aria-label="${dateLabel(iso)} ${n} 篇貼文">${day}</button>` : `<span class="${cls}">${day}</span>`);
   }
   $('#cal').innerHTML = `<div class="cal-h"><button data-nav="-1" aria-label="上個月">${ICON.prev}</button><b>${y} 年 ${m + 1} 月</b><button data-nav="1" aria-label="下個月">${ICON.next}</button></div>
@@ -760,7 +865,7 @@ function renderCalendar(){   // month calendar with post dates circled
 }
 function renderPostList(list){   // the same posts as the grid, as a list (the only view on phones)
   $('#plistLabel').textContent = dayFilter ? `${dateLabel(dayFilter)} 的貼文` : '全部貼文';
-  $('#plist').innerHTML = list.length ? list.map(d => row(d.id, `<b>${d.pinned ? ICON.pin : ''}${esc(postName(d))}</b><span><em>${d.date ? dateLabel(d.date) : '未排日期'}</em>${esc(d.caption.trim().split('\n')[d.title.trim() ? 0 : 1] || '沒有文案')}</span>`, d === cur)).join('')
+  $('#plist').innerHTML = list.length ? list.map(d => row(d.id, `<b>${d.pinned ? ICON.pin : ''}${d.kind === 'reels' ? '<i class="ktag">Reels</i>' : ''}${esc(postName(d))}</b><span><em>${d.date ? dateLabel(d.date) : '未排日期'}</em>${esc(d.caption.trim().split('\n')[d.title.trim() ? 0 : 1] || '沒有文案')}</span>`, d === cur)).join('')
     : `<div class="empty-note">${posts.length ? '找不到符合的貼文' : '還沒有貼文，按 + 新增'}</div>`;
 }
 function renderPosts(){
@@ -773,7 +878,7 @@ function renderPosts(){
     const cover = d.images[0] ? `<img src="${d.images[0].src}" alt="" loading="lazy">`
       : `<div class="txtcover ${d.caption.trim() ? '' : 'blank'}">${esc(d.caption.trim().slice(0, 90) || '空白貼文')}</div>`;
     return `<div class="card" role="button" tabindex="0" data-id="${d.id}" aria-label="貼文 ${esc(d.title)} ${dateLabel(d.date) || '未排日期'}">${cover}
-      <div class="ctop">${d.title.trim() ? `<span class="ctitle">${esc(d.title)}</span>` : ''}${d.images.length > 1 ? `<span class="chip">${ICON.multi}${d.images.length}</span>` : ''}${d.pinned ? `<span class="chip pin" title="已釘選">${ICON.pin}</span>` : ''}</div>
+      <div class="ctop">${d.title.trim() ? `<span class="ctitle">${esc(d.title)}</span>` : ''}${d.kind === 'reels' ? '<span class="chip reels">Reels</span>' : ''}${d.images.length > 1 ? `<span class="chip">${ICON.multi}${d.images.length}</span>` : ''}${d.pinned ? `<span class="chip pin" title="已釘選">${ICON.pin}</span>` : ''}</div>
       <div class="cfoot"><span class="${!d.date ? 'nodate' : d.date < today ? 'past' : ''}">${d.date ? dateLabel(d.date) : '未排日期'}</span>
       <button class="ccopy" data-copy="${d.id}" title="複製文案" aria-label="複製文案">${ICON.copy}</button></div></div>`;
   }).join('') : `<div class="empty-grid">${q || dayFilter ? '找不到符合的貼文' : '還沒有貼文，按左上角的 + 新增'}</div>`;
@@ -799,23 +904,37 @@ $('#grid').addEventListener('click', e => {
 });
 $('#grid').addEventListener('keydown', e => { if((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card')){ e.preventDefault(); openPost(e.target.dataset.id); } });
 $('#newPost').addEventListener('click', () => {
-  const now = Date.now(), d = { id:uid(), title:'', pinned:false, date:'', images:[], caption:'', createdAt:now, updatedAt:now };
+  const now = Date.now(), d = { id:uid(), title:'', pinned:false, date:'', kind:'post', images:[], caption:'', createdAt:now, updatedAt:now };
   posts.push(d); postSaver.soon(d.id); openPost(d.id); $('#ptitle').focus();
 });
 
 function openPost(id){
   cur = posts.find(d => d.id === id); if(!cur) return;
   $('#ptitle').value = cur.title; $('#pdate').value = cur.date; $('#caption').value = cur.caption;
-  $('#pinPost').classList.toggle('on', !!cur.pinned);
+  $('#pinPost').classList.toggle('on', !!cur.pinned); setKind(cur.kind || 'post', true);
+  exitFs(); $('#postEdit').classList.remove('meta-open'); $('#metaToggle').setAttribute('aria-expanded', false);
   $('#gridView').hidden = true; $('#postEdit').hidden = false; $('#posts').classList.add('editing');
   $('#postEdit').scrollTop = 0; animIn($('#postEdit'));
   renderMedia(); renderPostMeta(); renderPosts();
 }
 function closePost(){
-  cur = null; if(postSaver.dirty) postSaver.flush();
+  exitFs(); cur = null; if(postSaver.dirty) postSaver.flush();
   $('#postEdit').hidden = true; $('#gridView').hidden = false; $('#posts').classList.remove('editing');
   animIn($('#gridView')); renderPosts();
 }
+function setKind(k, quiet){
+  $$('#kindSeg button').forEach(b => b.classList.toggle('on', b.dataset.kind === k));
+  $('#kindSeg').classList.toggle('reels', k === 'reels');
+  requestAnimationFrame(() => placeInd($('#kindSeg'), quiet));
+}
+$('#kindSeg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b || !cur || cur.kind === b.dataset.kind) return;
+  cur.kind = b.dataset.kind; setKind(cur.kind); touchPost(); renderPosts();
+});
+$('#metaToggle').addEventListener('click', () => {
+  const open = $('#postEdit').classList.toggle('meta-open'); $('#metaToggle').setAttribute('aria-expanded', open);
+  if(open){ animIn($('#pmeta')); setKind(cur?.kind || 'post', true); }
+});
 function touchPost(){ cur.updatedAt = Date.now(); postSaver.soon(cur.id); }
 $('#backGrid').addEventListener('click', closePost);
 let plT;
@@ -922,7 +1041,9 @@ window.addEventListener('pointercancel', endDrag);
    ===================================================================== */
 let notes = [], curNote = null, curCell = null;
 const editor = $('#editor');
-const noteSaver = makeSaver('notes', () => notes);
+let htmlT = null;
+function syncHtml(){ if(htmlT){ clearTimeout(htmlT); htmlT = null; if(curNote) curNote.html = editor.innerHTML; } }   // the note's HTML is read from the editor lazily, not on every key
+const noteSaver = makeSaver('notes', () => { syncHtml(); return notes; });
 const collapsed = new Set(JSON.parse(lsGet('pn-collapsed') || lsGet('ml-collapsed') || '[]'));
 
 function htmlLines(html){
@@ -937,6 +1058,7 @@ function noteLabel(n){   // [title, snippet] for the list
 const categories = () => [...new Set(notes.map(n => n.category.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'zh-Hant'));
 
 function renderNoteList(){
+  syncHtml();
   const q = $('#nsearch').value.trim().toLowerCase();
   const list = notes.slice().sort(byPinThenRecent)
     .filter(n => !q || (n.title + ' ' + n.category + ' ' + htmlLines(n.html).join(' ')).toLowerCase().includes(q));
@@ -956,7 +1078,7 @@ function renderNoteList(){
   $('#catList').innerHTML = cats.map(c => `<option value="${esc(c)}">`).join('');
   renderSettings();
 }
-let listT; const renderNoteListSoon = () => { clearTimeout(listT); listT = setTimeout(renderNoteList, 250); };
+let listT; const renderNoteListSoon = () => { clearTimeout(listT); listT = setTimeout(renderNoteList, 600); };
 $('#nsearch').addEventListener('input', renderNoteList);
 $('#nitems').addEventListener('click', e => {
   const g = e.target.closest('.grp');
@@ -965,7 +1087,7 @@ $('#nitems').addEventListener('click', e => {
 });
 
 function openNote(id, focusTitle){
-  curNote = notes.find(n => n.id === id) || null;
+  exitFs(); syncHtml(); curNote = notes.find(n => n.id === id) || null;
   editor.innerHTML = curNote ? curNote.html : '';
   editor.contentEditable = curNote ? 'true' : 'false';
   if(curNote){ cleanColors(false); if(editor.innerHTML !== curNote.html){ curNote.html = editor.innerHTML; noteSaver.soon(curNote.id); } }
@@ -973,15 +1095,15 @@ function openNote(id, focusTitle){
   $('#ntitle').disabled = $('#ncat').disabled = !curNote;
   $('#pinNote').classList.toggle('on', !!curNote?.pinned);
   $('#noteMeta').textContent = curNote ? fmtFull(curNote.updatedAt) : '沒有選取的備忘錄';
-  curCell = null; placeTblBar(); renderNoteList();
+  curCell = null; placeTblBar(); renderNoteList(); fitWraps();
   $('#notes').classList.add('show-editor'); animIn($('#notes .ecol'));
   if(focusTitle) $('#ntitle').focus();
 }
 function touchNote(fromEditor = true){
   if(!curNote) return;
-  if(fromEditor){ ensureBody(); curNote.html = editor.innerHTML; }
+  if(fromEditor){ ensureBody(); clearTimeout(htmlT); htmlT = setTimeout(syncHtml, 400); }
   curNote.updatedAt = Date.now(); $('#noteMeta').textContent = fmtFull(curNote.updatedAt);
-  noteSaver.soon(curNote.id); renderNoteListSoon(); placeTblBar();
+  noteSaver.soon(curNote.id); renderNoteListSoon(); if(curCell){ placeTblBar(); fitWraps(); }
 }
 editor.addEventListener('input', () => touchNote());
 $('#ntitle').addEventListener('input', e => { curNote.title = e.target.value; touchNote(false); });
@@ -996,7 +1118,7 @@ $('#newNote').addEventListener('click', () => {
   const now = Date.now(), n = { id:uid(), title:'', category:'', pinned:false, html:'<p><br></p>', createdAt:now, updatedAt:now };
   notes.unshift(n); noteSaver.soon(n.id); openNote(n.id, true);
 });
-$('#backList').addEventListener('click', () => $('#notes').classList.remove('show-editor'));
+$('#backList').addEventListener('click', () => { exitFs(); $('#notes').classList.remove('show-editor'); });
 function deleteNote(id){
   const n = notes.find(x => x.id === id); if(!n) return;
   noteSaver.removed(id); notes = notes.filter(x => x !== n); noteSaver.flush(); toast('已刪除備忘錄');
@@ -1120,6 +1242,7 @@ function toggleQuote(){
 
 editor.addEventListener('keydown', e => {
   if(e.key === 'Tab' && curCell){ e.preventDefault(); moveCell(e.shiftKey ? -1 : 1); return; }
+  if(curCell && e.key.startsWith('Arrow') && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey && !imeBusy(e) && arrowCell(e.key)){ e.preventDefault(); return; }
   /* Enter: a new line after a heading / quote starts as body text instead of copying the style */
   if(e.key !== 'Enter' || e.shiftKey || imeBusy(e)) return;
   const n = selNode(); if(!n || n.closest('li,td')) return;
@@ -1176,6 +1299,16 @@ toolbar.addEventListener('mousedown', e => { if(e.target.closest('button,.sw,.tp
 $('#tblbar').addEventListener('mousedown', e => e.preventDefault());
 const closePops = () => $$('.pop').forEach(p => { p.hidden = true; });
 document.addEventListener('mousedown', e => { if(!e.target.closest('.pop,[data-pop]')) closePops(); });
+const closeGroups = () => $$('.tgrp.open', toolbar).forEach(g => g.classList.remove('open'));
+toolbar.addEventListener('click', e => {
+  const b = e.target.closest('.tgrp .tb'); if(!b || !phone.matches) return;
+  const g = b.closest('.tgrp');
+  if(!g.classList.contains('open') && g.querySelectorAll('.tb').length > 1){
+    e.stopImmediatePropagation(); closePops(); closeGroups(); g.classList.add('open');
+    g.scrollIntoView({inline:'nearest', block:'nearest'});
+  }
+}, true);
+toolbar.addEventListener('click', e => { const b = e.target.closest('.tgrp .tb'); if(b && phone.matches && !b.dataset.pop) closeGroups(); });
 toolbar.addEventListener('click', e => {
   const b = e.target.closest('button'); if(!b || !curNote) return;
   if(b.dataset.cmd){
@@ -1185,8 +1318,9 @@ toolbar.addEventListener('click', e => {
   } else if(b.dataset.block){ closePops(); b.dataset.block === 'blockquote' ? toggleQuote() : setBlock(b.dataset.block); }
   else if(b.dataset.pop){
     saveSel(); const p = $('#pop-' + b.dataset.pop), open = p.hidden; closePops(); p.hidden = !open;
-    p.style.left = Math.max(4, Math.min(b.offsetLeft, toolbar.clientWidth - p.offsetWidth - 4)) + 'px';
-    p.style.top = (b.offsetTop + b.offsetHeight + 6) + 'px';
+    const tr = toolbar.getBoundingClientRect(), br = b.getBoundingClientRect();
+    p.style.left = Math.max(4, Math.min(br.left - tr.left, toolbar.clientWidth - p.offsetWidth - 4)) + 'px';
+    p.style.top = (br.bottom - tr.top + 6) + 'px';
   }
 });
 $('#checkBtn').addEventListener('click', () => {
@@ -1262,8 +1396,9 @@ function insertTable(rows, cols){
   document.execCommand('insertHTML', false, `<div class="tbl-wrap"><table class="has-header" style="width:${w*cols}px"><colgroup>${`<col style="width:${w}px">`.repeat(cols)}</colgroup><tbody>${('<tr>' + '<td><br></td>'.repeat(cols) + '</tr>').repeat(rows)}</tbody></table></div><p><br></p>`);
   const wrap = selNode()?.closest('p')?.previousElementSibling;
   if(wrap?.classList.contains('tbl-wrap')) caretIn(wrap.querySelector('td'));
-  touchNote(); updateState(); toast('拖曳儲存格邊緣可以調整欄寬與列高');
+  touchNote(); updateState(); toast(coarse.matches ? '拖曳表格旁的小把手可以調整欄寬與列高' : '拖曳儲存格邊緣可以調整欄寬與列高');
 }
+function fitWraps(){ $$('.tbl-wrap', editor).forEach(w => w.classList.toggle('fit', w.scrollWidth <= w.clientWidth + 1)); }
 const sumColWidths = table => { table.style.width = $$('col', table).reduce((s, c) => s + parseFloat(c.style.width || 100), 0) + 'px'; };
 /* grid[r][c] = the cell covering that spot, pos = each cell's top-left spot (merged cells cover several spots) */
 function tableMap(table){
@@ -1337,21 +1472,55 @@ function tableOp(op){
   editor.focus(); caretIn(focus); touchNote(); updateState();
 }
 $('#tblbar').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if(b) tableOp(b.dataset.t); });
+/* ↑↓ go to the cell above / below (from the first / last line), ←→ to the previous / next cell (from the start / end) */
+function arrowCell(key){
+  const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
+  const td = curCell, table = td.closest('table'), r = s.getRangeAt(0);
+  let target = null, atEnd = false;
+  if(key === 'ArrowUp' || key === 'ArrowDown'){
+    const {grid, pos} = tableMap(table), p = pos.get(td), cr = td.getBoundingClientRect();
+    const lh = parseFloat(getComputedStyle(td).lineHeight) || 19;
+    const rect = r.getClientRects()[0] || (r.startContainer.nodeType === 1 ? r.startContainer.getBoundingClientRect() : null);
+    if(key === 'ArrowUp'){ if(rect && rect.top - cr.top > lh) return false; target = grid[p.r - 1]?.[p.c]; atEnd = true; }
+    else { if(rect && cr.bottom - rect.bottom > lh) return false; target = grid[p.r + td.rowSpan]?.[p.c]; }
+  } else {
+    const cells = $$('td', table), i = cells.indexOf(td), off = offIn(td, r.startContainer, r.startOffset);
+    if(key === 'ArrowLeft'){ if(off > 0) return false; target = cells[i - 1]; atEnd = true; }
+    else { if(off < td.textContent.length) return false; target = cells[i + 1]; }
+  }
+  if(!target) return false;   // edge of the table: the caret leaves it the normal way
+  caretIn(target, atEnd); clearCellSel(); updateState(); return true;
+}
 function moveCell(step){   // Tab / Shift+Tab; Tab in the last cell adds a row
   const cells = $$('td', curCell.closest('table')), i = cells.indexOf(curCell) + step;
   if(i >= cells.length) tableOp('rowBelow');
   else if(i >= 0){ const r = document.createRange(); r.selectNodeContents(cells[i]); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 }
-/* the table edit bar sits right above the active table */
+/* the table edit bar floats at the bottom of the note while the caret is in a table */
 function placeTblBar(){
-  const bar = $('#tblbar'), live = curCell && editor.contains(curCell) && !$('#view-notes').hidden;
-  const box = live ? (curCell.closest('.tbl-wrap') || curCell.closest('table')) : null;
-  $$('.tbl-wrap.active', editor).forEach(w => { if(w !== box) w.classList.remove('active'); });
-  if(!box){ bar.hidden = true; return; }
-  box.classList.add('active'); bar.hidden = false;
-  const sc = $('#escroll'), sr = sc.getBoundingClientRect(), wr = box.getBoundingClientRect();
-  bar.style.top = (wr.top - sr.top + sc.scrollTop - bar.offsetHeight - 6) + 'px';
-  bar.style.left = Math.max(6, Math.min(wr.left - sr.left, sc.clientWidth - bar.offsetWidth - 6)) + 'px';
+  const live = curCell && editor.contains(curCell) && !$('#view-notes').hidden;
+  $('#tblbar').hidden = !live; document.body.classList.toggle('tbl-on', !!live);
+  placeKnobs(live ? curCell.closest('table') : null);
+}
+/* touch screens: drag knobs on the active table's column / row edges */
+function placeKnobs(table){
+  const box = $('#rzh');
+  if(!table || !coarse.matches){ box.hidden = true; box.innerHTML = ''; return; }
+  const sc = $('#escroll'), sr = sc.getBoundingClientRect(), tr = table.getBoundingClientRect(), {grid, pos} = tableMap(table);
+  const X = x => x - sr.left, Y = y => y - sr.top + sc.scrollTop, out = [];
+  const cols = grid[0]?.length || 0;
+  for(let c = 0; c < cols; c++){
+    let cell = null;
+    for(const row of grid){ const x = row[c]; if(x && pos.get(x).c + x.colSpan - 1 === c){ cell = x; break; } }
+    if(!cell) continue;
+    const x = cell.getBoundingClientRect().right;
+    if(x < sr.left + 4 || x > sr.right - 4) continue;
+    out.push(`<i class="rzh c" data-c="${c}" style="left:${X(x)}px;top:${Y(tr.bottom) + 12}px"></i>`);
+  }
+  $$(':scope > tbody > tr, :scope > tr', table).forEach((tr2, i) => {
+    out.push(`<i class="rzh r" data-r="${i}" style="left:${Math.max(14, X(tr.left) - 13)}px;top:${Y(tr2.getBoundingClientRect().bottom)}px"></i>`);
+  });
+  box.innerHTML = out.join(''); box.hidden = false; box._table = table;
 }
 
 /* toolbar state follows the caret */
@@ -1368,11 +1537,39 @@ function updateState(){
   ['h1','h2'].forEach(t => toolbar.querySelector(`[data-block="${t}"]`).classList.toggle('on', bn === t.toUpperCase()));
   toolbar.querySelector('[data-block="blockquote"]').classList.toggle('on', !!n?.closest('blockquote'));
   toolbar.querySelector('[data-block="p"]').classList.toggle('on', !!n && !['H1','H2','BLOCKQUOTE'].includes(bn) && !n.closest('ul,ol'));
+  $$('.tgrp', toolbar).forEach(g => {
+    if(g.classList.contains('open')) return;
+    const bs = $$('.tb', g), lead = bs.find(x => x.classList.contains('on')) || bs[0];
+    bs.forEach(x => x.classList.toggle('lead', x === lead));
+  });
   const cell = n?.closest('td') || cellSel?.cells[0] || null;
   if(curCell !== cell){ curCell?.classList.remove('cur'); cell?.classList.add('cur'); curCell = cell; }
   placeTblBar();
 }
-document.addEventListener('selectionchange', () => { if(document.activeElement === editor){ saveSel(); updateState(); } });
+let usRaf = 0;
+document.addEventListener('selectionchange', () => {
+  if(document.activeElement !== editor) return;
+  saveSel(); if(!usRaf) usRaf = requestAnimationFrame(() => { usRaf = 0; updateState(); });
+});
+
+/* phones: tapping into the note body or the caption makes it full screen with a bar (‹ back, ✓ done) */
+const vv = window.visualViewport;
+function syncVV(){ if(!vv) return; const st = document.documentElement.style; st.setProperty('--vvh', vv.height + 'px'); st.setProperty('--vvt', vv.offsetTop + 'px'); }
+if(vv){ vv.addEventListener('resize', syncVV); vv.addEventListener('scroll', syncVV); syncVV(); }
+function exitFs(){
+  if(!document.body.classList.contains('fs-note') && !document.body.classList.contains('fs-cap')) return;
+  document.body.classList.remove('fs-note', 'fs-cap'); closePops(); closeGroups();
+}
+editor.addEventListener('focus', () => { if(phone.matches && curNote && !document.body.classList.contains('fs-note')){ document.body.classList.add('fs-note'); syncVV(); requestAnimationFrame(placeTblBar); } });
+$('#caption').addEventListener('focus', () => { if(phone.matches && cur){ document.body.classList.add('fs-cap'); syncVV(); } });
+function doneNote(){
+  editor.blur(); getSelection().removeAllRanges(); clearCellSel();
+  curCell?.classList.remove('cur'); curCell = null; exitFs(); placeTblBar();
+}
+$('#noteDone').addEventListener('click', doneNote);
+$('#noteBack').addEventListener('click', () => { doneNote(); $('#notes').classList.remove('show-editor'); });
+$('#capDone').addEventListener('click', () => { $('#caption').blur(); exitFs(); });
+$('#capBack').addEventListener('click', () => { $('#caption').blur(); closePost(); });
 
 /* images inside a note */
 $('#imgBtn').addEventListener('click', () => { if(curNote){ saveSel(); $('#noteImgInput').click(); } });
@@ -1458,37 +1655,54 @@ editor.addEventListener('pointermove', e => {
   editor.classList.toggle('col-hover', h?.type === 'col'); editor.classList.toggle('row-hover', h?.type === 'row');
 });
 editor.addEventListener('pointerleave', () => { if(!rz) editor.classList.remove('col-hover', 'row-hover'); });
-editor.addEventListener('pointerdown', e => {
-  const h = edgeAt(e); if(!h) return;
-  e.preventDefault();
-  const table = h.td.closest('table'), tr = table.getBoundingClientRect(), cr = h.td.getBoundingClientRect();
+function startRz(e, table, h){
+  const col = h.type === 'col' ? $$('col', table)[h.col] : null;
+  if(h.type === 'col' && !col) return;
+  e.preventDefault(); $$('.rz-guide').forEach(g => g.remove());
+  const tr = table.getBoundingClientRect();
   const guide = document.createElement('div'); guide.className = 'rz-guide'; document.body.appendChild(guide);
-  if(h.type === 'col'){
-    const col = $$('col', table)[h.col];
+  if(col){
     rz = {type:'col', table, guide, col, start:col.getBoundingClientRect().width || parseFloat(col.style.width) || 100, from:e.clientX, x:h.x};
     Object.assign(guide.style, {top:tr.top + 'px', height:tr.height + 'px', width:'2px', left:h.x + 'px'});
   } else {
-    rz = {type:'row', table, guide, row:h.td.parentElement, start:h.td.parentElement.getBoundingClientRect().height, from:e.clientY};
-    Object.assign(guide.style, {left:tr.left + 'px', width:tr.width + 'px', height:'2px', top:cr.bottom + 'px'});
+    rz = {type:'row', table, guide, row:h.row, start:h.row.getBoundingClientRect().height, from:e.clientY};
+    Object.assign(guide.style, {left:tr.left + 'px', width:tr.width + 'px', height:'2px', top:h.row.getBoundingClientRect().bottom + 'px'});
     document.body.classList.add('rowr');
   }
   document.body.classList.add('resizing');
-  try{ editor.setPointerCapture(e.pointerId); }catch(err){}
+  try{ e.target.setPointerCapture(e.pointerId); }catch(err){}
+}
+editor.addEventListener('pointerdown', e => {
+  if(e.pointerType !== 'mouse') return;   // touch uses the knobs; a finger on an edge just scrolls / places the caret
+  const h = edgeAt(e); if(!h) return;
+  startRz(e, h.td.closest('table'), h.type === 'col' ? {type:'col', col:h.col, x:h.x} : {type:'row', row:h.td.parentElement});
 });
+$('#rzh').addEventListener('pointerdown', e => {
+  const k = e.target.closest('.rzh'), table = $('#rzh')._table; if(!k || !table) return;
+  if(k.dataset.c != null){
+    const {grid, pos} = tableMap(table), c = +k.dataset.c;
+    const cell = grid.map(r => r[c]).find(x => x && pos.get(x).c + x.colSpan - 1 === c);
+    startRz(e, table, {type:'col', col:c, x:cell.getBoundingClientRect().right});
+  } else startRz(e, table, {type:'row', row:$$(':scope > tbody > tr, :scope > tr', table)[+k.dataset.r]});
+});
+editor.addEventListener('scroll', () => placeKnobs($('#rzh').hidden ? null : $('#rzh')._table), true);
 window.addEventListener('pointermove', e => {
   if(!rz) return;
   if(rz.type === 'col'){
-    const w = Math.max(48, rz.start + e.clientX - rz.from); rz.col.style.width = w + 'px'; sumColWidths(rz.table);
+    const w = Math.round(Math.max(48, rz.start + e.clientX - rz.from)); rz.col.style.width = w + 'px'; sumColWidths(rz.table);
     rz.guide.style.left = (rz.x + w - rz.start) + 'px';
   } else {
     rz.row.style.height = Math.max(18, rz.start + e.clientY - rz.from) + 'px';
     rz.guide.style.top = rz.row.getBoundingClientRect().bottom + 'px';
   }
+  if(!$('#rzh').hidden) placeKnobs(rz.table);
 });
-window.addEventListener('pointerup', () => {
+function endRz(){
   if(!rz) return; rz.guide.remove(); rz = null;
   document.body.classList.remove('resizing', 'rowr'); touchNote();
-});
+}
+window.addEventListener('pointerup', endRz);
+window.addEventListener('pointercancel', endRz);
 
 /* =====================================================================
    deleting: swipe a list row to the left (touch), or right-click a row / grid card (mouse)
@@ -1545,14 +1759,25 @@ document.addEventListener('wheel', () => { if(!ctx.hidden) closeCtx(); }, {passi
    ===================================================================== */
 const setPop = $('#setPop');
 function renderSettings(){ $('#stPosts').textContent = posts.length; $('#stNotes').textContent = notes.length; }
+const scrim = $('#setScrim'), setOpen = () => setPop.classList.contains('open');
+let setT;
 function toggleSettings(open){
-  setPop.hidden = !open; $('#setBtn').setAttribute('aria-expanded', open); $('#setBtn').classList.toggle('on', open);
-  if(open){ renderAccount(); requestAnimationFrame(() => placeInd($('#modeSeg'), true)); } else resetClear();
+  $('#setBtn').setAttribute('aria-expanded', open); $('#setBtn').classList.toggle('on', open); clearTimeout(setT);
+  if(open){
+    setPop.hidden = scrim.hidden = false; void setPop.offsetWidth;
+    setPop.classList.add('open'); scrim.classList.add('open');
+    renderAccount(); requestAnimationFrame(() => placeInd($('#modeSeg'), true));
+  } else {
+    setPop.classList.remove('open'); scrim.classList.remove('open'); resetClear();
+    setT = setTimeout(() => { setPop.hidden = scrim.hidden = true; }, reduced ? 0 : 320);
+  }
 }
-$('#setBtn').addEventListener('click', () => toggleSettings(setPop.hidden));
-document.addEventListener('mousedown', e => { if(!setPop.hidden && !e.target.closest('#setPop,#setBtn')) toggleSettings(false); });
+$('#setBtn').addEventListener('click', () => toggleSettings(!setOpen()));
+$('#setClose').addEventListener('click', () => toggleSettings(false));
+document.addEventListener('mousedown', e => { if(setOpen() && !e.target.closest('#setPop,#setBtn')) toggleSettings(false); });
+scrim.addEventListener('click', () => toggleSettings(false));
 document.addEventListener('keydown', e => {
-  if(e.key === 'Escape' && !setPop.hidden) toggleSettings(false);
+  if(e.key === 'Escape' && setOpen()) toggleSettings(false);
   if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's'){
     e.preventDefault(); if(curNote) curNote.html = editor.innerHTML;
     Promise.all([noteSaver.flush(), postSaver.flush()]).then(r => { if(r.every(Boolean)) toast('已儲存'); });
@@ -1573,7 +1798,7 @@ function readSeed(txt){ try{ const d = JSON.parse(txt), posts = d?.posts || d?.d
 function rerenderAll(){
   /* fill in fields older saves may lack, so the rest of the code can rely on them */
   notes = notes.map(n => ({ title:'', category:'', pinned:false, html:'<p><br></p>', ...n }));
-  posts = posts.map(d => ({ title:'', pinned:false, date:'', images:[], caption:'', ...d }));
+  posts = posts.map(d => ({ title:'', pinned:false, date:'', kind:'post', images:[], caption:'', ...d }));
   if(cur) closePost();
   openNote(notes.slice().sort(byPinThenRecent)[0]?.id); $('#notes').classList.remove('show-editor');
   renderPosts();
@@ -1655,21 +1880,30 @@ function sizeSky(){
   if(reduced) drawSky(0);
 }
 function mkStar(x, y){ const big = Math.random() < .07; return { x, y, big, r: big ? 3 + Math.random() * 3.5 : .4 + Math.random() * 1.2, vx:-(.02 + Math.random() * .07), vy:-(.04 + Math.random() * .1), ph:Math.random() * 6.28, sp:.6 + Math.random() * 1.6, c:tints[Math.random() * 4 | 0] }; }
-function sparkle(x, y, s){ sg.beginPath(); sg.moveTo(x, y - s); sg.quadraticCurveTo(x, y, x + s, y); sg.quadraticCurveTo(x, y, x, y + s); sg.quadraticCurveTo(x, y, x - s, y); sg.quadraticCurveTo(x, y, x, y - s); sg.fill(); }
+const sprites = {};
+function sprite(c){
+  if(sprites[c]) return sprites[c];
+  const cv = document.createElement('canvas'), g = cv.getContext('2d'), S = 48, x = S / 2, k = 12; cv.width = cv.height = S;
+  g.fillStyle = `rgb(${c})`; g.shadowColor = `rgba(${c},.9)`; g.shadowBlur = 8;
+  g.beginPath(); g.moveTo(x, x - k); g.quadraticCurveTo(x, x, x + k, x); g.quadraticCurveTo(x, x, x, x + k); g.quadraticCurveTo(x, x, x - k, x); g.quadraticCurveTo(x, x, x, x - k); g.fill();
+  return sprites[c] = cv;
+}
 function drawSky(t){
   sg.clearRect(0, 0, W, H);
   for(const s of stars){
     if(!reduced){ s.x += s.vx; s.y += s.vy; if(s.y < -10 || s.x < -10) Object.assign(s, mkStar(Math.random() * W * 1.1, H + 10)); }
     const a = .3 + .6 * Math.abs(Math.sin(s.ph + t * .001 * s.sp));
-    sg.fillStyle = `rgba(${s.c},${a})`;
-    if(s.big){ sg.shadowColor = `rgba(${s.c},.9)`; sg.shadowBlur = 8; sparkle(s.x, s.y, s.r * (.7 + .3 * a)); sg.shadowBlur = 0; }
-    else { sg.beginPath(); sg.arc(s.x, s.y, s.r, 0, 6.283); sg.fill(); }
+    if(s.big){ const z = s.r * (.7 + .3 * a) * 4; sg.globalAlpha = a; sg.drawImage(sprite(s.c), s.x - z / 2, s.y - z / 2, z, z); sg.globalAlpha = 1; }
+    else { sg.fillStyle = `rgba(${s.c},${a})`; sg.beginPath(); sg.arc(s.x, s.y, s.r, 0, 6.283); sg.fill(); }
   }
 }
-function loop(t){ drawSky(t); requestAnimationFrame(loop); }
+let lastDraw = 0, quietUntil = 0;
+const hush = () => { quietUntil = performance.now() + 1500; };   // typing gets the whole frame budget
+document.addEventListener('keydown', hush, true); document.addEventListener('input', hush, true);
+function loop(t){ requestAnimationFrame(loop); if(document.hidden || t < quietUntil || t - lastDraw < 33) return; lastDraw = t; drawSky(t); }
 let resizeT;
 window.addEventListener('resize', () => {
-  $$('.seg').forEach(b => placeInd(b, true)); placeTblBar();
+  $$('.seg').forEach(b => placeInd(b, true)); placeTblBar(); fitWraps();
   clearTimeout(resizeT); resizeT = setTimeout(sizeSky, 150);
 });
 

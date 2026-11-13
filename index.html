@@ -189,7 +189,11 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .tb.on{background:var(--btn-bg);color:var(--btn-fg)}
 .tb svg{width:15px;height:15px}
 .opts{display:flex;flex-direction:column;gap:2px;min-width:120px}
-.opt{display:flex;justify-content:space-between;gap:12px;padding:6px 10px;border-radius:7px;text-align:left}
+.opt{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:8px;padding:6px 10px 6px 8px;border-radius:7px;text-align:left}
+.opt .ck{font-style:normal;color:var(--acc-text);font-weight:700;font-size:12px}
+.opt.cur .ck::before{content:'✓'}
+.opt.cur{background:var(--acc-soft)}
+.opts{min-width:150px}
 .opt:hover{background:var(--hover)}
 .opt small{color:var(--muted);font-variant-numeric:tabular-nums}
 .pop{position:absolute;z-index:30;background:var(--float);border-radius:12px;padding:10px;box-shadow:var(--shadow)}
@@ -237,6 +241,11 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 #editor h1{font-size:24px;line-height:1.35;margin:0;font-weight:700;letter-spacing:0}
 #editor h2{font-size:19px;line-height:1.4;margin:0;color:var(--acc-text);font-weight:600;letter-spacing:0}
 #editor p,#editor div{margin:0}
+#editor .lg{font-size:18px}
+#editor .sm{font-size:13px}
+#editor .gal{display:flex;gap:8px;overflow-x:auto;margin:.5em 0;padding-bottom:6px;scroll-snap-type:x proximity;user-select:none;-webkit-user-select:none}
+#editor .gal img{height:180px;width:auto;max-width:none;flex:none;margin:0;object-fit:cover;scroll-snap-align:start;cursor:zoom-in;background:var(--s2)}
+@media (max-width:760px){#editor .gal img{height:140px}}
 #editor blockquote{margin:.2em 0;padding:.35em .9em;background:var(--s2);border-radius:10px}
 #editor hr{border:0;height:2px;border-radius:2px;background:var(--s3);margin:.6em 0}
 #editor ul,#editor ol{padding-left:1.5em;margin:0}
@@ -259,6 +268,20 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 body.resizing,body.resizing *{cursor:col-resize!important;user-select:none}
 body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .rz-guide{position:fixed;z-index:250;background:var(--acc-text);border-radius:2px;pointer-events:none}
+.imgbox{position:absolute;z-index:14;box-shadow:0 0 0 2px var(--acc-text);border-radius:10px;pointer-events:none}
+.imgbox .ih{position:absolute;right:-16px;bottom:-16px;width:32px;height:32px;display:grid;place-items:center;pointer-events:auto;touch-action:none;cursor:nwse-resize}
+.imgbox .ih::after{content:'';width:14px;height:14px;border-radius:50%;background:var(--acc-text);box-shadow:0 0 0 2.5px var(--s1)}
+.lb{position:fixed;inset:0;z-index:600;background:rgba(10,10,12,.92);display:flex;align-items:center;justify-content:center;touch-action:none;animation:rise .2s var(--ease) both}
+.lb img{max-width:calc(100vw - 120px);max-height:calc(100dvh - 120px);border-radius:10px;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.lb button{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center}
+.lb button:hover{background:rgba(255,255,255,.26)}
+.lb svg{width:20px;height:20px}
+.lb .prev{left:max(16px,env(safe-area-inset-left,0px))}
+.lb .next{right:max(16px,env(safe-area-inset-right,0px))}
+.lb .lb-x{top:max(16px,env(safe-area-inset-top,0px));right:16px}
+.lb .lb-del{top:max(16px,env(safe-area-inset-top,0px));right:70px}
+.lb-n{position:absolute;bottom:max(20px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;opacity:.8}
+@media (max-width:760px){.lb img{max-width:100vw;max-height:calc(100dvh - 140px);border-radius:0}.lb .prev,.lb .next{display:none}}
 .rzh-box{position:absolute;inset:0 auto auto 0;width:0;height:0;z-index:15}
 .rzh{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;display:grid;place-items:center;touch-action:none}
 .rzh::after{content:"";border-radius:4px;background:var(--acc-text);box-shadow:0 0 0 2.5px var(--s1)}
@@ -523,6 +546,8 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <button class="tb" data-block="h1" title="標題">標題</button>
               <button class="tb" data-block="h2" title="副標題">副標</button>
               <button class="tb" data-block="p" title="內文">內文</button>
+              <button class="tb" data-pop="size" title="文字樣式・字級"><span style="font-size:11px">A</span><span style="font-size:15px;margin-left:-2px">A</span></button>
+              <button class="tb" data-pop="lh" title="行高"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6h10M11 12h10M11 18h10M5 4v16M2.5 6.5L5 4l2.5 2.5M2.5 17.5L5 20l2.5-2.5"/></svg></button>
               </div>
               <span class="sep"></span>
               <div class="tgrp">
@@ -530,11 +555,6 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <button class="tb" data-cmd="italic" title="斜體 ⌘I"><i style="font-family:Georgia,serif">I</i></button>
               <button class="tb" data-cmd="underline" title="底線 ⌘U"><u>U</u></button>
               <button class="tb" data-cmd="strikeThrough" title="刪除線"><s>S</s></button>
-              </div>
-              <span class="sep"></span>
-              <div class="tgrp">
-              <button class="tb" data-pop="size" title="文字大小"><span style="font-size:11px">A</span><span style="font-size:15px;margin-left:-2px">A</span></button>
-              <button class="tb" data-pop="lh" title="行高"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6h10M11 12h10M11 18h10M5 4v16M2.5 6.5L5 4l2.5 2.5M2.5 17.5L5 20l2.5-2.5"/></svg></button>
               <button class="tb" data-pop="color" title="文字顏色"><svg viewBox="0 0 24 24"><path d="M7 16L12 4l5 12M8.6 12h6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><rect x="5" y="18.5" width="14" height="3" rx="1.5" fill="#3b7fe0"/></svg></button>
               <button class="tb" data-pop="hilite" title="螢光筆"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14 4l6 6-8 8H6v-6z"/><path d="M3 21h8" stroke="#d9a21b" stroke-width="3" stroke-linecap="round"/></svg></button>
               </div>
@@ -569,6 +589,7 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div class="meta-line" id="noteMeta"></div>
               <div id="editor" contenteditable="true" spellcheck="false" aria-label="備忘錄內容"></div>
               <div class="rzh-box" id="rzh" hidden></div>
+              <div class="imgbox" id="imgBox" hidden><i class="ih" id="imgHandle"></i></div>
             </div>
             <div class="tblbar" id="tblbar" hidden>
               <span class="gl">表格</span>
@@ -587,13 +608,14 @@ body.tbl-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
           </div>
         </div>
       </div>
-      <input type="file" id="noteImgInput" accept="image/*" hidden>
+      <input type="file" id="noteImgInput" accept="image/*" multiple hidden>
     </section>
   </main>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="ctx" id="ctx" hidden><button id="ctxDel"></button></div>
+<div class="lb" id="lb" hidden><button class="lb-x" id="lbClose" aria-label="關閉"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button><button class="lb-del" id="lbDel" aria-label="從相簿刪除這張" title="刪除這張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button><button class="prev" id="lbPrev" aria-label="上一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><img id="lbImg" alt=""><button class="next" id="lbNext" aria-label="下一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button><div class="lb-n" id="lbN"></div></div>
 
 <script id="sbLib" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script id="pnConfig" src="config.js"></script>
@@ -621,7 +643,7 @@ document.documentElement.dataset.mode = (lsGet('pn-mode') || lsGet('ml-mode2')) 
 /* untouched copies of the page parts, taken before anything renders, used by 匯出 */
 const PRISTINE = (() => {
   const g = id => document.getElementById(id)?.outerHTML || '';
-  return { lib:g('sbLib'), icons:g('appIcon') + g('appTouchIcon') + '\n', fonts:g('appFonts'), style:g('appStyle'), sky:g('sky'), app:g('app'), toast:g('toast') + '\n' + g('ctx'), script:document.currentScript?.outerHTML || g('appScript') };
+  return { lib:g('sbLib'), icons:g('appIcon') + g('appTouchIcon') + '\n', fonts:g('appFonts'), style:g('appStyle'), sky:g('sky'), app:g('app'), toast:g('toast') + '\n' + g('ctx') + '\n' + g('lb'), script:document.currentScript?.outerHTML || g('appScript') };
 })();
 
 let toastT;
@@ -1041,6 +1063,26 @@ window.addEventListener('pointercancel', endDrag);
    ===================================================================== */
 let notes = [], curNote = null, curCell = null;
 const editor = $('#editor');
+const Hist = { undo:[], redo:[], kind:'', at:0 };
+function histState(){
+  const s = getSelection(), r = s.rangeCount && editor.contains(s.anchorNode) ? s.getRangeAt(0) : null;
+  return { html:editor.innerHTML, sel: r ? [offIn(editor, r.startContainer, r.startOffset), offIn(editor, r.endContainer, r.endOffset)] : null };
+}
+function snap(kind = 'op'){   // call right before a change; typing / deleting runs are one step
+  if(!curNote) return;
+  const now = performance.now(), group = (kind === 'type' || kind === 'del') && Hist.kind === kind && now - Hist.at < 1200;
+  Hist.kind = kind; Hist.at = now; if(group) return;
+  const st = histState(), top = Hist.undo[Hist.undo.length - 1];
+  if(top && top.html === st.html) return;
+  Hist.undo.push(st); if(Hist.undo.length > 60) Hist.undo.shift(); Hist.redo.length = 0;
+}
+function applyHist(st){
+  editor.innerHTML = st.html; editor.focus(); Hist.kind = '';
+  if(st.sel){ try{ setRange(...posIn(editor, st.sel[0]), ...posIn(editor, st.sel[1])); }catch(e){} }
+  curCell = null; selImg = null; touchNote(); updateState(); placeImgBox();
+}
+function undo(){ const prev = Hist.undo.pop(); if(!prev){ toast('沒有可以復原的步驟'); return; } Hist.redo.push(histState()); applyHist(prev); }
+function redo(){ const next = Hist.redo.pop(); if(!next) return; Hist.undo.push(histState()); applyHist(next); }
 let htmlT = null;
 function syncHtml(){ if(htmlT){ clearTimeout(htmlT); htmlT = null; if(curNote) curNote.html = editor.innerHTML; } }   // the note's HTML is read from the editor lazily, not on every key
 const noteSaver = makeSaver('notes', () => { syncHtml(); return notes; });
@@ -1087,7 +1129,8 @@ $('#nitems').addEventListener('click', e => {
 });
 
 function openNote(id, focusTitle){
-  exitFs(); syncHtml(); curNote = notes.find(n => n.id === id) || null;
+  exitFs(); syncHtml(); Hist.undo = []; Hist.redo = []; Hist.kind = ''; selImg = null; placeImgBox();
+  curNote = notes.find(n => n.id === id) || null;
   editor.innerHTML = curNote ? curNote.html : '';
   editor.contentEditable = curNote ? 'true' : 'false';
   if(curNote){ cleanColors(false); if(editor.innerHTML !== curNote.html){ curNote.html = editor.innerHTML; noteSaver.soon(curNote.id); } }
@@ -1103,9 +1146,15 @@ function touchNote(fromEditor = true){
   if(!curNote) return;
   if(fromEditor){ ensureBody(); clearTimeout(htmlT); htmlT = setTimeout(syncHtml, 400); }
   curNote.updatedAt = Date.now(); $('#noteMeta').textContent = fmtFull(curNote.updatedAt);
-  noteSaver.soon(curNote.id); renderNoteListSoon(); if(curCell){ placeTblBar(); fitWraps(); }
+  noteSaver.soon(curNote.id); renderNoteListSoon(); if(curCell){ placeTblBar(); fitWraps(); } if(selImg) placeImgBox();
 }
 editor.addEventListener('input', () => touchNote());
+editor.addEventListener('beforeinput', e => {
+  if(e.inputType === 'historyUndo'){ e.preventDefault(); undo(); return; }
+  if(e.inputType === 'historyRedo'){ e.preventDefault(); redo(); return; }
+  snap(e.inputType === 'insertText' || e.inputType === 'insertCompositionText' ? 'type' : e.inputType.startsWith('delete') ? 'del' : 'op');
+  if(selImg){ selImg = null; placeImgBox(); }
+});
 $('#ntitle').addEventListener('input', e => { curNote.title = e.target.value; touchNote(false); });
 $('#ntitle').addEventListener('keydown', e => { if(e.key === 'Enter' && !imeBusy(e)){ e.preventDefault(); editor.focus(); caretIn(editor.firstElementChild || editor); } });
 $('#ncat').addEventListener('input', e => { curNote.category = e.target.value; touchNote(false); });
@@ -1133,7 +1182,14 @@ try{ document.execCommand('defaultParagraphSeparator', false, 'p'); }catch(e){}
 const TEXT_BLOCK = /^(P|H1|H2|H3|BLOCKQUOTE|DIV)$/;
 const ROOT_BLOCK = /^(P|H1|H2|H3|BLOCKQUOTE|DIV|UL|OL|HR|IMG|TABLE)$/;
 const isQuoteBox = n => n.nodeName === 'BLOCKQUOTE' && [...n.children].some(c => ROOT_BLOCK.test(c.nodeName));   // a quote holding several lines
-const isTextBlock = n => n.nodeType === 1 && TEXT_BLOCK.test(n.nodeName) && !n.classList.contains('tbl-wrap') && !isQuoteBox(n);
+const isTextBlock = n => n.nodeType === 1 && TEXT_BLOCK.test(n.nodeName) && !n.classList.contains('tbl-wrap') && !n.classList.contains('gal') && !isQuoteBox(n);
+/* line styles: one per line, so copying / joining lines keeps a predictable look */
+const STYLES = [['h1', '標題', 24, 'h1', ''], ['h2', '副標', 19, 'h2', ''], ['lg', '大字', 18, 'p', 'lg'], ['p', '內文', 15, 'p', ''], ['sm', '小字', 13, 'p', 'sm']];
+const styleOf = n => n?.nodeType !== 1 ? 'p' : n.nodeName === 'H1' ? 'h1' : n.nodeName === 'H2' ? 'h2' : n.classList.contains('lg') ? 'lg' : n.classList.contains('sm') ? 'sm' : 'p';
+function stripSizes(root){   // inline sizes from older notes or other apps give way to the line style
+  root.querySelectorAll('font[size]').forEach(f => f.replaceWith(...f.childNodes));
+  root.querySelectorAll('[style]').forEach(x => { x.style.removeProperty('font-size'); if(!x.getAttribute('style')){ x.removeAttribute('style'); if(x.nodeName === 'SPAN') x.replaceWith(...x.childNodes); } });
+}
 const isLoose = n => (n.nodeType === 3 && n.textContent.trim()) || (n.nodeType === 1 && !ROOT_BLOCK.test(n.nodeName));
 
 let savedRange = null;
@@ -1187,8 +1243,8 @@ function posIn(el, n){
 const blocksBetween = (a, b) => { const L = []; for(let n = a; n; n = n.nextSibling){ L.push(n); if(n === b) break; } return L; };
 
 /* 標題 / 副標 / 內文 / 引言 — done by hand so only the selected lines change and 內文 always turns a heading back */
-function setBlock(tag){
-  restoreSel();
+function setBlock(key){
+  restoreSel(); snap();
   if(!getSelection().rangeCount) return;
   keepSel(() => {
     normalizeRoot();
@@ -1201,14 +1257,17 @@ function setBlock(tag){
   if(!b || b.parentNode !== a.parentNode) b = a;
   const blocks = blocksBetween(a, b).filter(n => isTextBlock(n) || (n.nodeType === 1 && !ROOT_BLOCK.test(n.nodeName)) || (n.nodeType === 3 && n.textContent.trim()));
   if(!blocks.length) return;
-  const T = tag.toUpperCase(), final = (T !== 'P' && blocks.every(n => n.nodeName === T)) ? 'p' : tag;
+  if(key === 'blockquote') key = 'p';
+  const pick = ((key === 'h1' || key === 'h2') && blocks.every(n => styleOf(n) === key)) ? 'p' : key;   // pressing 標題 on a 標題 turns it back
+  const [, , , tag, cls] = STYLES.find(x => x[0] === pick);
   const si = Math.max(0, blocks.indexOf(topBlock(r.startContainer))), endIdx = blocks.indexOf(topBlock(r.endContainer));
   const so = offIn(blocks[si], r.startContainer, r.startOffset);
   const ei = endIdx < si ? si : endIdx, eo = endIdx < si ? so : offIn(blocks[ei], r.endContainer, r.endOffset);
   const made = blocks.map(n => {
-    const el = document.createElement(final);
-    if(isTextBlock(n)){ if(n.style.textAlign) el.style.textAlign = n.style.textAlign; el.append(...n.childNodes); n.replaceWith(el); }
+    const el = document.createElement(tag); if(cls) el.className = cls;
+    if(isTextBlock(n)){ if(n.style.cssText) el.style.cssText = n.style.cssText; el.append(...n.childNodes); n.replaceWith(el); }
     else { n.replaceWith(el); el.appendChild(n); }
+    stripSizes(el);
     if(!el.firstChild) el.innerHTML = '<br>';
     return el;
   });
@@ -1218,7 +1277,7 @@ function setBlock(tag){
 
 /* 引言: the selected lines go into one quote box; pressing it inside a quote takes the lines back out */
 function toggleQuote(){
-  restoreSel(); if(!getSelection().rangeCount) return;
+  restoreSel(); if(!getSelection().rangeCount) return; snap();
   if(selNode()?.closest('td')){ toast('表格裡不能使用引言'); return; }
   keepSel(normalizeRoot);
   const q = selNode()?.closest('blockquote');
@@ -1240,16 +1299,35 @@ function toggleQuote(){
   touchNote(); updateState();
 }
 
+function joinLines(key){
+  const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
+  const r = s.getRangeAt(0), n = selNode(); if(!n || n.closest('li,td')) return false;
+  const blk = topBlock(n); if(!blk || !isTextBlock(blk)) return false;
+  const off = offIn(blk, r.startContainer, r.startOffset);
+  let a, b;
+  if(key === 'Backspace'){ if(off > 0) return false; a = blk.previousSibling; b = blk; }
+  else { if(off < blk.textContent.length) return false; a = blk; b = blk.nextSibling; }
+  if(!a || !b || !isTextBlock(a) || !isTextBlock(b)) return false;
+  snap();
+  const seam = a.textContent.length, onlyBr = x => x.childNodes.length === 1 && x.firstChild.nodeName === 'BR';
+  if(onlyBr(a)) a.innerHTML = ''; else if(a.lastChild?.nodeName === 'BR') a.lastChild.remove();
+  if(!onlyBr(b)){ const f = document.createDocumentFragment(); f.append(...b.childNodes); const w = document.createElement('div'); w.append(f); stripSizes(w); a.append(...w.childNodes); }
+  b.remove(); if(!a.firstChild) a.innerHTML = '<br>';
+  const [tn, to] = posIn(a, seam); setRange(tn, to);
+  touchNote(); updateState(); return true;
+}
 editor.addEventListener('keydown', e => {
+  if((e.metaKey || e.ctrlKey) && !e.altKey && /^[zy]$/i.test(e.key)){ e.preventDefault(); (e.key.toLowerCase() === 'y' || e.shiftKey) ? redo() : undo(); return; }
   if(e.key === 'Tab' && curCell){ e.preventDefault(); moveCell(e.shiftKey ? -1 : 1); return; }
   if(curCell && e.key.startsWith('Arrow') && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey && !imeBusy(e) && arrowCell(e.key)){ e.preventDefault(); return; }
+  if((e.key === 'Backspace' || e.key === 'Delete') && !e.metaKey && !e.altKey && !imeBusy(e) && joinLines(e.key)){ e.preventDefault(); return; }
   /* Enter: a new line after a heading / quote starts as body text instead of copying the style */
   if(e.key !== 'Enter' || e.shiftKey || imeBusy(e)) return;
   const n = selNode(); if(!n || n.closest('li,td')) return;
   const blk = topBlock(n);
   const inQuote = blk?.parentNode?.nodeName === 'BLOCKQUOTE';
   if(!blk || (blk.parentNode !== editor && !inQuote) || !isTextBlock(blk)) return;
-  e.preventDefault();
+  e.preventDefault(); snap();
   if(inQuote && !blk.textContent.length){   // Enter on an empty line inside a quote leaves the quote
     const q = blk.parentNode, rest = []; for(let x = blk.nextSibling; x; x = x.nextSibling) rest.push(x);
     q.after(blk); if(rest.length){ const q2 = document.createElement('blockquote'); q2.append(...rest); blk.after(q2); }
@@ -1262,6 +1340,8 @@ editor.addEventListener('keydown', e => {
   const empty = x => !x.textContent.length && !x.querySelector?.('img');
   const nb = document.createElement(empty(frag) && blk.nodeName !== 'P' ? 'p' : blk.nodeName.toLowerCase());
   if(blk.style.textAlign) nb.style.textAlign = blk.style.textAlign;
+  if(blk.style.lineHeight) nb.style.lineHeight = blk.style.lineHeight;
+  if(nb.nodeName === 'P' && blk.nodeName === 'P' && blk.className) nb.className = blk.className;
   nb.appendChild(frag);
   if(empty(nb)) nb.innerHTML = '<br>';
   if(empty(blk)) blk.innerHTML = '<br>';
@@ -1284,13 +1364,26 @@ editor.addEventListener('paste', e => {
   e.preventDefault();
   const tmp = document.createElement('div'); tmp.innerHTML = html;
   tmp.querySelectorAll('script,style,meta,link,title').forEach(n => n.remove());
+  const KEEP = ['lg', 'sm', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
   tmp.querySelectorAll('*').forEach(el => {
-    const align = el.style?.textAlign;
-    ['class', 'id', 'style', 'color', 'face', 'size'].forEach(a => el.removeAttribute(a));
-    if(align && TEXT_BLOCK.test(el.nodeName)) el.style.textAlign = align;
+    const align = el.style?.textAlign, lh = el.style?.lineHeight, w = el.nodeName === 'COL' || el.nodeName === 'IMG' || el.nodeName === 'TABLE' ? el.style.width : '';
+    const keep = [...el.classList].filter(c => KEEP.includes(c));
+    ['class', 'id', 'style', 'color', 'face', 'size', 'contenteditable'].forEach(a => el.removeAttribute(a));
+    if(keep.length) el.className = keep.join(' ');
+    if(TEXT_BLOCK.test(el.nodeName)){ if(align) el.style.textAlign = align; if(lh) el.style.lineHeight = lh; }
+    if(w) el.style.width = w;
+    if(el.classList.contains('gal')) el.contentEditable = 'false';
     if(el.nodeName === 'FONT' || el.nodeName === 'SPAN') el.replaceWith(...el.childNodes);
   });
-  document.execCommand('insertHTML', false, tmp.innerHTML); touchNote();
+  const kids = [...tmp.children];
+  if(kids.length === 1 && isTextBlock(kids[0]) && !kids[0].querySelector('p,h1,h2,div,ul,ol,table')) tmp.innerHTML = kids[0].innerHTML;   // one line: goes into the line the caret is on
+  snap();
+  const before = topBlock(selNode() || editor);
+  document.execCommand('insertHTML', false, tmp.innerHTML);
+  const after = topBlock(selNode() || editor);
+  if(before && after && before.parentNode === after.parentNode && editor.contains(before)) blocksBetween(before, after).forEach(b => { if(b.nodeType === 1) keepSel(() => stripSizes(b)); });
+  else if(after?.nodeType === 1) keepSel(() => stripSizes(after));
+  touchNote();
 });
 
 /* toolbar */
@@ -1312,19 +1405,19 @@ toolbar.addEventListener('click', e => { const b = e.target.closest('.tgrp .tb')
 toolbar.addEventListener('click', e => {
   const b = e.target.closest('button'); if(!b || !curNote) return;
   if(b.dataset.cmd){
-    restoreSel(); document.execCommand(b.dataset.cmd, false, null);
+    restoreSel(); snap(); document.execCommand(b.dataset.cmd, false, null);
     if(b.dataset.cmd === 'insertUnorderedList') selNode()?.closest('ul')?.classList.remove('checklist');
     closePops(); touchNote(); updateState();
   } else if(b.dataset.block){ closePops(); b.dataset.block === 'blockquote' ? toggleQuote() : setBlock(b.dataset.block); }
   else if(b.dataset.pop){
-    saveSel(); const p = $('#pop-' + b.dataset.pop), open = p.hidden; closePops(); p.hidden = !open;
+    saveSel(); const p = $('#pop-' + b.dataset.pop), open = p.hidden; closePops(); p.hidden = !open; markOpts(b.dataset.pop);
     const tr = toolbar.getBoundingClientRect(), br = b.getBoundingClientRect();
     p.style.left = Math.max(4, Math.min(br.left - tr.left, toolbar.clientWidth - p.offsetWidth - 4)) + 'px';
     p.style.top = (br.bottom - tr.top + 6) + 'px';
   }
 });
 $('#checkBtn').addEventListener('click', () => {
-  if(!curNote) return; restoreSel();
+  if(!curNote) return; restoreSel(); snap();
   const ul = selNode()?.closest('ul');
   if(ul?.classList.contains('checklist')) document.execCommand('insertUnorderedList');
   else if(ul) ul.classList.add('checklist');
@@ -1333,7 +1426,7 @@ $('#checkBtn').addEventListener('click', () => {
 });
 editor.addEventListener('click', e => {   // tick a checklist item by clicking its box
   const li = e.target.closest('ul.checklist > li');
-  if(li && e.clientX - li.getBoundingClientRect().left < 22){ li.classList.toggle('done'); touchNote(); }
+  if(li && e.clientX - li.getBoundingClientRect().left < 22){ snap(); li.classList.toggle('done'); touchNote(); }
 });
 
 /* mid-tone colours that stay readable on both the dark and the light background */
@@ -1346,7 +1439,7 @@ $$('.swatches').forEach(w => {
   w.innerHTML = COLORS[kind].map(c => `<button class="sw ${c === 'none' ? 'none' : ''}" data-c="${c}" ${c === 'none' ? '' : `style="background:${c}"`} aria-label="${c === 'none' ? '移除顏色' : '顏色 ' + c}"></button>`).join('');
   w.addEventListener('click', e => {
     const s = e.target.closest('.sw'); if(!s) return;
-    restoreSel(); document.execCommand('styleWithCSS', false, true);
+    restoreSel(); snap(); document.execCommand('styleWithCSS', false, true);
     if(s.dataset.c !== 'none') document.execCommand(kind, false, s.dataset.c);
     else if(kind === 'hiliteColor') document.execCommand(kind, false, 'transparent');
     else { document.execCommand(kind, false, '#010203'); cleanColors(true); }
@@ -1356,26 +1449,22 @@ $$('.swatches').forEach(w => {
 });
 
 /* text size (on the selected text) and line height (on the selected lines) */
-const SIZES = [['小', 13], ['內文', 0], ['中', 18], ['大', 22], ['特大', 28]];
 const HEIGHTS = [['緊', 1.3], ['標準', 0], ['寬', 2], ['特寬', 2.4]];
-$('[data-kind="size"]').innerHTML = SIZES.map(([l, v]) => `<button class="opt" data-v="${v}"><span style="font-size:${v || 15}px">${l}</span><small>${v ? v + 'px' : '預設'}</small></button>`).join('');
-$('[data-kind="lh"]').innerHTML = HEIGHTS.map(([l, v]) => `<button class="opt" data-v="${v}"><span>${l}</span><small>${v || '預設'}</small></button>`).join('');
-$('[data-kind="size"]').addEventListener('click', e => { const o = e.target.closest('.opt'); if(o){ closePops(); setFontSize(+o.dataset.v); } });
-$('[data-kind="lh"]').addEventListener('click', e => { const o = e.target.closest('.opt'); if(o){ closePops(); setLineHeight(+o.dataset.v); } });
-function setFontSize(px){
-  restoreSel(); const s = getSelection();
-  if(!s.rangeCount || s.isCollapsed){ toast('先選取要調整大小的文字'); return; }
-  document.execCommand('styleWithCSS', false, false);
-  document.execCommand('fontSize', false, '7');   // marks the selection with <font size=7>, then each mark becomes a real size
-  $$('font[size="7"]', editor).forEach(f => {
-    $$('[style]', f).forEach(x => { x.style.removeProperty('font-size'); if(!x.getAttribute('style')) x.removeAttribute('style'); });
-    if(!px){ f.replaceWith(...f.childNodes); return; }
-    const sp = document.createElement('span'); sp.style.fontSize = px + 'px'; sp.append(...f.childNodes); f.replaceWith(sp);
-  });
-  touchNote();
+$('[data-kind="size"]').innerHTML = STYLES.map(([k, l, px]) => `<button class="opt" data-v="${k}"><i class="ck"></i><span style="font-size:${Math.min(px, 20)}px;font-weight:${k === 'h1' || k === 'h2' ? 700 : 500}">${l}</span><small>${px}px</small></button>`).join('');
+$('[data-kind="lh"]').innerHTML = HEIGHTS.map(([l, v]) => `<button class="opt" data-v="${v}"><i class="ck"></i><span>${l}</span><small>${v || '預設'}</small></button>`).join('');
+$('[data-kind="size"]').addEventListener('click', e => { const o = e.target.closest('.opt'); if(o){ closePops(); setBlock(o.dataset.v); } });
+function lineEl(){   // the element whose style the caret's line uses
+  const n = savedRange?.startContainer || selNode(); if(!n || !editor.contains(n)) return null;
+  const b = topBlock(n); return b?.nodeType === 1 ? b : (n.nodeType === 1 ? n : n.parentElement)?.closest('td,li') || null;
 }
+function markOpts(kind){
+  const el = lineEl();
+  if(kind === 'size'){ const k = styleOf(el); $$('#pop-size .opt').forEach(o => o.classList.toggle('cur', o.dataset.v === k)); }
+  if(kind === 'lh'){ const v = parseFloat(el?.style.lineHeight) || 0; $$('#pop-lh .opt').forEach(o => o.classList.toggle('cur', +o.dataset.v === v)); }
+}
+$('[data-kind="lh"]').addEventListener('click', e => { const o = e.target.closest('.opt'); if(o){ closePops(); setLineHeight(+o.dataset.v); } });
 function setLineHeight(v){
-  restoreSel(); if(!getSelection().rangeCount) return;
+  restoreSel(); if(!getSelection().rangeCount) return; snap();
   const r = getSelection().getRangeAt(0), a = topBlock(r.startContainer), b = topBlock(r.endContainer);
   if(!a) return;
   (b && b.parentNode === a.parentNode ? blocksBetween(a, b) : [a]).forEach(n => { if(n.nodeType === 1){ n.style.lineHeight = v || ''; if(!n.getAttribute('style')) n.removeAttribute('style'); } });
@@ -1391,7 +1480,7 @@ tpick.addEventListener('mouseover', e => {
 });
 tpick.addEventListener('click', e => { const i = e.target.closest('i'); if(i){ insertTable(+i.dataset.r, +i.dataset.c); closePops(); } });
 function insertTable(rows, cols){
-  restoreSel();
+  restoreSel(); snap();
   const w = Math.max(90, Math.min(200, Math.floor(620 / cols)));
   document.execCommand('insertHTML', false, `<div class="tbl-wrap"><table class="has-header" style="width:${w*cols}px"><colgroup>${`<col style="width:${w}px">`.repeat(cols)}</colgroup><tbody>${('<tr>' + '<td><br></td>'.repeat(cols) + '</tr>').repeat(rows)}</tbody></table></div><p><br></p>`);
   const wrap = selNode()?.closest('p')?.previousElementSibling;
@@ -1426,7 +1515,7 @@ function splitCell(cell){
 }
 function mergeInto(cell, other){ if(hasContent(other)){ if(!hasContent(cell)) cell.innerHTML = ''; else cell.append(document.createElement('br')); cell.append(...other.childNodes); } other.remove(); }
 function tableOp(op){
-  const cell = curCell; if(!cell) return;
+  const cell = curCell; if(!cell) return; snap();
   if(cellSel && (op === 'mergeRight' || op === 'mergeDown')){ if(cellSel.cells.length > 1) mergeSelection(); return; }
   clearCellSel();
   const table = cell.closest('table'), cols = $$('col', table);
@@ -1534,9 +1623,11 @@ function updateState(){
   toolbar.querySelector('[data-cmd="justifyLeft"]').classList.toggle('on', !!n && !toolbar.querySelector('[data-cmd^="justify"].on'));
   $('#checkBtn').classList.toggle('on', !!n?.closest('ul.checklist'));
   const bn = n ? topBlock(n)?.nodeName : null;
+  const sk = n ? styleOf(topBlock(n)) : '';
   ['h1','h2'].forEach(t => toolbar.querySelector(`[data-block="${t}"]`).classList.toggle('on', bn === t.toUpperCase()));
+  toolbar.querySelector('[data-pop="size"]').classList.toggle('on', sk === 'lg' || sk === 'sm');
   toolbar.querySelector('[data-block="blockquote"]').classList.toggle('on', !!n?.closest('blockquote'));
-  toolbar.querySelector('[data-block="p"]').classList.toggle('on', !!n && !['H1','H2','BLOCKQUOTE'].includes(bn) && !n.closest('ul,ol'));
+  toolbar.querySelector('[data-block="p"]').classList.toggle('on', !!n && sk === 'p' && !['H1','H2','BLOCKQUOTE'].includes(bn) && !n.closest('ul,ol'));
   $$('.tgrp', toolbar).forEach(g => {
     if(g.classList.contains('open')) return;
     const bs = $$('.tb', g), lead = bs.find(x => x.classList.contains('on')) || bs[0];
@@ -1560,7 +1651,7 @@ function exitFs(){
   if(!document.body.classList.contains('fs-note') && !document.body.classList.contains('fs-cap')) return;
   document.body.classList.remove('fs-note', 'fs-cap'); closePops(); closeGroups();
 }
-editor.addEventListener('focus', () => { if(phone.matches && curNote && !document.body.classList.contains('fs-note')){ document.body.classList.add('fs-note'); syncVV(); requestAnimationFrame(placeTblBar); } });
+editor.addEventListener('focus', () => { if(phone.matches && curNote && Date.now() - galTap > 500 && !document.body.classList.contains('fs-note')){ document.body.classList.add('fs-note'); syncVV(); requestAnimationFrame(placeTblBar); } });
 $('#caption').addEventListener('focus', () => { if(phone.matches && cur){ document.body.classList.add('fs-cap'); syncVV(); } });
 function doneNote(){
   editor.blur(); getSelection().removeAllRanges(); clearCellSel();
@@ -1574,10 +1665,75 @@ $('#capBack').addEventListener('click', () => { $('#caption').blur(); closePost(
 /* images inside a note */
 $('#imgBtn').addEventListener('click', () => { if(curNote){ saveSel(); $('#noteImgInput').click(); } });
 $('#noteImgInput').addEventListener('change', async e => {
-  const f = e.target.files[0]; e.target.value = ''; if(!f) return;
-  try{ const src = await readImage(f, 1400); restoreSel(); document.execCommand('insertHTML', false, `<img src="${src}" alt=""><p><br></p>`); touchNote(); }
-  catch(err){ toast('這張圖讀不到，請換個格式'); }
+  const files = [...e.target.files]; e.target.value = ''; if(!files.length) return;
+  let srcs; try{ srcs = await Promise.all(files.map(f => readImage(f, files.length > 1 ? 1200 : 1400))); }catch(err){ toast('有圖片讀不到，請換個格式'); return; }
+  restoreSel(); snap();
+  const html = srcs.length === 1 ? `<img src="${srcs[0]}" alt="">` : `<div class="gal" contenteditable="false">${srcs.map(x => `<img src="${x}" alt="">`).join('')}</div>`;
+  document.execCommand('insertHTML', false, html + '<p><br></p>'); touchNote();
+  if(srcs.length > 1) toast(`已插入 ${srcs.length} 張的相簿，點圖片可放大瀏覽`);
 });
+
+/* single image: tap to select, drag the corner to resize; double-click opens it large */
+let selImg = null, imgRz = null;
+function placeImgBox(){
+  const box = $('#imgBox');
+  if(!selImg || !editor.contains(selImg)){ selImg = null; box.hidden = true; return; }
+  const sc = $('#escroll'), sr = sc.getBoundingClientRect(), r = selImg.getBoundingClientRect();
+  Object.assign(box.style, { left:(r.left - sr.left) + 'px', top:(r.top - sr.top + sc.scrollTop) + 'px', width:r.width + 'px', height:r.height + 'px' });
+  box.hidden = false;
+}
+editor.addEventListener('click', e => {
+  const g = e.target.closest('.gal img');
+  if(g){ const list = $$('img', g.parentNode); openLb(list, list.indexOf(g), true); return; }
+  const im = e.target.closest('img');
+  selImg = im || null; placeImgBox();
+});
+editor.addEventListener('dblclick', e => { const im = e.target.closest('img'); if(im && !im.closest('.gal')) openLb([im], 0, false); });
+editor.addEventListener('pointerdown', e => { if(e.target.closest('.gal')) galTap = Date.now(); }, true);
+$('#imgHandle').addEventListener('pointerdown', e => {
+  if(!selImg) return; e.preventDefault(); e.stopPropagation(); snap();
+  imgRz = { x:e.clientX, w:selImg.getBoundingClientRect().width };
+  try{ e.target.setPointerCapture(e.pointerId); }catch(err){}
+});
+$('#imgHandle').addEventListener('pointermove', e => {
+  if(!imgRz || !selImg) return;
+  const max = editor.clientWidth - 56, w = Math.round(Math.max(80, Math.min(max, imgRz.w + e.clientX - imgRz.x)));
+  selImg.style.width = w + 'px'; placeImgBox();
+});
+const endImgRz = () => { if(!imgRz) return; imgRz = null; touchNote(); };
+$('#imgHandle').addEventListener('pointerup', endImgRz);
+$('#imgHandle').addEventListener('pointercancel', endImgRz);
+
+/* album viewer */
+let lbList = [], lbI = 0, lbEdit = false, lbX = null, galTap = 0;
+function openLb(list, i, editable){ lbList = list; lbI = i; lbEdit = editable; $('#lb').hidden = false; showLb(); }
+function showLb(){
+  if(!lbList.length){ closeLb(); return; }
+  $('#lbImg').src = lbList[lbI].src;
+  const many = lbList.length > 1;
+  $('#lbN').textContent = many ? `${lbI + 1} / ${lbList.length}` : '';
+  $('#lbPrev').hidden = $('#lbNext').hidden = !many; $('#lbDel').hidden = !lbEdit;
+}
+function closeLb(){ $('#lb').hidden = true; $('#lbImg').removeAttribute('src'); }
+const lbStep = d => { lbI = (lbI + d + lbList.length) % lbList.length; showLb(); };
+$('#lbClose').addEventListener('click', closeLb);
+$('#lbPrev').addEventListener('click', e => { e.stopPropagation(); lbStep(-1); });
+$('#lbNext').addEventListener('click', e => { e.stopPropagation(); lbStep(1); });
+$('#lbDel').addEventListener('click', e => {
+  e.stopPropagation(); const im = lbList[lbI], gal = im?.closest('.gal'); if(!im) return;
+  snap(); im.remove(); if(gal && !gal.querySelector('img')) gal.remove();
+  lbList.splice(lbI, 1); lbI = Math.min(lbI, lbList.length - 1); touchNote(); showLb(); toast('已刪除這張圖片');
+});
+$('#lb').addEventListener('click', e => { if(e.target === $('#lb')) closeLb(); });
+$('#lb').addEventListener('pointerdown', e => { lbX = e.clientX; });
+$('#lb').addEventListener('pointerup', e => { if(lbX == null) return; const dx = e.clientX - lbX; lbX = null; if(Math.abs(dx) > 50 && lbList.length > 1) lbStep(dx < 0 ? 1 : -1); });
+document.addEventListener('keydown', e => {
+  if($('#lb').hidden) return;
+  if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); closeLb(); }
+  else if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){ e.preventDefault(); e.stopPropagation(); if(lbList.length > 1) lbStep(e.key === 'ArrowRight' ? 1 : -1); }
+}, true);
+window.addEventListener('resize', placeImgBox);
+$('#escroll').addEventListener('scroll', () => { if(selImg) placeImgBox(); }, {passive:true});
 
 /* cell selection: dragging from one cell into another selects the rectangle between them,
    so dragging down one column selects just that column. Then: Delete clears, ⌘C copies, 合併 merges them. */
@@ -1601,6 +1757,7 @@ function selectCells(a, b){
   updateState();
 }
 function mergeSelection(){
+  snap();
   const { cells, r1, r2, c1, c2 } = cellSel, first = cells[0];
   first.rowSpan = r2 - r1 + 1; first.colSpan = c2 - c1 + 1;
   cells.slice(1).forEach(c => mergeInto(first, c));
@@ -1621,7 +1778,7 @@ editor.addEventListener('pointermove', e => {
 window.addEventListener('pointerup', () => { if(cellDrag){ cellDrag.table.classList.remove('picking'); cellDrag = null; } });
 document.addEventListener('keydown', e => {
   if(!cellSel || imeBusy(e)) return;
-  if(e.key === 'Backspace' || e.key === 'Delete'){ e.preventDefault(); cellSel.cells.forEach(c => { c.innerHTML = '<br>'; }); touchNote(); }
+  if(e.key === 'Backspace' || e.key === 'Delete'){ e.preventDefault(); snap(); cellSel.cells.forEach(c => { c.innerHTML = '<br>'; }); touchNote(); }
   else if(e.key === 'Escape') clearCellSel();
   else if(!e.metaKey && !e.ctrlKey && e.key.length === 1) clearCellSel();
 });
@@ -1658,7 +1815,7 @@ editor.addEventListener('pointerleave', () => { if(!rz) editor.classList.remove(
 function startRz(e, table, h){
   const col = h.type === 'col' ? $$('col', table)[h.col] : null;
   if(h.type === 'col' && !col) return;
-  e.preventDefault(); $$('.rz-guide').forEach(g => g.remove());
+  e.preventDefault(); snap(); $$('.rz-guide').forEach(g => g.remove());
   const tr = table.getBoundingClientRect();
   const guide = document.createElement('div'); guide.className = 'rz-guide'; document.body.appendChild(guide);
   if(col){

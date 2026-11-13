@@ -351,7 +351,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
       </div>
       <div class="acct" id="acct" hidden>
         <div class="acct-in" id="acctIn" hidden><span class="acct-dot"></span><span class="acct-mail" id="acctMail"></span><button class="btn" id="signOut">登出</button></div>
-        <form class="acct-out" id="acctOut"><input id="acctEmail" type="email" placeholder="Email" aria-label="Email" autocomplete="username" required><input id="acctPass" type="password" placeholder="密碼" aria-label="密碼" autocomplete="current-password" required><button class="btn acc">登入</button></form>
+        <form class="acct-out" id="acctOut" novalidate><input id="acctEmail" type="email" placeholder="Email" aria-label="Email" autocomplete="username"><input id="acctPass" type="password" placeholder="密碼" aria-label="密碼" autocomplete="current-password"><button class="btn acc" id="signIn">登入</button></form>
       </div>
       <div class="sp-row"><span>外觀</span>
         <div class="seg modeseg" id="modeSeg" role="group" aria-label="外觀"><span class="ind" aria-hidden="true"></span>
@@ -1366,14 +1366,21 @@ function renderAccount(){
   $('#acct').hidden = !Cloud.sb;
   $('#acctIn').hidden = !Cloud.user; $('#acctOut').hidden = !!Cloud.user;
   const fixed = window.PN_CONFIG?.email;   // config.js may name the account, then only the password is asked
-  if(fixed){ $('#acctEmail').value = fixed; $('#acctEmail').hidden = true; }
+  if(fixed){ $('#acctEmail').value = String(fixed).trim(); $('#acctEmail').hidden = true; }
   if(Cloud.user) $('#acctMail').textContent = Cloud.failed ? '連不上雲端' : `已同步・${Cloud.user.email}`;
 }
 $('#acctOut').addEventListener('submit', async e => {
   e.preventDefault();
-  const { error } = await Cloud.sb.auth.signInWithPassword({ email:$('#acctEmail').value.trim(), password:$('#acctPass').value });
-  if(error){ toast('Email 或密碼不正確'); return; }
-  $('#acctPass').value = ''; toggleSettings(false);
+  const email = $('#acctEmail').value.trim(), password = $('#acctPass').value, btn = $('#signIn');
+  if(!email){ toast('沒有 Email：請在 config.js 填 email，或在這裡輸入'); $('#acctEmail').hidden = false; return; }
+  if(!password){ toast('請輸入密碼'); return; }
+  btn.disabled = true; btn.textContent = '登入中⋯';
+  try{
+    const { error } = await Cloud.sb.auth.signInWithPassword({ email, password });
+    if(error){ toast(/invalid login/i.test(error.message) ? 'Email 或密碼不正確' : '登入失敗：' + error.message); return; }
+    $('#acctPass').value = ''; toggleSettings(false); toast('登入成功，同步中⋯');
+  }catch(err){ toast('連不上 Supabase，請檢查 config.js 的網址和 key'); }
+  finally{ btn.disabled = false; btn.textContent = '登入'; }
 });
 $('#signOut').addEventListener('click', async () => {
   if(curNote) curNote.html = editor.innerHTML;

@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794575733">
+<meta name="pn-build" content="1794730076">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -331,7 +331,8 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 
 
 /* ===== 貼文 ===== */
-.cal{padding:2px 4px 6px}
+.cal{padding:2px 4px 10px;margin-bottom:4px;border-bottom:1px solid var(--s3)}   /* a line under the calendar */
+.pgrid{display:none}
 .cal-h{display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px}
 .cal-h b{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
 .cal-h button{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:var(--muted)}
@@ -481,6 +482,17 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .back{display:grid!important}
   .thumbs{grid-template-columns:repeat(4,minmax(0,1fr))}
   .pmeta{display:none}
+  #plist{display:none}
+  .pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:2px 4px 8px}   /* phones: posts as a small grid, 3 a row */
+  .pgrid .card{border-radius:10px;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+  .pgrid .ctop{top:5px;left:5px;right:5px;gap:3px}
+  .pgrid .ctitle{font-size:11px;padding:2px 7px}
+  .pgrid .chip{font-size:9.5px;padding:2px 5px}
+  .pgrid .chip svg{width:9px;height:9px}
+  .pgrid .cfoot{padding:16px 6px 5px;font-size:10px}
+  .pgrid .ccopy{display:none}
+  .pgrid .txtcover{padding:28px 7px 22px;font-size:10px;line-height:1.55}
+  .pgrid .empty-grid{padding:28px 6px;font-size:13px}
   .meta-open .pmeta{display:block}
   #postEdit>.media{border-top:0}
   #postEdit.meta-open>.media{border-top:1px solid var(--s3)}
@@ -572,7 +584,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
             <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="搜尋" aria-label="搜尋貼文"></label>
             <button class="btn acc" id="newPost" title="新增貼文" aria-label="新增貼文"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
-          <div class="lbody"><div class="cal" id="cal"></div><div class="sec" id="plistLabel">全部貼文</div><div id="plist"></div></div>
+          <div class="lbody"><div class="cal" id="cal"></div><div class="sec" id="plistLabel">全部貼文</div><div id="plist"></div><div class="grid pgrid" id="pgrid"></div></div>
         </aside>
         <div class="pcol">
           <div class="panel pmain" id="gridView"><div class="grid" id="grid"></div></div>
@@ -997,15 +1009,18 @@ function renderPosts(){
   const q = $('#psearch').value.trim().toLowerCase();
   const list = sortedPosts().filter(d => (!q || (d.title + ' ' + d.caption).toLowerCase().includes(q)) && (!dayFilter || d.date === dayFilter));
   renderPostList(list);
-  $('#grid').innerHTML = list.length ? list.map(d => {
+  const cards = list.length ? list.map(d => {
     const cover = d.images[0] ? `<img src="${d.images[0].src}" alt="" loading="lazy">`
       : `<div class="txtcover ${d.caption.trim() ? '' : 'blank'}">${esc(d.caption.trim().slice(0, 90) || '空白貼文')}</div>`;
     return `<div class="card${isPast(d) ? ' past' : ''}" role="button" tabindex="0" data-id="${d.id}" aria-label="貼文 ${esc(d.title)} ${dateLabel(d.date) || '未排日期'}">${cover}
       <div class="ctop">${d.title.trim() ? `<span class="ctitle">${esc(d.title)}</span>` : ''}${d.kind === 'reels' ? '<span class="chip reels">Reels</span>' : ''}${d.images.length > 1 ? `<span class="chip">${ICON.multi}${d.images.length}</span>` : ''}${d.pinned ? `<span class="chip pin" title="已釘選">${ICON.pin}</span>` : ''}</div>
       <div class="cfoot"><span class="${!d.date ? 'nodate' : d.date < today ? 'past' : ''}">${d.date ? dateLabel(d.date) : '未排日期'}</span>
       <button class="ccopy" data-copy="${d.id}" title="複製文案" aria-label="複製文案">${ICON.copy}</button></div></div>`;
-  }).join('') : `<div class="empty-grid">${q || dayFilter ? '找不到符合的貼文' : '還沒有貼文，按左上角的 + 新增'}</div>`;
+  }).join('') : `<div class="empty-grid">${q || dayFilter ? '找不到符合的貼文' : posts.length ? '' : '還沒有貼文，按 + 新增'}</div>`;
+  $('#grid').innerHTML = phone.matches ? '' : cards;   // computer: the big grid; phone: the small one under the calendar
+  $('#pgrid').innerHTML = phone.matches ? cards : '';
 }
+phone.addEventListener('change', () => renderPosts());
 $('#psearch').addEventListener('input', () => { if(cur) closePost(); else renderPosts(); });
 $('#cal').addEventListener('click', e => {
   const nav = e.target.closest('[data-nav]'), day = e.target.closest('[data-d]');
@@ -1019,12 +1034,23 @@ $('#cal').addEventListener('click', e => {
   if(cur) closePost(); else renderPosts();
 });
 $('#plist').addEventListener('click', e => listClick(e, openPost, deletePost));
-$('#grid').addEventListener('click', e => {
-  const cp = e.target.closest('[data-copy]');
-  if(cp){ copyText(posts.find(d => d.id === cp.dataset.copy)?.caption); return; }
-  const c = e.target.closest('.card'); if(c) openPost(c.dataset.id);
+[$('#grid'), $('#pgrid')].forEach(g => {
+  g.addEventListener('click', e => {
+    if(lpFired){ lpFired = false; return; }   // the tap that ended a long-press
+    const cp = e.target.closest('[data-copy]');
+    if(cp){ copyText(posts.find(d => d.id === cp.dataset.copy)?.caption); return; }
+    const c = e.target.closest('.card'); if(c) openPost(c.dataset.id);
+  });
+  g.addEventListener('keydown', e => { if((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card')){ e.preventDefault(); openPost(e.target.dataset.id); } });
 });
-$('#grid').addEventListener('keydown', e => { if((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card')){ e.preventDefault(); openPost(e.target.dataset.id); } });
+/* phones: long-press a card for the delete menu (computers right-click) */
+let lp = null, lpFired = false;
+$('#pgrid').addEventListener('pointerdown', e => {
+  const c = e.target.closest('.card'); if(!c || e.pointerType === 'mouse') return;
+  lp = { x:e.clientX, y:e.clientY, t:setTimeout(() => { lpFired = true; lp = null; openCtx(c, e.clientX, e.clientY); try{ navigator.vibrate?.(12); }catch(err){} }, 500) };
+});
+$('#pgrid').addEventListener('pointermove', e => { if(lp && Math.hypot(e.clientX - lp.x, e.clientY - lp.y) > 8){ clearTimeout(lp.t); lp = null; } });
+['pointerup', 'pointercancel'].forEach(t => $('#pgrid').addEventListener(t, () => { if(lp){ clearTimeout(lp.t); lp = null; } }));
 $('#newPost').addEventListener('click', () => {
   const now = Date.now(), d = { id:uid(), title:'', pinned:false, date:'', kind:'post', images:[], caption:'', createdAt:now, updatedAt:now };
   posts.push(d); postSaver.soon(d.id); openPost(d.id); $('#ptitle').focus();
@@ -2435,13 +2461,16 @@ window.addEventListener('pointercancel', endPointer);
 
 const ctx = $('#ctx'), ctxDel = $('#ctxDel'); let ctxFor = null;
 function closeCtx(){ ctx.hidden = true; ctxFor = null; ctxDel.classList.remove('armed'); }
-document.addEventListener('contextmenu', e => {
-  const el = e.target.closest('#grid .card, #plist .nitem, #nitems .nitem'); if(!el) return;
-  e.preventDefault();
-  ctxFor = { note:!!el.closest('#nitems'), id:el.dataset.id };
+let ctxAt = 0;
+function openCtx(el, x, y){
+  ctxFor = { note:!!el.closest('#nitems'), id:el.dataset.id }; ctxAt = Date.now();
   ctxDel.classList.remove('armed'); ctxDel.innerHTML = `${ICON.trash}${ctxFor.note ? '刪除備忘錄' : '刪除貼文'}`;
   ctx.hidden = false;
-  ctx.style.left = Math.min(e.clientX, innerWidth - ctx.offsetWidth - 8) + 'px'; ctx.style.top = Math.min(e.clientY, innerHeight - ctx.offsetHeight - 8) + 'px';
+  ctx.style.left = Math.max(8, Math.min(x, innerWidth - ctx.offsetWidth - 8)) + 'px'; ctx.style.top = Math.max(8, Math.min(y, innerHeight - ctx.offsetHeight - 8)) + 'px';
+}
+document.addEventListener('contextmenu', e => {
+  const el = e.target.closest('#grid .card, #pgrid .card, #plist .nitem, #nitems .nitem'); if(!el) return;
+  e.preventDefault(); openCtx(el, e.clientX, e.clientY);
 });
 ctxDel.addEventListener('click', () => {
   if(!ctxDel.classList.contains('armed')){ ctxDel.classList.add('armed'); ctxDel.innerHTML = `${ICON.trash}再按一次確認刪除`; return; }
@@ -2473,7 +2502,7 @@ scrim.addEventListener('click', () => toggleSettings(false));
 document.addEventListener('mousedown', e => {
   if(!e.target.closest('.pop,[data-pop]')) closePops();
   if(!$('#datePop').hidden && !e.target.closest('#datePop,#dateBtn')) closeDatePop();
-  if(!ctx.hidden && !e.target.closest('#ctx')) closeCtx();
+  if(!ctx.hidden && !e.target.closest('#ctx') && Date.now() - ctxAt > 500) closeCtx();   // not the finger lift that opened it
   if(setOpen() && !e.target.closest('#setPop,#setBtn')) toggleSettings(false);
 });
 document.addEventListener('keydown', e => {

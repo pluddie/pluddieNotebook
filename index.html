@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794980498">
+<meta name="pn-build" content="1794982966">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -343,6 +343,8 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .dock .tb.on{background:var(--ebar-ink);color:var(--ebar)}
 .dock .sep{width:1px;height:18px;margin:0 6px;background:currentColor;opacity:.25;flex:none}
 .dock .dz{color:var(--danger)}
+.dock .tb.wide{width:auto;gap:6px;padding:0 10px;font-size:12.5px;font-weight:600}
+#tblClr[hidden]{display:none}
 .capin{width:min(240px,55vw);border:0;border-radius:8px;padding:6px 10px;background:var(--s1);color:var(--fg);font:13px var(--font);outline:none}
 .dock .tgrp{display:contents}
 @keyframes barup{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translateX(-50%)}}
@@ -716,6 +718,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div class="lbar" id="lbar" hidden></div>
             </div>
             <div class="dock tblbar" id="tblbar" hidden>
+              <div class="tgrp" id="tblClr"><button class="tb" data-t="clear" title="恢復預設樣式（內文・預設行高・無粗體與顏色）">清除樣式</button><span class="sep"></span></div>
               <div class="tgrp"><button class="tb" data-t="header" title="第一列當表頭">表頭</button></div>
               <span class="sep"></span>
               <div class="tgrp"><button class="tb" data-t="rowAbove" title="上方加一列">＋上</button><button class="tb" data-t="rowBelow" title="下方加一列">＋下</button><button class="tb" data-t="colLeft" title="左邊加一欄">＋左</button><button class="tb" data-t="colRight" title="右邊加一欄">＋右</button></div>
@@ -727,6 +730,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div class="tgrp"><button class="tb dz" data-t="delTable" title="刪除表格" aria-label="刪除表格"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button></div>
             </div>
             <div class="dock mbar" id="mbar" hidden></div>
+            <div class="dock fmtbar" id="fmtbar" hidden><button class="tb wide" data-t="clear" title="恢復預設樣式（內文・預設行高・無粗體與顏色）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h12v2M10 5l-3 14M5 19h6M15 13l6 6M21 13l-6 6"/></svg><span>清除樣式</span></button></div>
           </div>
         </div>
       </div>
@@ -1619,6 +1623,38 @@ function joinLines(key){
   const [tn, to] = posIn(a, seam); setRange(tn, to);
   touchNote(); updateState(); return true;
 }
+function listKey(){   // Backspace at the very start of a list item: it becomes a plain line; at the start of the line right under a list: joins its last item
+  const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
+  const r = s.getRangeAt(0), n = selNode(); if(!n || n.closest('td')) return false;
+  const li = n.closest('li');
+  if(li && editor.contains(li)){
+    if(offIn(li, r.startContainer, r.startOffset) > 0) return false;
+    snap();
+    const list = li.parentElement;
+    if(list.parentElement?.nodeName === 'LI'){ document.execCommand('outdent'); touchNote(); updateState(); return true; }   // nested: one level out
+    const k = styleOf(li), p = document.createElement(k === 'h1' || k === 'h2' ? k : 'p');
+    if(k === 'lg') p.className = 'lg';
+    if(li.style.lineHeight) p.style.lineHeight = li.style.lineHeight; if(li.style.textAlign) p.style.textAlign = li.style.textAlign;
+    const sub = [...li.children].filter(x => /^(UL|OL)$/.test(x.nodeName));
+    sub.forEach(x => x.remove()); p.append(...li.childNodes); if(!p.firstChild) p.innerHTML = '<br>';
+    const rest = []; for(let x = li.nextElementSibling; x; x = x.nextElementSibling) rest.push(x);
+    li.remove(); list.after(p);
+    let tail = p; sub.forEach(x => { tail.after(x); tail = x; });
+    if(rest.length){ const l2 = list.cloneNode(false); l2.append(...rest); tail.after(l2); }
+    if(!list.children.length) list.remove();
+    caretIn(p); touchNote(); updateState(); return true;
+  }
+  const blk = topBlock(n), prev = blk?.previousElementSibling;
+  if(!blk || !isTextBlock(blk) || !prev || !/^(UL|OL)$/.test(prev.nodeName) || offIn(blk, r.startContainer, r.startOffset) > 0) return false;
+  let last = prev.lastElementChild; while(last?.lastElementChild && /^(UL|OL)$/.test(last.lastElementChild.nodeName)) last = last.lastElementChild.lastElementChild;
+  if(!last) return false;
+  snap();
+  const seam = last.textContent.length;
+  if(last.childNodes.length === 1 && last.firstChild.nodeName === 'BR') last.innerHTML = '';
+  if(blk.textContent.length || blk.querySelector('img')){ const w = document.createElement('div'); w.append(...blk.childNodes); stripSizes(w); w.querySelectorAll(':scope > br:last-child').forEach(b => b.remove()); last.append(...w.childNodes); }
+  blk.remove(); if(!last.firstChild) last.innerHTML = '<br>';
+  const [tn, to] = posIn(last, seam); setRange(tn, to); touchNote(); updateState(); return true;
+}
 editor.addEventListener('keydown', e => {
   if((e.metaKey || e.ctrlKey) && !e.altKey && /^[zy]$/i.test(e.key)){ e.preventDefault(); (e.key.toLowerCase() === 'y' || e.shiftKey) ? redo() : undo(); return; }
   const cell = selNode()?.closest('td');
@@ -1631,6 +1667,7 @@ editor.addEventListener('keydown', e => {
   if(e.key === 'Tab' && cell){ e.preventDefault(); curCell = cell; moveCell(e.shiftKey ? -1 : 1); return; }
   if((e.key === 'Backspace' || e.key === 'Delete') && !e.metaKey && !e.altKey && !imeBusy(e) && mediaKey(e.key)){ e.preventDefault(); return; }
   if(cell && e.key.startsWith('Arrow') && (curCell = cell) && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey && !imeBusy(e) && arrowCell(e.key)){ e.preventDefault(); return; }
+  if(e.key === 'Backspace' && !e.metaKey && !e.altKey && !e.shiftKey && !imeBusy(e) && listKey()){ e.preventDefault(); return; }
   if((e.key === 'Backspace' || e.key === 'Delete') && !e.metaKey && !e.altKey && !imeBusy(e) && joinLines(e.key)){ e.preventDefault(); return; }
   /* Enter: a new line after a heading / quote starts as body text instead of copying the style */
   if(e.key !== 'Enter' || e.shiftKey || imeBusy(e)) return;
@@ -1689,7 +1726,7 @@ function tidyColors(root){
   root.querySelectorAll('[style]').forEach(el => {
     ['color', 'backgroundColor'].forEach(k => { const v = el.style[k]; if(v && !P[k].has(v)) el.style[k] = /^(transparent|rgba\(0, 0, 0, 0\))$/.test(v) || /rgb\(1, 2, 3\)/.test(v) ? '' : nearestSwatch(k, v); });
     if(el.nodeName === 'SPAN' && !el.classList.contains('ph')) [...el.style].forEach(p => { if(p !== 'color' && p !== 'background-color') el.style.removeProperty(p); });   // a span only ever carries a colour
-    if(!el.getAttribute('style')){ el.removeAttribute('style'); if(el.nodeName === 'SPAN') el.replaceWith(...el.childNodes); }
+    if(!el.getAttribute('style')){ el.removeAttribute('style'); if(el.nodeName === 'SPAN' && !el.classList.contains('ph')) el.replaceWith(...el.childNodes); }
   });
   root.querySelectorAll('span:not([style]):not(.ph)').forEach(x => x.replaceWith(...x.childNodes));
 }
@@ -1798,13 +1835,60 @@ editor.addEventListener('paste', e => {
   if(pasteOnPic(e)) return;
   if((cellSel || selNode()?.closest('td')) && pasteCells(e.clipboardData)){ e.preventDefault(); return; }
   const html = e.clipboardData?.getData('text/html'); if(!html) return;
-  e.preventDefault(); snap(); insertHtml(html);
+  e.preventDefault(); snap(); insertHtml(html, true);
 });
-function insertHtml(html){   // cleaned HTML in at the caret (the caller snaps first)
+function textLines(root){   // the plain lines of some HTML
+  const out = []; let run = null;
+  const end = () => { if(run !== null){ out.push(run); run = null; } };
+  const walk = n => n.childNodes.forEach(c => {
+    if(c.nodeType === 3){ if(c.textContent.trim() || run !== null) run = (run || '') + c.textContent.replace(/\s*\n\s*/g, ' '); }
+    else if(c.nodeName === 'BR'){ out.push(run || ''); run = null; }
+    else if(/^(P|H1|H2|DIV|LI|UL|OL|BLOCKQUOTE)$/.test(c.nodeName)){ end(); walk(c); end(); }
+    else walk(c);
+  });
+  walk(root); end(); return out;
+}
+function intoLine(line, tmp, inList){   // an empty line is replaced by the pasted lines, each keeping its own look
+  const blocks = []; let run = null;
+  [...tmp.childNodes].forEach(c => {
+    if(ROOT_BLOCK.test(c.nodeName) || c.classList?.contains('gal') || c.classList?.contains('tbl-wrap')){ run = null; blocks.push(c); }
+    else if(c.nodeType === 1 || c.textContent.trim()){ if(!run){ run = document.createElement('p'); blocks.push(run); } run.append(c); }
+  });
+  if(!blocks.length) return false;
+  let items = blocks;
+  if(inList){   // into a list: every line becomes an item of it
+    if(blocks.some(b => !/^(P|H1|H2|UL|OL)$/.test(b.nodeName))) return false;
+    items = blocks.flatMap(b => {
+      if(b.nodeName === 'UL' || b.nodeName === 'OL') return [...b.children];
+      const li = document.createElement('li'), k = styleOf(b); if(k !== 'p') li.className = k;
+      if(b.style.lineHeight) li.style.lineHeight = b.style.lineHeight; li.append(...b.childNodes); return [li];
+    });
+  }
+  items.forEach(b => { if(b.nodeType === 1) stripSizes(b); });
+  line.replaceWith(...items);
+  const join = (a, b) => { if(a && b && /^(UL|OL)$/.test(a.nodeName) && a.nodeName === b.nodeName && a.className === b.className){ a.append(...b.children); b.remove(); return true; } return false; };   // next to a list of the same kind: one list
+  const first = items[0], prev = first.previousElementSibling; let last = items[items.length - 1];
+  join(last, last.nextElementSibling); if(join(prev, first) && first === last) last = prev;
+  if(last.classList?.contains('gal') || last.classList?.contains('tbl-wrap') || last.nodeName === 'HR'){
+    let nx = last.nextElementSibling; if(!nx){ nx = document.createElement('p'); nx.innerHTML = '<br>'; last.after(nx); } caretIn(nx);
+  } else caretIn(/^(UL|OL)$/.test(last.nodeName) ? last.lastElementChild : last, true);
+  return true;
+}
+function insertHtml(html, paste){   // cleaned HTML in at the caret (the caller snaps first); paste: after text it goes in as plain text, into an empty line with its look
   const tmp = adoptHtml(html);
   const inQuote = !!selNode()?.closest('blockquote');
   let kids = [...tmp.children];
   while(kids.length === 1 && kids[0].nodeName === 'BLOCKQUOTE' && (inQuote || kids[0].children.length <= 1)){ tmp.innerHTML = kids[0].innerHTML; kids = [...tmp.children]; }
+  if(paste){
+    const s = getSelection(); if(s.rangeCount && !s.isCollapsed) document.execCommand('delete');
+    const n = selNode(), td = n?.closest('td'), li = !td && n?.closest('li'), line = td || li || (n && topBlock(n));
+    const filled = line && (line.textContent.replace(/​/g, '').trim() || line.querySelector?.('img'));
+    if(line && filled && !tmp.querySelector('img,table,hr,.gal')){   // after text: plain lines in the look of the line it joins
+      textLines(tmp).forEach((l, i) => { if(i) document.execCommand(td ? 'insertLineBreak' : 'insertParagraph'); if(l) document.execCommand('insertText', false, l); });
+      touchNote(); return;
+    }
+    if(line && !filled && !td && line.nodeType === 1 && (li || line.parentNode === editor || line.parentNode.nodeName === 'BLOCKQUOTE') && intoLine(line, tmp, !!li)){ touchNote(); fitWraps(); return; }
+  }
   if(kids.length === 1 && isTextBlock(kids[0]) && !kids[0].querySelector('p,h1,h2,div,ul,ol,table')) tmp.innerHTML = kids[0].innerHTML;   // one line: goes into the line the caret is on
   const before = topBlock(selNode() || editor);
   document.execCommand('insertHTML', false, tmp.innerHTML);
@@ -2047,7 +2131,24 @@ function tableOp(op){
   else if(op === 'delTable'){ const p = document.createElement('p'); p.innerHTML = '<br>'; (table.closest('.tbl-wrap') || table).replaceWith(p); focus = p; }
   editor.focus({preventScroll:true}); caretIn(focus); touchNote(); updateState();
 }
-$('#tblbar').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if(b && !groupTap(b)) tableOp(b.dataset.t); });
+$('#tblbar').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if(!b) return; if(b.dataset.t === 'clear') return clearStyles(); if(!groupTap(b)) tableOp(b.dataset.t); });
+$('#fmtbar').addEventListener('mousedown', e => e.preventDefault());
+$('#fmtbar').addEventListener('click', e => { if(e.target.closest('[data-t="clear"]')) clearStyles(); });
+function clearStyles(){   // the picked text back to the default look: 內文, the default line height, no bold / italic / underline / colour
+  if(!cellSel) restoreSel();
+  const lines = selLines(); if(!lines.length) return; snap();
+  if(cellSel) lines.forEach(c => { c.querySelectorAll('b,i,u,s,strong,em,font,span:not(.ph)').forEach(x => x.replaceWith(...x.childNodes)); c.normalize(); });
+  else document.execCommand('removeFormat');
+  const o = cellSel ? null : selOffsets();
+  selLines().forEach(n => {
+    let el = n;
+    if(n.nodeName === 'H1' || n.nodeName === 'H2'){ el = document.createElement('p'); el.append(...n.childNodes); n.replaceWith(el); }
+    el.classList.remove('h1', 'h2', 'lg'); if(!el.classList.length) el.removeAttribute('class');
+    el.style.removeProperty('line-height'); el.style.removeProperty('text-align'); if(!el.getAttribute('style')) el.removeAttribute('style');
+  });
+  if(o) setOffsets(o);
+  touchNote(); updateState(); toast('已恢復預設樣式');
+}
 /* ↑↓ go to the cell above / below (from the first / last line), ←→ to the previous / next cell (from the start / end) */
 function arrowCell(key){
   const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
@@ -2072,11 +2173,12 @@ function moveCell(step){   // Tab / Shift+Tab; Tab in the last cell adds a row
   if(i >= cells.length) tableOp('rowBelow');
   else if(i >= 0) selectIn(cells[i]);
 }
-const dockState = () => document.body.classList.toggle('dock-on', !$('#tblbar').hidden || !$('#mbar').hidden);   // the toast moves up over a bottom bar
+const dockState = () => document.body.classList.toggle('dock-on', !$('#tblbar').hidden || !$('#mbar').hidden || !$('#fmtbar').hidden);   // the toast moves up over a bottom bar
 /* the table edit bar floats at the bottom of the note while the caret is in a table */
 function placeTblBar(){
   const live = curCell && editor.contains(curCell) && !$('#view-notes').hidden && !sel;   // a picked picture shows its own bar instead
-  $('#tblbar').hidden = !live; dockState();
+  const s = getSelection(), txt = editor.isContentEditable && !sel && !$('#view-notes').hidden && (!!cellSel || (s.rangeCount > 0 && !s.isCollapsed && editor.contains(s.anchorNode)));
+  $('#tblbar').hidden = !live; $('#tblClr').hidden = !(live && txt); $('#fmtbar').hidden = !txt || live; dockState();   // selected text: a 清除樣式 button (inside the table bar in a table)
   if(live) $('#tblbar [data-t="header"]').classList.toggle('on', curCell.closest('table').classList.contains('has-header'));
   placeKnobs(live ? curCell.closest('table') : null);
 }
@@ -2371,12 +2473,12 @@ editor.addEventListener('dragstart', e => { const s = getSelection(); if(sd || e
 editor.addEventListener('load', queueMedia, true);   // pictures change the layout as they arrive
 
 /* album viewer: every picture side by side; drag / swipe follows the finger, arrows and keys step */
-let lbList = [], lbI = 0, lbDrag = null;
+let lbList = [], lbI = 0, lbDrag = null, lbAt = 0;
 const lbTrack = $('#lbTrack');
 function openLb(list, i){
   lbList = list; lbI = Math.max(0, i);
   lbTrack.innerHTML = list.map(im => `<div class="lb-slide"><img src="${im.src}" alt=""></div>`).join('');
-  $('#lb').hidden = false; showLb(false);
+  $('#lb').hidden = false; lbAt = Date.now(); showLb(false);
 }
 function showLb(animate = true){
   lbTrack.classList.toggle('drag', !animate); lbTrack.style.transform = `translateX(${-lbI * 100}%)`;
@@ -2391,7 +2493,7 @@ $('#lbPrev').addEventListener('click', e => { e.stopPropagation(); lbStep(-1); }
 $('#lbNext').addEventListener('click', e => { e.stopPropagation(); lbStep(1); });
 $('#lb').addEventListener('pointerdown', e => {
   if(e.target.closest('button')) return;
-  lbDrag = { x:e.clientX, t:Date.now(), dx:0 }; lbTrack.classList.add('drag');
+  lbDrag = { x:e.clientX, t:Date.now(), dx:0, pic:onPic(e) }; lbTrack.classList.add('drag');
   try{ $('#lb').setPointerCapture(e.pointerId); }catch(err){}
 });
 $('#lb').addEventListener('pointermove', e => {
@@ -2399,10 +2501,11 @@ $('#lb').addEventListener('pointermove', e => {
   let dx = e.clientX - lbDrag.x; if((lbI === 0 && dx > 0) || (lbI === lbList.length - 1 && dx < 0)) dx *= .3;   // resist past the ends
   lbDrag.dx = dx; lbTrack.style.transform = `translateX(calc(${-lbI * 100}% + ${dx}px))`;
 });
+const onPic = e => { const r = lbTrack.children[lbI]?.querySelector('img')?.getBoundingClientRect(); return !!r && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };   // the pictures don't take pointer events
 const lbEnd = () => {
-  if(!lbDrag) return; const { dx, t } = lbDrag; lbDrag = null;
+  if(!lbDrag) return; const { dx, t, pic } = lbDrag; lbDrag = null;
   const fast = Math.abs(dx) > 20 && Date.now() - t < 250, step = Math.abs(dx) > innerWidth * .18 || fast ? (dx < 0 ? 1 : -1) : 0;
-  if(Math.abs(dx) < 6 && step === 0 && !$('#lb').hidden){ showLb(); return; }   // a tap: nothing moves
+  if(Math.abs(dx) < 6 && step === 0 && !$('#lb').hidden){ if(pic || Date.now() - lbAt < 400) showLb(); else closeLb(); return; }   // (the 2nd click of the double-click that opened it doesn't count)   // a tap: on the picture nothing happens, outside it closes
   lbI = Math.max(0, Math.min(lbList.length - 1, lbI + step)); showLb();
 };
 $('#lb').addEventListener('pointerup', lbEnd);
@@ -2455,10 +2558,30 @@ function copyPic(e, cut){   // a picked picture (nothing selected as text): ⌘C
   } else toast('已複製圖片');
   return true;
 }
-document.addEventListener('cut', e => { copyPic(e, true); });
+function copySel(e, cut){   // a text selection in the note: the copy carries its line (list, size, line height) and inline marks along
+  const s = getSelection(); if(!s.rangeCount || s.isCollapsed) return false;
+  const r = s.getRangeAt(0); let a = r.commonAncestorContainer; if(a.nodeType === 3) a = a.parentElement;
+  if(!editor.contains(a) || (a !== editor && a.closest('table') && !a.closest('td'))) return false;   // across table cells: the browser's own copy
+  const box = document.createElement('div'); box.append(r.cloneContents());
+  for(; a && a !== editor && a.nodeName !== 'TD'; a = a.parentElement){ const w = a.cloneNode(false); w.removeAttribute('id'); w.append(...box.childNodes); box.append(w); }
+  e.preventDefault(); e.clipboardData.setData('text/html', box.innerHTML); e.clipboardData.setData('text/plain', s.toString());
+  if(!cut || !editor.isContentEditable) return true;
+  const lineOf = (node, off) => { const x = (node.nodeType === 3 ? node.parentElement : node).closest('li'); return x && editor.contains(x) && !x.closest('td') ? x : null; };
+  const l1 = lineOf(r.startContainer), l2 = lineOf(r.endContainer);
+  const whole = l1 && l2 && offIn(l1, r.startContainer, r.startOffset) === 0 && offIn(l2, r.endContainer, r.endOffset) >= l2.textContent.length;   // whole bullet lines
+  snap(); document.execCommand('delete');
+  const li = whole && selNode()?.closest('li');
+  if(li && !li.textContent.trim() && !li.querySelector('img,ul,ol')){   // the emptied bullet goes too
+    const list = li.parentElement, next = li.nextElementSibling || list.nextElementSibling, prev = li.previousElementSibling || list.previousElementSibling;
+    li.remove(); if(!list.children.length) list.remove();
+    if(next) caretIn(next); else if(prev) caretIn(prev, true); else { const p = document.createElement('p'); p.innerHTML = '<br>'; editor.append(p); caretIn(p); }
+  }
+  touchNote(); updateState(); return true;
+}
+document.addEventListener('cut', e => { copyPic(e, true) || copySel(e, true); });
 document.addEventListener('copy', e => {
   if(copyPic(e, false)) return;
-  if(!cellSel) return;
+  if(!cellSel){ copySel(e, false); return; }
   e.preventDefault();
   const {grid} = tableMap(cellSel.table), rows = [];
   for(let r = cellSel.r1; r <= cellSel.r2; r++){
@@ -2555,7 +2678,22 @@ editor.addEventListener('click', e => {
   if(im && sel?.img === im && sel.gal){ const list = albumOf(im); openLb(list, list.indexOf(im)); }   // a second tap on an album picture opens it
   else selectImg(im);
 });
-editor.addEventListener('dblclick', e => { if(galEdge(e)) return; const im = imgAt(e.target); if(im){ const list = albumOf(im); openLb(list, list.indexOf(im)); } });
+function fitEdge(h){
+  const table = h.td.closest('table'); snap();
+  if(h.type === 'row'){ const tr = h.td.parentElement; tr.style.removeProperty('height'); if(!tr.getAttribute('style')) tr.removeAttribute('style'); }
+  else {
+    const col = $$('col', table)[h.col]; if(!col) return;
+    const {grid, pos} = tableMap(table); let w = 0;
+    new Set(grid.map(r => r[h.col])).forEach(c => {
+      if(!c || c.colSpan > 1 || pos.get(c).c !== h.col) return;
+      const m = document.createElement('div'); m.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;width:max-content;left:0;top:0';
+      m.innerHTML = c.innerHTML; c.append(m); w = Math.max(w, m.offsetWidth); m.remove();
+    });
+    col.style.width = Math.max(48, Math.ceil(w) + 18) + 'px'; sumColWidths(table);   // 48: the narrowest a column can be
+  }
+  touchNote(); fitWraps(); placeKnobs(curCell?.closest('table') || null);
+}
+editor.addEventListener('dblclick', e => { const h = editor.isContentEditable && edgeAt(e); if(h){ e.preventDefault(); fitEdge(h); return; } if(galEdge(e)) return; const im = imgAt(e.target); if(im){ const list = albumOf(im); openLb(list, list.indexOf(im)); } });
 editor.addEventListener('contextmenu', e => { const im = imgAt(e.target); if(im){ e.preventDefault(); selectImg(im); } });
 $('#rzh').addEventListener('pointerdown', e => {
   const k = e.target.closest('.rzh'), table = $('#rzh')._table; if(!k || !table) return;

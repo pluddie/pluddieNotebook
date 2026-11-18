@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794962513">
+<meta name="pn-build" content="1794964623">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -38,6 +38,7 @@
   --cover-bg:linear-gradient(160deg,#1f3440,#161619 75%); --cover-fg:#e8e8ec;
   --thumb:rgba(108,196,222,.35); --shadow:0 16px 44px rgba(0,0,0,.55);
   --sky-opacity:1;
+  --chev-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ececef' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 6l-6 6 6 6'/%3E%3C/svg%3E"); --chev-r:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ececef' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
   --cal:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d3edf5' stroke-width='2' stroke-linecap='round'%3E%3Crect x='4' y='5' width='16' height='15' rx='3'/%3E%3Cpath d='M4 10h16M9 3v4M15 3v4'/%3E%3C/svg%3E");
   --cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='24' viewBox='0 0 24 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='1' stop-color='%2342a7c6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12 3.5Q13.3 14.6 20.5 16Q13.3 17.4 12 28.5Q10.7 17.4 3.5 16Q10.7 14.6 12 3.5Z' fill='url(%23g)' stroke='url(%23g)' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") 9 12, auto;
   --cursor-hot:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='27' viewBox='0 0 24 32'%3E%3Cpath d='M12 3.5Q13.3 14.6 20.5 16Q13.3 17.4 12 28.5Q10.7 17.4 3.5 16Q10.7 14.6 12 3.5Z' fill='%239182f9' stroke='%239182f9' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") 10 13, pointer;
@@ -59,6 +60,7 @@
   --cover-bg:linear-gradient(160deg,#ffefb8,#fffaf0 75%); --cover-fg:#2b2118;
   --thumb:rgba(143,100,0,.3); --shadow:0 16px 40px rgba(110,80,20,.16);
   --sky-opacity:.5;
+  --chev-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232b2118' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 6l-6 6 6 6'/%3E%3C/svg%3E"); --chev-r:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232b2118' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
   --cal:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e4c00' stroke-width='2' stroke-linecap='round'%3E%3Crect x='4' y='5' width='16' height='15' rx='3'/%3E%3Cpath d='M4 10h16M9 3v4M15 3v4'/%3E%3C/svg%3E");
   --cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='24' viewBox='0 0 24 32'%3E%3Cpath d='M12 3.5Q13.3 14.6 20.5 16Q13.3 17.4 12 28.5Q10.7 17.4 3.5 16Q10.7 14.6 12 3.5Z' fill='%233a2a08' stroke='%233a2a08' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") 9 12, auto;
   --cursor-hot:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='27' viewBox='0 0 24 32'%3E%3Cpath d='M12 3.5Q13.3 14.6 20.5 16Q13.3 17.4 12 28.5Q10.7 17.4 3.5 16Q10.7 14.6 12 3.5Z' fill='%23e3913a' stroke='%23e3913a' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") 10 13, pointer;
@@ -260,7 +262,19 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 #editor h2,#editor .h2{font-size:19px;line-height:1.4;margin:0;color:var(--acc-text);font-weight:600;letter-spacing:0}
 #editor p,#editor div{margin:0}
 #editor .lg{font-size:15px}
-#editor .gal{display:flex;gap:8px;overflow-x:auto;margin:.5em 0;padding-bottom:6px;scroll-snap-type:x proximity;user-select:none;-webkit-user-select:none}
+#editor .gal{display:flex;gap:8px;overflow-x:auto;margin:.5em 0;padding-bottom:6px;scroll-snap-type:x proximity;scrollbar-width:none}
+#editor .gal::-webkit-scrollbar{display:none}
+/* the arrows stick to the album's sides (no measuring, so they can't drift); faint until you scroll or point at the album */
+#editor .gal.more::before,#editor .gal.more::after{content:'';position:sticky;z-index:2;flex:none;align-self:center;width:32px;height:32px;border-radius:50%;background:var(--float) center/16px no-repeat;box-shadow:0 2px 10px rgba(0,0,0,.18);opacity:.45;transition:opacity .25s var(--ease);cursor:var(--cursor-hot)}
+#editor .gal.more::before{left:6px;margin-right:-40px;background-image:var(--chev-l)}
+#editor .gal.more::after{right:6px;margin-left:-40px;background-image:var(--chev-r)}
+#editor .gal.more:hover::before,#editor .gal.more:hover::after,#editor .gal.scrolling::before,#editor .gal.scrolling::after{opacity:1}
+#editor .gal.at-start::before,#editor .gal.at-end::after{opacity:.12!important}
+#editor .ph{position:relative;display:block;width:fit-content;max-width:100%;margin:.6em 0}   /* a picture with a caption */
+#editor .ph>img{margin:0}
+#editor .gal .ph{flex:none;margin:0;scroll-snap-align:start}
+#editor .ph::after{content:attr(data-cap);position:absolute;left:6px;bottom:6px;max-width:calc(100% - 12px);box-sizing:border-box;padding:2px 9px;border-radius:999px;background:var(--onimg-bg);color:var(--onimg-fg);font-size:11.5px;font-weight:600;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+#editor img.psel{outline:2.5px solid var(--acc-text);outline-offset:-2.5px}
 #editor .gal img{height:180px;width:auto;max-width:none;flex:none;margin:0;object-fit:cover;scroll-snap-align:start;cursor:grab;background:var(--s2);-webkit-user-drag:none;-webkit-touch-callout:none}
 @media (max-width:760px){#editor .gal img{height:140px}}
 #editor blockquote{margin:.2em 0;padding:.35em .9em;background:var(--s2);border-radius:10px}
@@ -285,7 +299,6 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 body.resizing,body.resizing *{cursor:col-resize!important;user-select:none}
 body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .rz-guide{position:fixed;z-index:250;background:var(--acc-text);border-radius:2px;pointer-events:none}
-.imgbox.g .ih{display:none}
 .imgbox{position:absolute;z-index:14;box-shadow:0 0 0 2px var(--acc-text);border-radius:10px;pointer-events:none}
 .imgbox .ih{position:absolute;right:-16px;bottom:-16px;width:32px;height:32px;display:grid;place-items:center;pointer-events:auto;touch-action:none;cursor:nwse-resize}
 .imgbox .ih::after{content:'';width:14px;height:14px;border-radius:50%;background:var(--acc-text);box-shadow:0 0 0 2.5px var(--s1)}
@@ -304,10 +317,6 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .lb .lb-x{top:max(16px,env(safe-area-inset-top,0px));right:16px}
 .lb-n{position:absolute;bottom:max(20px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;opacity:.8}
 @media (max-width:760px){.lb-slide{padding:max(60px,env(safe-area-inset-top,0px)) 8px max(56px,env(safe-area-inset-bottom,0px))}.lb-slide img{border-radius:6px}.lb .prev,.lb .next{display:none}}
-.mlayer{position:absolute;inset:0 auto auto 0;width:0;height:0;z-index:16}
-.gnav{animation:fadein .2s var(--ease) both;position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;background:var(--float);color:var(--fg);box-shadow:var(--shadow);display:grid;place-items:center}
-.gnav svg{width:16px;height:16px}
-.gnav:hover{background:var(--hover-acc);color:var(--hover-acc-fg)}
 .lbar{position:absolute;z-index:17;display:flex;gap:2px;padding:3px;background:var(--float);border-radius:11px;box-shadow:var(--shadow);white-space:nowrap}
 .lbar .tb{height:28px;font-size:12px}
 .lbar .lurl{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 8px;font-size:12px;color:var(--acc-text);align-self:center;text-decoration:underline}
@@ -332,6 +341,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .dock .tb.on{background:var(--ebar-ink);color:var(--ebar)}
 .dock .sep{width:1px;height:18px;margin:0 6px;background:currentColor;opacity:.25;flex:none}
 .dock .dz{color:var(--danger)}
+.capin{width:min(240px,55vw);border:0;border-radius:8px;padding:6px 10px;background:var(--s1);color:var(--fg);font:13px var(--font);outline:none}
 .dock .tgrp{display:contents}
 @keyframes barup{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translateX(-50%)}}
 
@@ -701,7 +711,6 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div id="editor" contenteditable="true" spellcheck="false" aria-label="備忘錄內容"></div>
               <div class="rzh-box" id="rzh" hidden></div>
               <div class="imgbox" id="imgBox" hidden><i class="ih" id="imgHandle"></i></div>
-              <div class="mlayer" id="mlayer"></div>
               <div class="lbar" id="lbar" hidden></div>
             </div>
             <div class="dock tblbar" id="tblbar" hidden>
@@ -1244,7 +1253,7 @@ function endDrag(){
 let notes = [], curNote = null, curCell = null;
 const editor = $('#editor');
 const Hist = { undo:[], redo:[], kind:'', at:0 };
-const UI_CLASS = ['cur', 'csel', 'dragging', 'fit', 'picking', 'drop-on'];
+const UI_CLASS = ['cur', 'csel', 'dragging', 'fit', 'picking', 'drop-on', 'psel', 'more', 'at-start', 'at-end', 'scrolling'];
 const noteHtml = () => editor.innerHTML.replace(/ class="([^"]*)"/g, (m, c) => { const k = c.split(' ').filter(x => x && !UI_CLASS.includes(x)).join(' '); return k ? ` class="${k}"` : ''; });
 function histState(){
   return { html:noteHtml(), sel:selOffsets() };
@@ -1563,7 +1572,7 @@ function toggleQuote(){
 }
 
 /* Backspace right after (or Delete right before) a picture or an album: the first press selects it, the second removes just that one */
-const mediaOf = x => x?.nodeType === 1 && (x.classList.contains('gal') || x.nodeName === 'IMG' || (x.nodeName === 'P' && x.childNodes.length === 1 && x.firstChild.nodeName === 'IMG')) ? x : null;
+const mediaOf = x => x?.nodeType === 1 && (x.classList.contains('gal') || x.nodeName === 'IMG' || (x.nodeName === 'P' && x.childNodes.length === 1 && (x.firstChild.nodeName === 'IMG' || x.firstChild.classList?.contains('ph')))) ? x : null;
 function mediaKey(key){
   const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
   const n = selNode(), blk = n && topBlock(n); if(!blk || blk.parentNode !== editor || mediaOf(blk)) return false;
@@ -1661,14 +1670,14 @@ function tidyColors(root){
   });
   root.querySelectorAll('[style]').forEach(el => {
     ['color', 'backgroundColor'].forEach(k => { const v = el.style[k]; if(v && !P[k].has(v)) el.style[k] = /^(transparent|rgba\(0, 0, 0, 0\))$/.test(v) || /rgb\(1, 2, 3\)/.test(v) ? '' : nearestSwatch(k, v); });
-    if(el.nodeName === 'SPAN') [...el.style].forEach(p => { if(p !== 'color' && p !== 'background-color') el.style.removeProperty(p); });   // a span only ever carries a colour
+    if(el.nodeName === 'SPAN' && !el.classList.contains('ph')) [...el.style].forEach(p => { if(p !== 'color' && p !== 'background-color') el.style.removeProperty(p); });   // a span only ever carries a colour
     if(!el.getAttribute('style')){ el.removeAttribute('style'); if(el.nodeName === 'SPAN') el.replaceWith(...el.childNodes); }
   });
-  root.querySelectorAll('span:not([style])').forEach(x => x.replaceWith(...x.childNodes));
+  root.querySelectorAll('span:not([style]):not(.ph)').forEach(x => x.replaceWith(...x.childNodes));
 }
 
 /* paste: anything this editor can't make is turned into something it can, or dropped */
-const KEEP_CLASS = ['lg', 'h1', 'h2', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
+const KEEP_CLASS = ['ph', 'lg', 'h1', 'h2', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
 const RENAME = { H3:'h2', H4:'h2', H5:'h2', H6:'h2', PRE:'p', DT:'p', DD:'p', ADDRESS:'p', STRONG:'b', EM:'i', DEL:'s', STRIKE:'s', INS:'u' };
 const ALLOWED = /^(P|DIV|H1|H2|BR|B|I|U|S|A|UL|OL|LI|BLOCKQUOTE|HR|IMG|TABLE|THEAD|TBODY|TFOOT|TR|TD|TH|COLGROUP|COL|SPAN)$/;
 function cleanEl(el){
@@ -1680,7 +1689,7 @@ function cleanEl(el){
   if(/^(P|H1|H2|LI)$/.test(T)){ if(/center|right/.test(st.textAlign)) keep.textAlign = st.textAlign; if(/^[\d.]+$/.test(st.lineHeight)) keep.lineHeight = st.lineHeight; }
   if(T === 'SPAN'){ if(st.color) keep.color = st.color; if(st.backgroundColor) keep.backgroundColor = st.backgroundColor; }   // already limited to the swatches
   if(/^(COL|TABLE|IMG)$/.test(T) && /px$/.test(st.width)) keep.width = st.width;
-  const cls = [...el.classList].filter(c => KEEP_CLASS.includes(c)), href = el.getAttribute('href') || '', src = el.getAttribute('src') || '', cs = el.colSpan, rs = el.rowSpan;
+  const cap = el.dataset?.cap || '', cls = [...el.classList].filter(c => KEEP_CLASS.includes(c)), href = el.getAttribute('href') || '', src = el.getAttribute('src') || '', cs = el.colSpan, rs = el.rowSpan;
   [...el.attributes].forEach(x => el.removeAttribute(x.name));
   Object.assign(el.style, keep);
   if(cls.length) el.className = cls.join(' ');
@@ -1688,7 +1697,8 @@ function cleanEl(el){
   if(T === 'IMG'){ if(!/^(data:image|https?:)/.test(src)) return void el.remove(); el.src = src; el.alt = ''; }
   if((T === 'TD' || T === 'TH') && cs > 1) el.colSpan = cs;
   if((T === 'TD' || T === 'TH') && rs > 1) el.rowSpan = rs;
-  if(T === 'SPAN' && !el.getAttribute('style')) el.replaceWith(...el.childNodes);
+  if(T === 'SPAN' && el.classList.contains('ph')){ if(cap){ el.dataset.cap = cap; el.contentEditable = 'false'; } else el.replaceWith(...el.childNodes); }   // a captioned picture
+  else if(T === 'SPAN' && !el.getAttribute('style')) el.replaceWith(...el.childNodes);
   else if(el.classList.contains('gal')) el.contentEditable = 'false';
 }
 /* any table becomes this editor's table: column widths, header row, a scroll wrapper, one line of text per cell line */
@@ -2143,7 +2153,15 @@ $('#capBack').addEventListener('click', () => { $('#caption').blur(); closePost(
 /* =====================================================================
    images in a note: one picture, or an album (a swipeable row) — tap one to get its bar
    ===================================================================== */
-let pickFor = null, sel = null, imgRz = null, mediaRaf = 0;   // sel = { img, gal } — gal is null for a single picture
+let pickFor = null, sel = null, imgRz = null, mediaRaf = 0;
+const itemOf = img => img.parentElement?.classList.contains('ph') ? img.parentElement : img;   // what moves / goes when a picture does
+const capOf = img => img.parentElement?.classList.contains('ph') ? img.parentElement.dataset.cap || '' : '';
+function setCap(img, text){
+  const w = img.parentElement.classList.contains('ph') ? img.parentElement : null;
+  if(!text){ w?.replaceWith(img); return; }
+  if(w){ w.dataset.cap = text; return; }
+  const s = document.createElement('span'); s.className = 'ph'; s.contentEditable = 'false'; s.dataset.cap = text; img.replaceWith(s); s.append(img);
+}   // sel = { img, gal } — gal is null for a single picture
 function pickImages(target){ saveSel(); pickFor = target; $('#noteImgInput').click(); }
 const galHtml = srcs => `<div class="gal" contenteditable="false">${srcs.map(x => `<img src="${x}" alt="">`).join('')}</div>`;
 $('#noteImgInput').addEventListener('change', e => { const files = [...e.target.files], target = pickFor; e.target.value = ''; pickFor = null; addNoteImages(files, target); });
@@ -2153,11 +2171,12 @@ async function addNoteImages(files, target){
   let srcs; try{ srcs = await Promise.all(files.map(f => readImage(f, 1400))); }catch(err){ toast('有圖片讀不到，請換個格式'); return; }
   snap();
   if(target?.gal && editor.contains(target.gal)){   // add to this album, after the picked picture
-    const at = target.img; srcs.reverse().forEach(x => { const im = new Image(); im.src = x; im.alt = ''; at.after(im); });
+    const at = itemOf(target.img); srcs.reverse().forEach(x => { const im = new Image(); im.src = x; im.alt = ''; at.after(im); });
     toast(`已加入 ${srcs.length} 張`);
   } else if(target?.img && editor.contains(target.img)){   // a single picture becomes an album
-    const one = target.img, box = one.parentElement !== editor && one.parentElement.childNodes.length === 1 ? one.parentElement : one;
-    const t = document.createElement('div'); t.innerHTML = galHtml([one.src, ...srcs]); box.replaceWith(t.firstChild);
+    const one = itemOf(target.img), box = one.parentElement !== editor && one.parentElement.childNodes.length === 1 ? one.parentElement : one;
+    const t = document.createElement('div'); t.innerHTML = galHtml(srcs); const g = t.firstChild;
+    box.replaceWith(g); g.prepend(one); target.img.style.removeProperty('width');   // the picture (with its caption) leads the new album
     toast('已變成相簿');
   } else {
     restoreSel();
@@ -2182,49 +2201,72 @@ editor.addEventListener('drop', e => {
   if(r){ const s = getSelection(); s.removeAllRanges(); s.addRange(r); saveSel(); }
   addNoteImages(files, null);
 });
-function tidyGal(gal){ const left = $$('img', gal); if(left.length === 1) gal.replaceWith(left[0]); else if(!left.length) gal.remove(); }   // an album of one is just a picture
-function selectImg(img){ sel = img ? { img, gal:img.closest('.gal') } : null; queueMedia(); placeTblBar(); }
+function tidyGal(gal){ const left = $$('img', gal); if(left.length === 1) gal.replaceWith(itemOf(left[0])); else if(!left.length) gal.remove(); }   // an album of one is just a picture
+function selectImg(img){
+  $$('img.psel', editor).forEach(x => unmark(x, 'psel'));
+  sel = img ? { img, gal:img.closest('.gal') } : null; sel?.gal && img.classList.add('psel');   // album pictures get an outline right on them
+  $('#mbar').dataset.k = ''; queueMedia(); placeTblBar();
+}
 const queueMedia = () => { if(!mediaRaf) mediaRaf = requestAnimationFrame(() => { mediaRaf = 0; placeMedia(); }); };
-/* everything drawn over the note: album arrows, the selection box and the picture bar */
+function galNav(g){ const more = g.scrollWidth > g.clientWidth + 2; g.classList.toggle('more', more); g.classList.toggle('at-start', more && g.scrollLeft < 3); g.classList.toggle('at-end', more && g.scrollLeft + g.clientWidth > g.scrollWidth - 3); }
+/* drawn over the note: the single picture's box (with the resize handle) and the picture bar */
 function placeMedia(){
-  const sc = $('#escroll'), sr = sc.getBoundingClientRect(), X = x => x - sr.left, Y = y => y - sr.top + sc.scrollTop;
-  const nav = $$('.gal', editor).map((g, i) => {
-    const r = g.getBoundingClientRect(), mid = Y(r.top + (r.height - 6) / 2), btn = (dir, x) => `<button class="gnav" data-g="${i}" data-dir="${dir}" style="left:${X(x)}px;top:${mid}px" aria-label="${dir < 0 ? '上一張' : '下一張'}">${dir < 0 ? ICON.prev : ICON.next}</button>`;
-    return (g.scrollLeft > 2 ? btn(-1, r.left + 22) : '') + (g.scrollLeft + g.clientWidth < g.scrollWidth - 2 ? btn(1, r.right - 22) : '');
-  }).join('');
-  if($('#mlayer').innerHTML !== nav) $('#mlayer').innerHTML = nav;
+  $$('.gal', editor).forEach(galNav);
   const box = $('#imgBox'), bar = $('#mbar');
-  if(!sel || !editor.contains(sel.img)){ sel = null; box.hidden = bar.hidden = true; dockState(); return; }
-  let r = sel.img.getBoundingClientRect();
-  if(sel.gal){ const g = sel.gal.getBoundingClientRect(); const L = Math.max(r.left, g.left), R = Math.min(r.right, g.right); r = { left:L, top:r.top, width:Math.max(0, R - L), height:r.height }; }
-  Object.assign(box.style, { left:X(r.left) + 'px', top:Y(r.top) + 'px', width:r.width + 'px', height:r.height + 'px' });
-  box.classList.toggle('g', !!sel.gal); box.hidden = false;
+  if(!sel || !editor.contains(sel.img)){ if(sel) selectImg(null); sel = null; box.hidden = bar.hidden = true; dockState(); return; }
+  if(sel.gal) box.hidden = true;
+  else {
+    const sc = $('#escroll'), sr = sc.getBoundingClientRect(), r = sel.img.getBoundingClientRect();
+    Object.assign(box.style, { left:(r.left - sr.left) + 'px', top:(r.top - sr.top + sc.scrollTop) + 'px', width:r.width + 'px', height:r.height + 'px' }); box.hidden = false;
+  }
   const key = sel.gal ? 'g' : 's';
-  if(bar.dataset.k !== key){
+  if(bar.dataset.k !== 'cap' && bar.dataset.k !== key){
     bar.dataset.k = key;
     bar.innerHTML = '<button class="tb" data-m="add" title="' + (sel.gal ? '加照片' : '加照片（變成相簿）') + '" aria-label="加照片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="13" height="13" rx="2"/><path d="M3 15l4-4 4 4M19 3v6M16 6h6"/></svg></button>'
+      + '<span class="sep"></span><button class="tb" data-m="cap" title="圖片說明" aria-label="圖片說明"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M7 20h10M9 8h6M12 8v5"/></svg></button>'
       + (sel.gal ? '<span class="sep"></span><button class="tb" data-m="split" title="這張拆成單張" aria-label="拆成單張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5" opacity=".45"/><path d="M7 14v6M4.5 17.5L7 20l2.5-2.5"/></svg></button>' : '')
       + '<span class="sep"></span><button class="tb dz" data-m="del" title="' + (sel.gal ? '從相簿移除這張' : '刪除圖片') + '" aria-label="刪除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>';
   }
   bar.hidden = false; dockState();
 }
-$('#mlayer').addEventListener('mousedown', e => e.preventDefault());
-$('#mlayer').addEventListener('click', e => {
-  const b = e.target.closest('.gnav'); if(!b) return;
-  const g = $$('.gal', editor)[+b.dataset.g]; g?.scrollBy({ left:+b.dataset.dir * g.clientWidth * .8, behavior:reduced ? 'auto' : 'smooth' });
-});
-$('#mbar').addEventListener('mousedown', e => e.preventDefault());
+/* album arrows: a tap near an album's left / right edge scrolls it */
+function galEdge(e){
+  const g = e.target.closest?.('.gal.more'); if(!g) return null;
+  const r = g.getBoundingClientRect(), d = e.clientX < r.left + 44 ? -1 : e.clientX > r.right - 44 ? 1 : 0;
+  return d && !g.classList.contains(d < 0 ? 'at-start' : 'at-end') ? { g, d } : null;
+}
+let galScrollT;
+editor.addEventListener('scroll', e => {
+  const g = e.target; if(!g.classList?.contains('gal')) return;
+  galNav(g); g.classList.add('scrolling'); clearTimeout(galScrollT); galScrollT = setTimeout(() => $$('.gal.scrolling', editor).forEach(x => unmark(x, 'scrolling')), 700);
+  if(sel?.gal === g) queueMedia();
+}, true);
+$('#mbar').addEventListener('mousedown', e => { if(!e.target.closest('input')) e.preventDefault(); });
 $('#tblbar').addEventListener('mousedown', e => e.preventDefault());
 $('#mbar').addEventListener('click', e => {
   const b = e.target.closest('[data-m]'); if(!b || !sel) return;
   const { img, gal } = sel, act = b.dataset.m;
   if(act === 'add') return pickImages(sel);
+  if(act === 'cap'){   // the bar turns into a caption field
+    const bar = $('#mbar'); bar.dataset.k = 'cap';
+    bar.innerHTML = `<input class="capin" id="capIn" placeholder="圖片說明（留空就不顯示）" value="${esc(capOf(img))}"><button class="tb" data-m="capok" title="完成" aria-label="完成">✓</button>`;
+    const inp = $('#capIn'); inp.focus(); inp.select();
+    inp.addEventListener('keydown', ev => { ev.stopPropagation(); if(ev.key === 'Enter' && !imeBusy(ev)){ ev.preventDefault(); saveCap(); } else if(ev.key === 'Escape'){ bar.dataset.k = ''; queueMedia(); } });
+    return;
+  }
+  if(act === 'capok') return saveCap();
   snap();
-  if(act === 'split'){ gal.after(img); tidyGal(gal); }   // only this picture leaves, placed right under the album
-  else if(gal){ img.remove(); tidyGal(gal); }
-  else { const p = img.parentElement; img.remove(); if(p !== editor && !p.childNodes.length) p.innerHTML = '<br>'; }
+  if(act === 'split'){ gal.after(itemOf(img)); tidyGal(gal); }   // only this picture leaves, placed right under the album
+  else if(gal){ itemOf(img).remove(); tidyGal(gal); }
+  else { const it = itemOf(img), p = it.parentElement; it.remove(); if(p !== editor && !p.childNodes.length) p.innerHTML = '<br>'; }
   selectImg(null); touchNote();
 });
+function saveCap(){
+  const inp = $('#capIn'); if(!inp || !sel) return;
+  const text = inp.value.replace(/\s+/g, ' ').trim();
+  if(text !== capOf(sel.img)){ snap(); setCap(sel.img, text); touchNote(); }
+  $('#mbar').dataset.k = ''; queueMedia();
+}
 $('#imgHandle').addEventListener('pointerdown', e => {
   if(!sel || sel.gal) return; e.preventDefault(); e.stopPropagation(); snap();
   imgRz = { x:e.clientX, w:sel.img.getBoundingClientRect().width };
@@ -2243,7 +2285,7 @@ function startGalDrag(){
   if(!gd) return; gd.active = true; snap();
   const g = document.createElement('div'); g.className = 'drag-ghost'; g.innerHTML = `<img src="${gd.img.src}" alt="">`;
   g.style.left = gd.x + 'px'; g.style.top = gd.y + 'px'; document.body.appendChild(g); gd.ghost = g;
-  gd.img.classList.add('dragging'); selectImg(null); try{ navigator.vibrate?.(12); }catch(e){}
+  gd.img.classList.add('dragging'); selectImg(null); getSelection().removeAllRanges(); try{ navigator.vibrate?.(12); }catch(e){}
 }
 function moveGalDrag(e){
   if(!gd || e.pointerId !== gd.pid) return;
@@ -2256,7 +2298,7 @@ function moveGalDrag(e){
   const gr = gd.gal.getBoundingClientRect();
   if(e.clientX < gr.left + 40) gd.gal.scrollLeft -= 12; else if(e.clientX > gr.right - 40) gd.gal.scrollLeft += 12;
   const over = document.elementFromPoint(e.clientX, e.clientY)?.closest('img');
-  if(over && over !== gd.img && over.parentNode === gd.gal){ const r = over.getBoundingClientRect(); gd.gal.insertBefore(gd.img, e.clientX > r.left + r.width / 2 ? over.nextSibling : over); }
+  if(over && over !== gd.img && over.closest('.gal') === gd.gal){ const r = over.getBoundingClientRect(), o = itemOf(over); gd.gal.insertBefore(itemOf(gd.img), e.clientX > r.left + r.width / 2 ? o.nextSibling : o); }
 }
 function endGalDrag(){
   if(!gd) return; clearTimeout(gd.timer); const st = gd; gd = null; if(!st.active) return;
@@ -2264,9 +2306,8 @@ function endGalDrag(){
 }
 window.addEventListener('pointermove', moveGalDrag);
 editor.addEventListener('touchmove', e => { if(gd?.active || cellDrag?.touch) e.preventDefault(); }, {passive:false});   // a running drag owns the finger
-editor.addEventListener('dragstart', e => { if(e.target.closest?.('.gal')) e.preventDefault(); });
+editor.addEventListener('dragstart', e => { const s = getSelection(); if(e.target.closest?.('.gal') && !(s.rangeCount && !s.isCollapsed && s.getRangeAt(0).intersectsNode(e.target))) e.preventDefault(); });
 editor.addEventListener('load', queueMedia, true);   // pictures change the layout as they arrive
-editor.addEventListener('scroll', e => { if(e.target.classList?.contains('gal')) queueMedia(); }, true);
 
 /* album viewer: every picture side by side; drag / swipe follows the finger, arrows and keys step */
 let lbList = [], lbI = 0, lbDrag = null;
@@ -2279,7 +2320,7 @@ function openLb(list, i){
 function showLb(animate = true){
   lbTrack.classList.toggle('drag', !animate); lbTrack.style.transform = `translateX(${-lbI * 100}%)`;
   const many = lbList.length > 1;
-  $('#lbN').textContent = many ? `${lbI + 1} / ${lbList.length}` : '';
+  $('#lbN').textContent = [capOf(lbList[lbI]), many ? `${lbI + 1} / ${lbList.length}` : ''].filter(Boolean).join('　·　');
   $('#lbPrev').classList.toggle('off', !many || lbI === 0); $('#lbNext').classList.toggle('off', !many || lbI === lbList.length - 1);
 }
 function closeLb(){ $('#lb').hidden = true; lbTrack.innerHTML = ''; }
@@ -2386,7 +2427,8 @@ function startRz(e, table, h){
 editor.addEventListener('pointerdown', e => {
   clearCellSel();
   const gi = e.target.closest('.gal img');
-  if(gi && e.button === 0 && editor.isContentEditable){ gd = { img:gi, gal:gi.parentNode, x:e.clientX, y:e.clientY, pid:e.pointerId, mouse:e.pointerType === 'mouse', active:false }; if(!gd.mouse) gd.timer = setTimeout(startGalDrag, 330); return; }
+  const covered = (() => { const s = getSelection(); return s.rangeCount && !s.isCollapsed && gi && s.getRangeAt(0).intersectsNode(gi); })();   // part of a text selection: let it drag / copy like text
+  if(gi && e.button === 0 && editor.isContentEditable && !covered && !galEdge(e)){ gd = { img:gi, gal:gi.closest('.gal'), x:e.clientX, y:e.clientY, pid:e.pointerId, mouse:e.pointerType === 'mouse', active:false }; if(!gd.mouse) gd.timer = setTimeout(startGalDrag, 330); return; }
   const tdT = e.target.closest('td');
   if(e.pointerType !== 'mouse'){   // a finger: hold on a cell to start picking cells (resizing uses the knobs)
     if(tdT && editor.isContentEditable) cellPress = { x:e.clientX, y:e.clientY, timer:setTimeout(() => {
@@ -2411,11 +2453,15 @@ editor.addEventListener('pointermove', e => {
     editor.classList.toggle('col-hover', h?.type === 'col'); editor.classList.toggle('row-hover', h?.type === 'row');
   }
 });
+const imgAt = t => t.closest?.('img') || t.closest?.('.ph')?.querySelector('img') || null;
+const albumOf = im => im.closest('.gal') ? $$('img', im.closest('.gal')) : [im];
 editor.addEventListener('click', e => {
+  const edge = galEdge(e);
+  if(edge){ edge.g.scrollBy({ left:edge.d * edge.g.clientWidth * .8, behavior:reduced ? 'auto' : 'smooth' }); return; }
   if(!editor.isContentEditable){
-    const a = e.target.closest('a'), im = e.target.closest('img');
+    const a = e.target.closest('a'), im = imgAt(e.target);
     if(a){ e.preventDefault(); window.open(a.href, '_blank', 'noopener'); }
-    else if(im){ const list = im.closest('.gal') ? $$('img', im.parentNode) : [im]; openLb(list, list.indexOf(im)); }
+    else if(im){ const list = albumOf(im); openLb(list, list.indexOf(im)); }
     return;
   }
   const li = e.target.closest('ul.checklist > li');   // tick a checklist item by clicking its box
@@ -2423,12 +2469,13 @@ editor.addEventListener('click', e => {
   const a = e.target.closest('a');
   if(a){ if(e.metaKey || e.ctrlKey) window.open(a.href, '_blank', 'noopener'); else showLinkBar(a); } else if(barLink) hideLinkBar();
   if(Date.now() - gdEnd < 300) return;   // the click that ends an album drag
-  const im = e.target.closest('img');
-  if(im && sel?.img === im && sel.gal) openLb($$('img', sel.gal), $$('img', sel.gal).indexOf(im));   // a second tap on an album picture opens it
+  const s = getSelection(); if(s.rangeCount && !s.isCollapsed) return;   // a text selection over pictures stays a text selection
+  const im = imgAt(e.target);
+  if(im && sel?.img === im && sel.gal){ const list = albumOf(im); openLb(list, list.indexOf(im)); }   // a second tap on an album picture opens it
   else selectImg(im);
 });
-editor.addEventListener('dblclick', e => { const im = e.target.closest('img'); if(im){ const list = im.closest('.gal') ? $$('img', im.parentNode) : [im]; openLb(list, list.indexOf(im)); } });
-editor.addEventListener('contextmenu', e => { const im = e.target.closest('img'); if(im){ e.preventDefault(); selectImg(im); } });
+editor.addEventListener('dblclick', e => { if(galEdge(e)) return; const im = imgAt(e.target); if(im){ const list = albumOf(im); openLb(list, list.indexOf(im)); } });
+editor.addEventListener('contextmenu', e => { const im = imgAt(e.target); if(im){ e.preventDefault(); selectImg(im); } });
 $('#rzh').addEventListener('pointerdown', e => {
   const k = e.target.closest('.rzh'), table = $('#rzh')._table; if(!k || !table) return;
   if(k.dataset.c != null){

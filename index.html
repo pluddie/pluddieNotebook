@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794984995">
+<meta name="pn-build" content="1794986122">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -716,7 +716,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <span class="sep"></span>
               <div class="tgrp">
               <button class="tb" id="imgBtn" title="插入圖片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg></button>
-              <button class="tb" id="inkBtn" title="手寫（Apple Pencil／手指／滑鼠）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 4.5l4 4L9 19l-5 1 1-5z"/><path d="M13.5 6.5l4 4"/></svg></button>
+              <button class="tb" id="inkBtn" title="手寫（Apple Pencil／手指／滑鼠）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19.5c1.6-2.6 3-2.6 4.4 0s2.9 2.6 4.4 0 2.9-2.6 4.4 0"/><path d="M14.5 3.5l3 3-7 7H7.5v-3z"/></svg></button>
               <button class="tb" data-pop="link" title="連結"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 006.4 0l3-3a4.5 4.5 0 00-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 00-6.4 0l-3 3a4.5 4.5 0 006.4 6.4l1.2-1.2"/></svg></button>
               <button class="tb" id="quoteBtn" title="引言"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 7H6a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6zM20 7h-4a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6z"/></svg></button>
               <button class="tb" data-cmd="insertHorizontalRule" title="分隔線"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12h18"/></svg></button>
@@ -748,7 +748,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div class="tgrp" id="tblClr"><button class="tb" data-t="clear" title="恢復預設樣式（內文・預設行高・無粗體與顏色）">清除樣式</button><span class="sep"></span></div>
               <div class="tgrp"><button class="tb" data-t="header" title="第一列當表頭">表頭</button></div>
               <span class="sep"></span>
-              <div class="tgrp"><button class="tb" data-t="rowAbove" title="上方加一列">＋上</button><button class="tb" data-t="rowBelow" title="下方加一列">＋下</button><button class="tb" data-t="colLeft" title="左邊加一欄">＋左</button><button class="tb" data-t="colRight" title="右邊加一欄">＋右</button></div>
+              <div class="tgrp"><button class="tb" data-t="rowAbove" title="上方加一列" aria-label="上方加一列"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button><button class="tb" data-t="rowBelow" title="下方加一列" aria-label="下方加一列"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button class="tb" data-t="colLeft" title="左邊加一欄" aria-label="左邊加一欄"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button class="tb" data-t="colRight" title="右邊加一欄" aria-label="右邊加一欄"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
               <span class="sep"></span>
               <div class="tgrp"><button class="tb" data-t="delRow" title="刪除這一列">－列</button><button class="tb" data-t="delCol" title="刪除這一欄">－欄</button></div>
               <span class="sep"></span>
@@ -1516,6 +1516,7 @@ const isLoose = n => (n.nodeType === 3 && n.textContent.trim()) || (n.nodeType =
 let savedRange = null;
 function saveSel(){ const s = getSelection(); if(s.rangeCount && editor.contains(s.anchorNode)) savedRange = s.getRangeAt(0).cloneRange(); }
 function restoreSel(){ editor.focus({preventScroll:true}); if(savedRange && editor.contains(savedRange.startContainer)){ const s = getSelection(); s.removeAllRanges(); s.addRange(savedRange); } }
+const caretRange = () => { const s = getSelection(); return s.rangeCount && s.isCollapsed ? s.getRangeAt(0) : null; };   // the caret, when nothing is selected
 function selNode(){ const s = getSelection(); if(!s.rangeCount) return null; let n = s.anchorNode; if(n?.nodeType === 3) n = n.parentElement; return n && editor.contains(n) ? n : null; }
 function setRange(sn, so, en = sn, eo = so){ const r = document.createRange(); r.setStart(sn, so); r.setEnd(en, eo); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 function selectIn(el, collapse){   // select an element's contents; collapse: 'start' / 'end' puts just the caret there
@@ -1623,9 +1624,9 @@ function toggleQuote(){
 /* Backspace right after (or Delete right before) a picture or an album: the first press selects it, the second removes just that one */
 const mediaOf = x => x?.nodeType === 1 && (x.classList.contains('gal') || x.nodeName === 'IMG' || (x.nodeName === 'P' && x.childNodes.length === 1 && (x.firstChild.nodeName === 'IMG' || x.firstChild.classList?.contains('ph')))) ? x : null;
 function mediaKey(key){
-  const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
+  const r = caretRange(); if(!r) return false;
   const n = selNode(), blk = n && topBlock(n); if(!blk || blk.parentNode !== editor || mediaOf(blk)) return false;
-  const r = s.getRangeAt(0), off = offIn(blk, r.startContainer, r.startOffset);
+  const off = offIn(blk, r.startContainer, r.startOffset);
   const m = mediaOf(key === 'Backspace' ? (off === 0 ? blk.previousSibling : null) : (off === blk.textContent.length ? blk.nextSibling : null));
   if(!m) return false;
   const img = m.nodeName === 'IMG' ? m : m.querySelector('img');
@@ -1634,8 +1635,7 @@ function mediaKey(key){
   return true;
 }
 function joinLines(key){
-  const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
-  const r = s.getRangeAt(0), n = selNode(); if(!n || n.closest('li,td')) return false;
+  const r = caretRange(), n = selNode(); if(!r || !n || n.closest('li,td')) return false;
   const blk = topBlock(n); if(!blk || !isTextBlock(blk)) return false;
   const off = offIn(blk, r.startContainer, r.startOffset);
   let a, b;
@@ -1651,8 +1651,7 @@ function joinLines(key){
   touchNote(); updateState(); return true;
 }
 function listKey(){   // Backspace at the very start of a list item: it becomes a plain line; at the start of the line right under a list: joins its last item
-  const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
-  const r = s.getRangeAt(0), n = selNode(); if(!n || n.closest('td')) return false;
+  const r = caretRange(), n = selNode(); if(!r || !n || n.closest('td')) return false;
   const li = n.closest('li');
   if(li && editor.contains(li)){
     if(offIn(li, r.startContainer, r.startOffset) > 0) return false;
@@ -1925,9 +1924,9 @@ function insertHtml(html, paste){   // cleaned HTML in at the caret (the caller 
       [...t.rows].forEach(r => { const p = document.createElement('p'); p.innerHTML = [...r.cells].map(cellHtml).join('　'); f.append(p); });
       (t.closest('.tbl-wrap') || t).replaceWith(f);
     });
-    const filled = line && (line.textContent.replace(/​/g, '').trim() || line.querySelector?.('img'));
-    if(td && !filled && !tmp.querySelector('img,table,hr,.gal')){ document.execCommand('insertHTML', false, cellHtml(tmp)); keepSel(() => tidyColors(editor)); touchNote(); return; }   // an empty cell: every line in this one cell
-    if(line && filled && !tmp.querySelector('img,table,hr,.gal')){   // after text: plain lines in the look of the line it joins
+    const filled = line && (line.textContent.replace(/\u200b/g, '').trim() || line.querySelector?.('img')), plain = !tmp.querySelector('img,table,hr,.gal');
+    if(td && !filled && plain){ document.execCommand('insertHTML', false, cellHtml(tmp)); keepSel(() => tidyColors(editor)); touchNote(); return; }   // an empty cell: every line in this one cell
+    if(line && filled && plain){   // after text: plain lines in the look of the line it joins
       textLines(tmp).forEach((l, i) => { if(i) document.execCommand(td ? 'insertLineBreak' : 'insertParagraph'); if(l) document.execCommand('insertText', false, l); });
       touchNote(); return;
     }
@@ -2196,8 +2195,8 @@ function clearStyles(){   // the picked text back to the default look: 內文, t
 }
 /* ↑↓ go to the cell above / below (from the first / last line), ←→ to the previous / next cell (from the start / end) */
 function arrowCell(key){
-  const s = getSelection(); if(!s.rangeCount || !s.isCollapsed) return false;
-  const td = curCell, table = td.closest('table'), r = s.getRangeAt(0);
+  const r = caretRange(); if(!r) return false;
+  const td = curCell, table = td.closest('table');
   let target = null, atEnd = false;
   if(key === 'ArrowUp' || key === 'ArrowDown'){
     const {grid, pos} = tableMap(table), p = pos.get(td), cr = td.getBoundingClientRect();
@@ -2413,11 +2412,13 @@ function placeMedia(){
   const key = (sel.img.classList.contains('ink') ? 'i' : '') + (sel.gal ? 'g' : 's');
   if(bar.dataset.k !== 'cap' && bar.dataset.k !== key){
     bar.dataset.k = key;
-    bar.innerHTML = (key.startsWith('i') ? '<button class="tb" data-m="ink" title="編輯手寫" aria-label="編輯手寫"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 4.5l4 4L9 19l-5 1 1-5z"/></svg></button><span class="sep"></span>' : '')
-      + '<button class="tb" data-m="add" title="' + (sel.gal ? '加照片' : '加照片（變成相簿）') + '" aria-label="加照片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="13" height="13" rx="2"/><path d="M3 15l4-4 4 4M19 3v6M16 6h6"/></svg></button>'
-      + '<span class="sep"></span><button class="tb" data-m="cap" title="圖片說明" aria-label="圖片說明"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M7 20h10M9 8h6M12 8v5"/></svg></button>'
-      + (sel.gal ? '<span class="sep"></span><button class="tb" data-m="split" title="這張拆成單張" aria-label="拆成單張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5" opacity=".45"/><path d="M7 14v6M4.5 17.5L7 20l2.5-2.5"/></svg></button>' : '')
-      + '<span class="sep"></span><button class="tb dz" data-m="del" title="' + (sel.gal ? '從相簿移除這張' : '刪除圖片') + '" aria-label="刪除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>';
+    const btn = (m, title, d, cls = '') => `<button class="tb ${cls}" data-m="${m}" title="${title}" aria-label="${title}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg></button>`;
+    bar.innerHTML = (key.startsWith('i') ? btn('ink', '編輯手寫', '<path d="M3 19.5c1.6-2.6 3-2.6 4.4 0s2.9 2.6 4.4 0 2.9-2.6 4.4 0"/><path d="M14.5 3.5l3 3-7 7H7.5v-3z"/>') : '')
+      + btn('add', sel.gal ? '加照片' : '加照片（變成相簿）', '<rect x="3" y="5" width="13" height="13" rx="2"/><path d="M3 15l4-4 4 4M19 3v6M16 6h6"/>')
+      + btn('cap', '圖片說明', '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M7 20h10M9 8h6M12 8v5"/>')
+      + (sel.gal ? btn('split', '這張拆成單張', '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5" opacity=".45"/><path d="M7 14v6M4.5 17.5L7 20l2.5-2.5"/>') : '')
+      + btn('dl', '下載這張', '<path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/>')
+      + btn('del', sel.gal ? '從相簿移除這張' : '刪除圖片', '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>', 'dz');
   }
   bar.hidden = false; dockState();
 }
@@ -2448,12 +2449,35 @@ $('#mbar').addEventListener('click', e => {
     return;
   }
   if(act === 'capok') return saveCap();
+  if(act === 'dl') return downloadPic(img);
   snap();
-  if(act === 'split'){ gal.after(itemOf(img)); tidyGal(gal); }   // only this picture leaves, placed right under the album
-  else if(gal){ itemOf(img).remove(); tidyGal(gal); }
-  else { const it = itemOf(img), p = it.parentElement; it.remove(); if(p !== editor && !p.childNodes.length) p.innerHTML = '<br>'; }
-  selectImg(null); touchNote();
+  if(act === 'split'){ gal.after(itemOf(img)); tidyGal(gal); selectImg(null); }   // only this picture leaves, placed right under the album
+  else removePic(img);
+  touchNote();
 });
+function removePic(img){   // a picture (with its caption) out of the note: its album tidies up, a line it leaves empty goes too
+  const it = itemOf(img), gal = img.closest('.gal'), p = it.parentElement;
+  if(sel?.img === img) selectImg(null);
+  it.remove();
+  if(gal) tidyGal(gal);
+  else if(p !== editor && !p.textContent.trim() && !p.querySelector('img')) p.parentElement.children.length > 1 ? p.remove() : (p.innerHTML = '<br>');
+}
+async function downloadPic(img){   // this one picture onto the device (a drawing comes out as a PNG on its paper)
+  let blob;
+  try{
+    if(img.classList.contains('ink')){
+      const im = new Image(); im.src = img.src; await im.decode();
+      const c = document.createElement('canvas'), x = c.getContext('2d'); c.width = im.naturalWidth * 2; c.height = im.naturalHeight * 2;
+      x.fillStyle = '#fffdf8'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+      blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    } else blob = await (await fetch(img.src)).blob();
+  }catch(e){ toast('這張圖片無法下載'); return; }
+  const list = albumOf(img), name = (curNote?.title.trim() || '備忘錄').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 40) + (list.length > 1 ? '-' + (list.indexOf(img) + 1) : '');
+  const ext = (blob.type.split('/')[1] || 'jpg').replace('jpeg', 'jpg').replace('svg+xml', 'svg');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${name}.${ext}`;
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  toast('已下載圖片');
+}
 function saveCap(){
   const inp = $('#capIn'); if(!inp || !sel) return;
   const text = inp.value.replace(/\s+/g, ' ').trim();
@@ -2496,7 +2520,7 @@ function endSelDrag(){
   if(!st.active || !st.to) return;   // a plain click (or a drop back inside): nothing moves
   const box = document.createElement('div'); box.appendChild(st.range.cloneContents());
   snap(); gdEnd = Date.now();
-  const mark = document.createElement('span'); mark.textContent = '​'; st.to.insertNode(mark);
+  const mark = document.createElement('span'); mark.textContent = '\u200b'; st.to.insertNode(mark);
   const s = getSelection(); s.removeAllRanges(); s.addRange(st.range); document.execCommand('delete');
   if(!editor.contains(mark)) return touchNote();
   const r = document.createRange(); r.setStartBefore(mark); r.collapse(true); s.removeAllRanges(); s.addRange(r); mark.remove();
@@ -2668,7 +2692,7 @@ function saveInk(){
   if(img && editor.contains(img)){
     snap();
     if(ink.strokes.length) img.src = inkSvg();
-    else { const it = itemOf(img), gal = img.closest('.gal'); if(sel?.img === img) selectImg(null); it.remove(); if(gal) tidyGal(gal); }   // erased to nothing: the drawing goes
+    else removePic(img);   // erased to nothing: the drawing goes
     touchNote(); queueMedia(); return;
   }
   if(!ink.strokes.length) return;
@@ -2757,9 +2781,7 @@ function copyPic(e, cut){   // a picked picture (nothing selected as text): ⌘C
   $$('.psel', box).forEach(x => x.classList.remove('psel')); $$('img', box).forEach(im => im.removeAttribute('style'));
   e.preventDefault(); e.clipboardData.setData('text/html', box.innerHTML); e.clipboardData.setData('text/plain', capOf(sel.img));
   if(cut && editor.isContentEditable){
-    snap(); const gal = sel.gal, p = it.parentElement; selectImg(null); it.remove();
-    if(gal) tidyGal(gal); else if(p !== editor && !p.textContent.trim() && !p.querySelector('img')) p.parentElement.children.length > 1 ? p.remove() : (p.innerHTML = '<br>');   // its now-empty line goes too
-    touchNote(); toast('已剪下圖片');
+    snap(); removePic(sel.img); touchNote(); toast('已剪下圖片');
   } else toast('已複製圖片');
   return true;
 }
@@ -2771,7 +2793,7 @@ function copySel(e, cut){   // a text selection in the note: the copy carries it
   for(; a && a !== editor && a.nodeName !== 'TD'; a = a.parentElement){ const w = a.cloneNode(false); w.removeAttribute('id'); w.append(...box.childNodes); box.append(w); }
   e.preventDefault(); e.clipboardData.setData('text/html', box.innerHTML); e.clipboardData.setData('text/plain', s.toString());
   if(!cut || !editor.isContentEditable) return true;
-  const lineOf = (node, off) => { const x = (node.nodeType === 3 ? node.parentElement : node).closest('li'); return x && editor.contains(x) && !x.closest('td') ? x : null; };
+  const lineOf = node => { const x = (node.nodeType === 3 ? node.parentElement : node).closest('li'); return x && editor.contains(x) && !x.closest('td') ? x : null; };
   const l1 = lineOf(r.startContainer), l2 = lineOf(r.endContainer);
   const whole = l1 && l2 && offIn(l1, r.startContainer, r.startOffset) === 0 && offIn(l2, r.endContainer, r.endOffset) >= l2.textContent.length;   // whole bullet lines
   snap(); document.execCommand('delete');

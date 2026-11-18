@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794964623">
+<meta name="pn-build" content="1794968591">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -212,6 +212,8 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .pop{position:absolute;z-index:30;background:var(--float);border-radius:12px;padding:10px;box-shadow:var(--shadow)}
 .swatches{display:grid;grid-template-columns:repeat(6,22px);gap:6px}
 .sw{width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(128,128,128,.25)}
+.dropcaret{position:fixed;width:2px;margin-left:-1px;border-radius:1px;background:var(--acc-text);pointer-events:none;z-index:60}
+body.seldrag,body.seldrag *{cursor:grabbing!important}
 .sw.cur{box-shadow:0 0 0 2px var(--float),0 0 0 3.5px var(--acc-text);display:grid;place-items:center}
 .sw.cur::after{content:'✓';color:#fff;font-size:12px;font-weight:800;text-shadow:0 0 2px rgba(0,0,0,.6)}
 .sw.none{background:linear-gradient(135deg,transparent 44%,var(--danger) 45% 55%,transparent 56%),var(--s2)}
@@ -710,7 +712,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div class="meta-line" id="noteMeta"></div>
               <div id="editor" contenteditable="true" spellcheck="false" aria-label="備忘錄內容"></div>
               <div class="rzh-box" id="rzh" hidden></div>
-              <div class="imgbox" id="imgBox" hidden><i class="ih" id="imgHandle"></i></div>
+              <i class="dropcaret" id="dropCaret" hidden></i><div class="imgbox" id="imgBox" hidden><i class="ih" id="imgHandle"></i></div>
               <div class="lbar" id="lbar" hidden></div>
             </div>
             <div class="dock tblbar" id="tblbar" hidden>
@@ -885,7 +887,8 @@ const Cloud = {
   sb:null, user:null, failed:false, noKind:false, pending:false,
   cacheSoon(now){   // this device keeps a copy of the cloud data, shown instantly on the next start
     if(!this.user) return; clearTimeout(this.cacheT);
-    this.cacheT = setTimeout(() => Store.set('cloud:' + this.user.id, { notes, posts }), now ? 0 : 800);
+    const uid = this.user.id;
+    this.cacheT = setTimeout(() => { if(this.user?.id === uid) Store.set('cloud:' + uid, { notes, posts }); }, now ? 0 : 800);   // not after signing out
   },
   get on(){ return !!this.user && !this.failed; },
   async init(){
@@ -987,7 +990,11 @@ function showView(v){
   $('#view-notes').hidden = v !== 'notes'; $('#view-posts').hidden = v !== 'posts';
   exitFs(); placeInd($('#nav')); placeTblBar(); animIn($('#view-' + v));
 }
-$('#nav').addEventListener('click', e => { const b = e.target.closest('button'); if(b) showView(b.dataset.view); });
+function resetView(v){   // a tab's default: posts → the grid, notes → the first note (the list on a phone)
+  if(v === 'posts'){ if(cur) closePost(); $$('#gridView, #view-posts .lbody').forEach(x => { x.scrollTop = 0; }); }
+  else { openNote(firstNoteId()); $('#notes').classList.remove('show-editor'); $('#nitems').scrollTop = 0; }
+}
+$('#nav').addEventListener('click', e => { const b = e.target.closest('button'); if(!b || b.classList.contains('on')) return; resetView(b.dataset.view); showView(b.dataset.view); });
 
 /* =====================================================================
    貼文
@@ -1387,7 +1394,7 @@ function renameCat(old, name){
 function openNote(id, focusTitle){
   exitFs(); if(htmlT) syncHtml(); Hist.undo = []; Hist.redo = []; Hist.kind = ''; sel = null; undoState();
   curNote = notes.find(n => n.id === id) || null;
-  editor.innerHTML = curNote ? curNote.html : '';
+  editor.innerHTML = curNote ? curNote.html : ''; $('#escroll').scrollTop = 0;   // always opens at the top
   if(curNote){   // older saves may hold stray colours, inline sizes or UI marks: tidy once, save if anything changed
     tidyColors(editor); migrateSizes(); $$('.' + UI_CLASS.join(',.'), editor).forEach(x => UI_CLASS.forEach(c => unmark(x, c)));
     const h = noteHtml(); if(h !== curNote.html){ curNote.html = h; noteSaver.soon(curNote.id); }
@@ -1769,20 +1776,21 @@ editor.addEventListener('paste', e => {
   if(imgs.length){ e.preventDefault(); if(!sel) saveSel(); addNoteImages(imgs, sel); return; }   // a picked picture / album gets them, else they go in at the caret
   if((cellSel || selNode()?.closest('td')) && pasteCells(e.clipboardData)){ e.preventDefault(); return; }
   const html = e.clipboardData?.getData('text/html'); if(!html) return;
-  e.preventDefault();
+  e.preventDefault(); snap(); insertHtml(html);
+});
+function insertHtml(html){   // cleaned HTML in at the caret (the caller snaps first)
   const tmp = adoptHtml(html);
   const inQuote = !!selNode()?.closest('blockquote');
   let kids = [...tmp.children];
   while(kids.length === 1 && kids[0].nodeName === 'BLOCKQUOTE' && (inQuote || kids[0].children.length <= 1)){ tmp.innerHTML = kids[0].innerHTML; kids = [...tmp.children]; }
   if(kids.length === 1 && isTextBlock(kids[0]) && !kids[0].querySelector('p,h1,h2,div,ul,ol,table')) tmp.innerHTML = kids[0].innerHTML;   // one line: goes into the line the caret is on
-  snap();
   const before = topBlock(selNode() || editor);
   document.execCommand('insertHTML', false, tmp.innerHTML);
   const after = topBlock(selNode() || editor);
   if(before && after && before.parentNode === after.parentNode && editor.contains(before)) blocksBetween(before, after).forEach(b => { if(b.nodeType === 1) keepSel(() => stripSizes(b)); });
   keepSel(() => tidyColors(editor));   // the browser re-adds the source's look while inserting
   touchNote(); fitWraps();
-});
+}
 
 /* toolbar */
 const toolbar = $('#toolbar');
@@ -2281,6 +2289,36 @@ $('#imgHandle').addEventListener('pointerup', endImgRz);
 $('#imgHandle').addEventListener('pointercancel', endImgRz);
 /* reorder an album by dragging a picture (a finger long-presses first, like the post images) */
 let gd = null, gdEnd = 0;
+/* a text selection holding pictures: press on it and drag to move it, like text */
+let sd = null;
+const hasPics = r => !!r.cloneContents().querySelector('img');
+function dropAt(x, y){   // where a drop at (x, y) goes: beside a picture / album, else the caret point there
+  const el = document.elementFromPoint(x, y); if(!el || !editor.contains(el)) return null;
+  const isl = el.closest('.gal, .ph, img'), r = document.createRange();
+  if(isl){ const b = isl.getBoundingClientRect(), o = isl.closest('.gal') || itemOf(isl); (o.classList?.contains('gal') ? y > b.top + b.height / 2 : x > b.left + b.width / 2) ? r.setStartAfter(o) : r.setStartBefore(o); return r; }
+  return document.caretRangeFromPoint?.(x, y) || null;
+}
+function moveSelDrag(e){
+  if(!sd) return;
+  if(!sd.active){ if(Math.hypot(e.clientX - sd.x, e.clientY - sd.y) < 5) return; sd.active = true; document.body.classList.add('seldrag'); }
+  const r = dropAt(e.clientX, e.clientY), c = $('#dropCaret');
+  const ok = r && !sd.range.isPointInRange(r.startContainer, r.startOffset); sd.to = ok ? r : null;
+  const b = ok && (r.getClientRects()[0] || r.startContainer.nodeType === 1 && r.startContainer.childNodes[r.startOffset]?.getBoundingClientRect?.() || r.startContainer.parentElement?.getBoundingClientRect());
+  if(b){ Object.assign(c.style, { left:b.left + 'px', top:b.top + 'px', height:Math.max(b.height, 16) + 'px' }); c.hidden = false; } else c.hidden = true;
+}
+function endSelDrag(){
+  if(!sd) return; const st = sd; sd = null; $('#dropCaret').hidden = true; document.body.classList.remove('seldrag');
+  if(!st.active || !st.to) return;   // a plain click (or a drop back inside): nothing moves
+  const box = document.createElement('div'); box.appendChild(st.range.cloneContents());
+  snap(); gdEnd = Date.now();
+  const mark = document.createElement('span'); mark.textContent = '​'; st.to.insertNode(mark);
+  const s = getSelection(); s.removeAllRanges(); s.addRange(st.range); document.execCommand('delete');
+  if(!editor.contains(mark)) return touchNote();
+  const r = document.createRange(); r.setStartBefore(mark); r.collapse(true); s.removeAllRanges(); s.addRange(r); mark.remove();
+  insertHtml(box.innerHTML); selectImg(null);
+}
+window.addEventListener('pointermove', moveSelDrag);
+document.body.appendChild($('#dropCaret'));   // fixed to the window, outside any zoomed / animated box
 function startGalDrag(){
   if(!gd) return; gd.active = true; snap();
   const g = document.createElement('div'); g.className = 'drag-ghost'; g.innerHTML = `<img src="${gd.img.src}" alt="">`;
@@ -2306,7 +2344,7 @@ function endGalDrag(){
 }
 window.addEventListener('pointermove', moveGalDrag);
 editor.addEventListener('touchmove', e => { if(gd?.active || cellDrag?.touch) e.preventDefault(); }, {passive:false});   // a running drag owns the finger
-editor.addEventListener('dragstart', e => { const s = getSelection(); if(e.target.closest?.('.gal') && !(s.rangeCount && !s.isCollapsed && s.getRangeAt(0).intersectsNode(e.target))) e.preventDefault(); });
+editor.addEventListener('dragstart', e => { const s = getSelection(); if(sd || e.target.closest?.('.gal') || s.rangeCount && !s.isCollapsed && hasPics(s.getRangeAt(0))) e.preventDefault(); });   // pictures move with our own drag
 editor.addEventListener('load', queueMedia, true);   // pictures change the layout as they arrive
 
 /* album viewer: every picture side by side; drag / swipe follows the finger, arrows and keys step */
@@ -2425,6 +2463,11 @@ function startRz(e, table, h){
   try{ e.target.setPointerCapture(e.pointerId); }catch(err){}
 }
 editor.addEventListener('pointerdown', e => {
+  const s0 = getSelection(), r0 = s0.rangeCount && !s0.isCollapsed ? s0.getRangeAt(0) : null;
+  if(r0 && e.pointerType === 'mouse' && e.button === 0 && editor.isContentEditable && hasPics(r0)){   // pressing on a selection that holds pictures: get ready to move it
+    const im = imgAt(e.target), cp = document.caretRangeFromPoint?.(e.clientX, e.clientY);
+    if(im ? r0.intersectsNode(im) : cp && r0.isPointInRange(cp.startContainer, cp.startOffset)){ e.preventDefault(); sd = { x:e.clientX, y:e.clientY, range:r0.cloneRange(), active:false }; return; }
+  }
   clearCellSel();
   const gi = e.target.closest('.gal img');
   const covered = (() => { const s = getSelection(); return s.rangeCount && !s.isCollapsed && gi && s.getRangeAt(0).intersectsNode(gi); })();   // part of a text selection: let it drag / copy like text
@@ -2469,8 +2512,8 @@ editor.addEventListener('click', e => {
   const a = e.target.closest('a');
   if(a){ if(e.metaKey || e.ctrlKey) window.open(a.href, '_blank', 'noopener'); else showLinkBar(a); } else if(barLink) hideLinkBar();
   if(Date.now() - gdEnd < 300) return;   // the click that ends an album drag
-  const s = getSelection(); if(s.rangeCount && !s.isCollapsed) return;   // a text selection over pictures stays a text selection
-  const im = imgAt(e.target);
+  const im = imgAt(e.target), s = getSelection();
+  if(s.rangeCount && !s.isCollapsed && (!im || s.getRangeAt(0).intersectsNode(im))) return;   // a text selection over pictures stays a text selection
   if(im && sel?.img === im && sel.gal){ const list = albumOf(im); openLb(list, list.indexOf(im)); }   // a second tap on an album picture opens it
   else selectImg(im);
 });
@@ -2538,7 +2581,7 @@ const endSwipe = () => {
   if(horiz){ setSwiped(it, base + dx < -38); it.dataset.swiped = '1'; setTimeout(() => delete it.dataset.swiped, 400); }
 };
 /* every drag in the app ends here */
-const endPointer = () => { endDrag(); endGalDrag(); endCatDrag(); endCellDrag(); endRz(); endSwipe(); };
+const endPointer = () => { endDrag(); endGalDrag(); endSelDrag(); endCatDrag(); endCellDrag(); endRz(); endSwipe(); };
 window.addEventListener('pointerup', endPointer);
 window.addEventListener('pointercancel', endPointer);
 

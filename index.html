@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794968591">
+<meta name="pn-build" content="1794980498">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -772,7 +772,7 @@ const PRISTINE = (() => {
 })();
 
 let toastT;
-function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800); }
+function toast(msg, stay){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); if(!stay) toastT = setTimeout(() => t.classList.remove('show'), 1800); }   // stay: up until the next toast
 /* the class comes off when done: a lingering transform animation would trap position:fixed children (full-screen editing) */
 function animIn(el){ el.classList.remove('anim-in'); void el.offsetWidth; el.classList.add('anim-in'); el.addEventListener('animationend', function f(e){ if(e.target === el){ el.classList.remove('anim-in'); el.removeEventListener('animationend', f); } }); }
 
@@ -1205,7 +1205,8 @@ media.addEventListener('dragover', e => { if(e.dataTransfer?.types.includes('Fil
 media.addEventListener('dragleave', e => { if(!media.contains(e.relatedTarget)) media.classList.remove('dragover'); });
 media.addEventListener('drop', e => { e.preventDefault(); media.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
 document.addEventListener('paste', e => {   // pictures pasted anywhere: into the open post, or the picked note picture / album
-  const fs = imageFiles(e.clipboardData?.files); if(!fs.length || e.defaultPrevented) return;
+  if(e.defaultPrevented) return;
+  const fs = imageFiles(e.clipboardData?.files); if(!fs.length){ if(!$('#view-notes').hidden) pasteOnPic(e); return; }
   if(cur && !$('#view-posts').hidden){ e.preventDefault(); addFiles(fs); }
   else if(sel && !$('#view-notes').hidden){ e.preventDefault(); addNoteImages(fs, sel); }
 });
@@ -1284,6 +1285,16 @@ function redo(){ const next = Hist.redo.pop(); if(!next) return; Hist.undo.push(
 let htmlT = null;
 function syncHtml(){ clearTimeout(htmlT); htmlT = null; if(curNote) curNote.html = noteHtml(); }   // the note's HTML is read from the editor lazily, not on every key
 const saveAll = () => Promise.all([noteSaver.flush(), postSaver.flush()]);
+let saving = false;
+async function saveNow(){   // ⌘S: "正在儲存中…" stays up until everything has really reached the cloud (or this browser)
+  if(saving) return; saving = true; toast('正在儲存中…', true);
+  try{
+    syncHtml();
+    for(let i = 0; Cloud.pending && i < 100; i++) await new Promise(r => setTimeout(r, 200));   // the cloud is still loading: wait for it, else the changes only queue
+    const r = Cloud.pending ? [false] : await saveAll();
+    if(r.every(Boolean)) toast('已儲存'); else if(Cloud.pending) toast('雲端還在連線，稍後再按一次儲存');
+  } finally { saving = false; }
+}
 const noteSaver = makeSaver('notes', () => { syncHtml(); return notes; });
 const collapsed = new Set();   // categories start unfolded every time the app opens
 
@@ -1771,9 +1782,20 @@ function pasteCells(cd){
   selectCells(start, last); touchNote(); fitWraps();
   return true;
 }
+function pasteOnPic(e){   // copied / cut pictures pasted while a picture is picked: they join it as an album
+  if(!sel || !editor.contains(sel.img) || !editor.isContentEditable) return false;
+  const html = e.clipboardData?.getData('text/html'); if(!html) return false;
+  const tmp = adoptHtml(html), imgs = $$('img', tmp);
+  if(!imgs.length || tmp.textContent.trim()) return false;   // text in it: an ordinary paste
+  e.preventDefault(); snap();
+  const items = [...new Set(imgs.map(im => itemOf(im)))]; items.forEach(n => { if(n.tagName === 'IMG') n.removeAttribute('style'); });
+  const keep = sel.img; placeItems(items, sel); selectImg(keep); touchNote();
+  return true;
+}
 editor.addEventListener('paste', e => {
   const imgs = imageFiles(e.clipboardData?.files);
   if(imgs.length){ e.preventDefault(); if(!sel) saveSel(); addNoteImages(imgs, sel); return; }   // a picked picture / album gets them, else they go in at the caret
+  if(pasteOnPic(e)) return;
   if((cellSel || selNode()?.closest('td')) && pasteCells(e.clipboardData)){ e.preventDefault(); return; }
   const html = e.clipboardData?.getData('text/html'); if(!html) return;
   e.preventDefault(); snap(); insertHtml(html);
@@ -2174,19 +2196,20 @@ function pickImages(target){ saveSel(); pickFor = target; $('#noteImgInput').cli
 const galHtml = srcs => `<div class="gal" contenteditable="false">${srcs.map(x => `<img src="${x}" alt="">`).join('')}</div>`;
 $('#noteImgInput').addEventListener('change', e => { const files = [...e.target.files], target = pickFor; e.target.value = ''; pickFor = null; addNoteImages(files, target); });
 /* add pictures: into an album (after its picked picture), turning a single picture into an album, or as new ones at the caret */
+function placeItems(items, target){   // pictures (img / captioned .ph) next to the picked one: into its album, or the two become an album (caller snaps)
+  if(target.gal && editor.contains(target.gal)){ const at = itemOf(target.img); [...items].reverse().forEach(n => at.after(n)); toast(`已加入 ${items.length} 張`); return; }
+  const one = itemOf(target.img), box = one.parentElement !== editor && one.parentElement.childNodes.length === 1 ? one.parentElement : one;
+  const g = document.createElement('div'); g.className = 'gal'; g.contentEditable = 'false';
+  box.replaceWith(g); g.append(one, ...items); $$('img', g).forEach(im => im.style.removeProperty('width'));   // the picked picture (with its caption) leads the new album
+  toast('已變成相簿');
+}
+const mkImg = src => { const im = new Image(); im.src = src; im.alt = ''; return im; };
 async function addNoteImages(files, target){
   files = imageFiles(files); if(!files.length) return;
   let srcs; try{ srcs = await Promise.all(files.map(f => readImage(f, 1400))); }catch(err){ toast('有圖片讀不到，請換個格式'); return; }
   snap();
-  if(target?.gal && editor.contains(target.gal)){   // add to this album, after the picked picture
-    const at = itemOf(target.img); srcs.reverse().forEach(x => { const im = new Image(); im.src = x; im.alt = ''; at.after(im); });
-    toast(`已加入 ${srcs.length} 張`);
-  } else if(target?.img && editor.contains(target.img)){   // a single picture becomes an album
-    const one = itemOf(target.img), box = one.parentElement !== editor && one.parentElement.childNodes.length === 1 ? one.parentElement : one;
-    const t = document.createElement('div'); t.innerHTML = galHtml(srcs); const g = t.firstChild;
-    box.replaceWith(g); g.prepend(one); target.img.style.removeProperty('width');   // the picture (with its caption) leads the new album
-    toast('已變成相簿');
-  } else {
+  if(target?.img && editor.contains(target.img)) placeItems(srcs.map(mkImg), target);
+  else {
     restoreSel();
     document.execCommand('insertHTML', false, (srcs.length === 1 ? `<img src="${srcs[0]}" alt="">` : galHtml(srcs)) + '<p><br></p>');
     if(srcs.length > 1) toast(`已插入 ${srcs.length} 張的相簿`);
@@ -2419,7 +2442,22 @@ document.addEventListener('keydown', e => {
   else if(e.key === 'Escape') clearCellSel();
   else if(!e.metaKey && !e.ctrlKey && e.key.length === 1) clearCellSel();
 });
+function copyPic(e, cut){   // a picked picture (nothing selected as text): ⌘C / ⌘X take the picture itself
+  const s = getSelection();
+  if(!sel || !editor.contains(sel.img) || cellSel || (s.rangeCount && !s.isCollapsed && editor.contains(s.anchorNode))) return false;
+  const it = itemOf(sel.img), box = document.createElement('div'); box.appendChild(it.cloneNode(true));
+  $$('.psel', box).forEach(x => x.classList.remove('psel')); $$('img', box).forEach(im => im.removeAttribute('style'));
+  e.preventDefault(); e.clipboardData.setData('text/html', box.innerHTML); e.clipboardData.setData('text/plain', capOf(sel.img));
+  if(cut && editor.isContentEditable){
+    snap(); const gal = sel.gal, p = it.parentElement; selectImg(null); it.remove();
+    if(gal) tidyGal(gal); else if(p !== editor && !p.textContent.trim() && !p.querySelector('img')) p.parentElement.children.length > 1 ? p.remove() : (p.innerHTML = '<br>');   // its now-empty line goes too
+    touchNote(); toast('已剪下圖片');
+  } else toast('已複製圖片');
+  return true;
+}
+document.addEventListener('cut', e => { copyPic(e, true); });
 document.addEventListener('copy', e => {
+  if(copyPic(e, false)) return;
   if(!cellSel) return;
   e.preventDefault();
   const {grid} = tableMap(cellSel.table), rows = [];
@@ -2638,7 +2676,7 @@ document.addEventListener('keydown', e => {
   }
   if(e.key === 'Escape'){ if(!$('#datePop').hidden) closeDatePop(); else if(!ctx.hidden) closeCtx(); else if(setOpen()) toggleSettings(false); else if(sel) selectImg(null); }
   if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's'){
-    e.preventDefault(); saveAll().then(r => { if(r.every(Boolean)) toast('已儲存'); });
+    e.preventDefault(); saveNow();
   }
 }, true);
 

@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794791399">
+<meta name="pn-build" content="1794962513">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -18,7 +18,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link id="appFonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap">
+<link id="appFonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <style id="appStyle">
 /* Layout: top bar, then per page a split of left panel | content.
    Surface scale, used the same way everywhere:
@@ -317,6 +317,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .lf input:focus{box-shadow:inset 0 0 0 1.5px var(--acc-text)}
 .lacts{display:flex;justify-content:flex-end;gap:6px}
 #editor .gal img.dragging{opacity:.3}
+#editor .drop-on{outline:2px dashed var(--acc-text);outline-offset:3px;border-radius:10px}
 .mbar .dz{color:var(--danger)}
 .rzh-box{position:absolute;inset:0 auto auto 0;width:0;height:0;z-index:15}
 .rzh{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;display:grid;place-items:center;touch-action:none}
@@ -728,8 +729,8 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 <div class="ctx" id="ctx" hidden><button id="ctxDel"></button></div>
 <div class="lb" id="lb" hidden><button class="lb-x" id="lbClose" aria-label="關閉"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></button><button class="prev" id="lbPrev" aria-label="上一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="lb-track" id="lbTrack"></div><button class="next" id="lbNext" aria-label="下一張"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button><div class="lb-n" id="lbN"></div></div>
 
-<script id="sbLib" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script id="pnConfig" src="config.js"></script>
+<script id="sbLib" defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script id="pnConfig" defer src="config.js"></script>
 <script type="application/json" id="seedData">null</script>
 <script id="appScript">
 (() => {
@@ -747,6 +748,7 @@ const coarse = matchMedia('(pointer:coarse)'), phone = matchMedia('(max-width:76
 const WEEK = ['日','一','二','三','四','五','六'];
 const lsGet = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
 const lsSet = (k, v) => { try{ localStorage.setItem(k, v); }catch(e){} };
+const imageFiles = list => [...(list || [])].filter(f => f.type.startsWith('image/'));
 const imeBusy = e => e.isComposing || e.keyCode === 229;   // Enter that only confirms a Chinese IME word
 
 document.documentElement.dataset.mode = (lsGet('pn-mode') || lsGet('ml-mode2')) === 'dark' ? 'dark' : 'light';
@@ -871,7 +873,11 @@ const noteFromRow = r => ({ id:r.id, title:r.title, category:r.category, pinned:
 const postToRow = d => ({ id:d.id, title:d.title, pinned:d.pinned, date:d.date, kind:d.kind || 'post', caption:d.caption, images:d.images.filter(i => i.path).map(i => ({ id:i.id, path:i.path })), created_at:d.createdAt, updated_at:d.updatedAt });
 const postFromRow = r => ({ id:r.id, title:r.title, pinned:r.pinned, date:r.date, kind:r.kind || 'post', caption:r.caption, images:(r.images || []).map(i => ({ id:i.id, path:i.path, src:'' })), createdAt:r.created_at, updatedAt:r.updated_at });
 const Cloud = {
-  sb:null, user:null, failed:false, noKind:false,
+  sb:null, user:null, failed:false, noKind:false, pending:false,
+  cacheSoon(now){   // this device keeps a copy of the cloud data, shown instantly on the next start
+    if(!this.user) return; clearTimeout(this.cacheT);
+    this.cacheT = setTimeout(() => Store.set('cloud:' + this.user.id, { notes, posts }), now ? 0 : 800);
+  },
   get on(){ return !!this.user && !this.failed; },
   async init(){
     const cfg = window.PN_CONFIG;
@@ -935,6 +941,7 @@ function makeSaver(kind, getList){
   const schedule = () => { clearTimeout(t); t = setTimeout(flush, 1200); };
   async function run(){
     let ok = true;
+    if(Cloud.pending){ schedule(); return true; }   // the cloud is still loading: keep the changes queued
     if(Cloud.on){
       const ids = [...changed], del = [...removed], gone = [...files];
       changed.clear(); removed.clear(); files.clear();
@@ -942,6 +949,7 @@ function makeSaver(kind, getList){
         const rows = getList().filter(x => ids.includes(x.id));
         if(kind === 'posts') for(const d of rows) await Cloud.uploadImages(d);
         await Cloud.push(kind, rows.map(kind === 'posts' ? postToRow : noteToRow), del, gone);
+        Cloud.cacheSoon();
       }catch(e){
         ok = false; ids.forEach(i => changed.add(i)); del.forEach(i => removed.add(i)); gone.forEach(f => files.add(f));
         toast('雲端同步失敗，稍後按儲存再試一次');
@@ -958,7 +966,7 @@ function makeSaver(kind, getList){
     soon(id){ if(id){ changed.add(id); removed.delete(id); } schedule(); },
     removed(id, paths = []){ changed.delete(id); removed.add(id); paths.forEach(p => files.add(p)); schedule(); },
     dropFiles(paths){ paths.forEach(p => files.add(p)); schedule(); },
-    flush, get dirty(){ return pending(); }
+    flush, get dirty(){ return pending(); }, get queued(){ return { changed, removed }; }
   };
 }
 
@@ -1169,7 +1177,7 @@ function renderMedia(){
   $('#imgHint').textContent = imgs.length ? `${imgs.length} / ${MAX_IMG} 張・拖曳排序，第一張是封面` : `可多選、拖曳或貼上・最多 ${MAX_IMG} 張`;
 }
 async function addFiles(files){
-  files = [...files].filter(f => f.type.startsWith('image/')); if(!files.length || !cur) return;
+  files = imageFiles(files); if(!files.length || !cur) return;
   const room = MAX_IMG - cur.images.length;
   if(files.length > room){ toast(`一篇最多 ${MAX_IMG} 張，多的沒有加入`); files = files.slice(0, Math.max(0, room)); }
   for(const f of files){ try{ cur.images.push({ id:uid(), src: await readImage(f, 720) }); }catch(e){ toast('有一張圖讀不到，請換個格式'); } }
@@ -1180,10 +1188,10 @@ const media = $('#media');
 media.addEventListener('dragover', e => { if(e.dataTransfer?.types.includes('Files')){ e.preventDefault(); media.classList.add('dragover'); } });
 media.addEventListener('dragleave', e => { if(!media.contains(e.relatedTarget)) media.classList.remove('dragover'); });
 media.addEventListener('drop', e => { e.preventDefault(); media.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
-document.addEventListener('paste', e => {
-  if(!cur || $('#view-posts').hidden) return;
-  const fs = [...(e.clipboardData?.files || [])].filter(f => f.type.startsWith('image/'));
-  if(fs.length){ e.preventDefault(); addFiles(fs); }
+document.addEventListener('paste', e => {   // pictures pasted anywhere: into the open post, or the picked note picture / album
+  const fs = imageFiles(e.clipboardData?.files); if(!fs.length || e.defaultPrevented) return;
+  if(cur && !$('#view-posts').hidden){ e.preventDefault(); addFiles(fs); }
+  else if(sel && !$('#view-notes').hidden){ e.preventDefault(); addNoteImages(fs, sel); }
 });
 
 const thumbs = $('#thumbs');
@@ -1236,7 +1244,7 @@ function endDrag(){
 let notes = [], curNote = null, curCell = null;
 const editor = $('#editor');
 const Hist = { undo:[], redo:[], kind:'', at:0 };
-const UI_CLASS = ['cur', 'csel', 'dragging', 'fit', 'picking'];
+const UI_CLASS = ['cur', 'csel', 'dragging', 'fit', 'picking', 'drop-on'];
 const noteHtml = () => editor.innerHTML.replace(/ class="([^"]*)"/g, (m, c) => { const k = c.split(' ').filter(x => x && !UI_CLASS.includes(x)).join(' '); return k ? ` class="${k}"` : ''; });
 function histState(){
   return { html:noteHtml(), sel:selOffsets() };
@@ -1747,6 +1755,8 @@ function pasteCells(cd){
   return true;
 }
 editor.addEventListener('paste', e => {
+  const imgs = imageFiles(e.clipboardData?.files);
+  if(imgs.length){ e.preventDefault(); if(!sel) saveSel(); addNoteImages(imgs, sel); return; }   // a picked picture / album gets them, else they go in at the caret
   if((cellSel || selNode()?.closest('td')) && pasteCells(e.clipboardData)){ e.preventDefault(); return; }
   const html = e.clipboardData?.getData('text/html'); if(!html) return;
   e.preventDefault();
@@ -2136,8 +2146,10 @@ $('#capBack').addEventListener('click', () => { $('#caption').blur(); closePost(
 let pickFor = null, sel = null, imgRz = null, mediaRaf = 0;   // sel = { img, gal } — gal is null for a single picture
 function pickImages(target){ saveSel(); pickFor = target; $('#noteImgInput').click(); }
 const galHtml = srcs => `<div class="gal" contenteditable="false">${srcs.map(x => `<img src="${x}" alt="">`).join('')}</div>`;
-$('#noteImgInput').addEventListener('change', async e => {
-  const files = [...e.target.files], target = pickFor; e.target.value = ''; pickFor = null; if(!files.length) return;
+$('#noteImgInput').addEventListener('change', e => { const files = [...e.target.files], target = pickFor; e.target.value = ''; pickFor = null; addNoteImages(files, target); });
+/* add pictures: into an album (after its picked picture), turning a single picture into an album, or as new ones at the caret */
+async function addNoteImages(files, target){
+  files = imageFiles(files); if(!files.length) return;
   let srcs; try{ srcs = await Promise.all(files.map(f => readImage(f, 1400))); }catch(err){ toast('有圖片讀不到，請換個格式'); return; }
   snap();
   if(target?.gal && editor.contains(target.gal)){   // add to this album, after the picked picture
@@ -2153,6 +2165,22 @@ $('#noteImgInput').addEventListener('change', async e => {
     if(srcs.length > 1) toast(`已插入 ${srcs.length} 張的相簿`);
   }
   selectImg(null); touchNote();
+}
+const markDrop = el => { $$('.drop-on', editor).forEach(x => unmark(x, 'drop-on')); el?.classList.add('drop-on'); };
+editor.addEventListener('dragover', e => {
+  if(!e.dataTransfer?.types.includes('Files') || !editor.isContentEditable) return;
+  e.preventDefault(); const t = e.target.closest?.('.gal, img'); markDrop(t ? t.closest('.gal') || t : null);
+});
+editor.addEventListener('dragleave', e => { if(!editor.contains(e.relatedTarget)) markDrop(null); });
+editor.addEventListener('drop', e => {
+  const files = imageFiles(e.dataTransfer?.files); markDrop(null); if(!files.length || !editor.isContentEditable) return;
+  e.preventDefault();
+  const gal = e.target.closest?.('.gal'), im = e.target.closest?.('img');
+  if(gal) return addNoteImages(files, { gal, img:im || gal.lastElementChild });   // onto an album: after the picture under the pointer
+  if(im) return addNoteImages(files, { img:im, gal:null });                      // onto a picture: it becomes an album
+  const r = document.caretRangeFromPoint?.(e.clientX, e.clientY);                  // anywhere else: new pictures where it was dropped
+  if(r){ const s = getSelection(); s.removeAllRanges(); s.addRange(r); saveSel(); }
+  addNoteImages(files, null);
 });
 function tidyGal(gal){ const left = $$('img', gal); if(left.length === 1) gal.replaceWith(left[0]); else if(!left.length) gal.remove(); }   // an album of one is just a picture
 function selectImg(img){ sel = img ? { img, gal:img.closest('.gal') } : null; queueMedia(); placeTblBar(); }
@@ -2536,11 +2564,29 @@ function setMode(m, quiet){
 $('#modeSeg').addEventListener('click', e => { const b = e.target.closest('button'); if(b) setMode(b.dataset.mode); });
 
 function readSeed(txt){ try{ const d = JSON.parse(txt), posts = d?.posts || d?.drafts; if(Array.isArray(d?.notes) && Array.isArray(posts)){ if(Array.isArray(d.catOrder)) saveCatOrder(d.catOrder); return { notes:d.notes, posts }; } }catch(e){} return null; }
-function rerenderAll(){
-  /* fill in fields older saves may lack, so the rest of the code can rely on them */
+function normalize(){   // fill in fields older saves may lack, so the rest of the code can rely on them
   notes = notes.map(n => ({ title:'', category:'', pinned:false, html:'<p><br></p>', ...n }));
   posts = posts.map(d => ({ title:'', pinned:false, date:'', kind:'post', images:[], caption:'', ...d }));
-  resetUI();
+}
+function rerenderAll(){ normalize(); resetUI(); }
+/* fresh cloud data arriving while the cached copy is on screen: swap it in without resetting the view;
+   anything edited meanwhile (still queued to save) keeps the local version */
+function applyCloud(c){
+  const take = (local, remote, saver) => {
+    const { changed, removed } = saver.queued, mine = new Map(local.map(x => [x.id, x]));
+    return remote.filter(x => !removed.has(x.id)).map(x => changed.has(x.id) && mine.get(x.id) || x)
+      .concat(local.filter(x => changed.has(x.id) && !remote.some(r => r.id === x.id)));
+  };
+  notes = take(notes, c.notes, noteSaver); posts = take(posts, c.posts, postSaver); normalize();
+  if(cur){ cur = posts.find(d => d.id === cur.id) || null; cur ? renderMedia() : closePost(); }   // also refreshes picture links
+  if(curNote){
+    const n = notes.find(x => x.id === curNote.id), shown = $('#notes').classList.contains('show-editor');
+    if(!n) openNote(firstNoteId());
+    else if(n.html !== curNote.html && !inFs() && document.activeElement !== editor){ openNote(n.id); if(!shown) $('#notes').classList.remove('show-editor'); }
+    else curNote = n;
+  } else openNote(firstNoteId());
+  if(phone.matches) $('#notes').classList.remove('show-editor');
+  renderPosts(); renderNoteList();
 }
 /* the first note in list order: first category's first note (pinned first), else the first uncategorized */
 function firstNoteId(){
@@ -2560,7 +2606,7 @@ function resetUI(){
 }
 let hiddenAt = 0;
 document.addEventListener('visibilitychange', () => {
-  if(document.hidden){ hiddenAt = Date.now(); return; }
+  if(document.hidden){ hiddenAt = Date.now(); if(Cloud.user && !Cloud.pending) Cloud.cacheSoon(true); return; }
   if(hiddenAt && Date.now() - hiddenAt > 10 * 60e3 && !inFs()) resetUI();   // back after 10+ minutes: start fresh (an open edit is kept)
 });
 async function replaceAll(n, d, msg){
@@ -2724,32 +2770,52 @@ async function loadLocal(){
   }
   return { notes:Array.isArray(n) ? n : [], posts:Array.isArray(p) ? p : [] };
 }
-async function loadData(){
-  const local = await loadLocal();
-  notes = local.notes; posts = local.posts;
-  if(Cloud.user){
-    try{
-      const c = await Cloud.load();
-      if(c.notes.length || c.posts.length){ notes = c.notes; posts = c.posts; }
-      else if(notes.length || posts.length){   // first sign-in: move what this device has into the cloud
-        rerenderAll(); notes.forEach(x => noteSaver.soon(x.id)); posts.forEach(x => postSaver.soon(x.id));
-        await saveAll(); Cloud.pushSettings();
-        toast('已把這台裝置的資料上傳到雲端');
-      }
-    }catch(e){ Cloud.failed = true; toast('連不上雲端，先顯示這台裝置的資料'); }
+/* get the cloud's data (signed in) — soft: a cached copy is already on screen, so swap without a reset */
+async function syncCloud(soft){
+  if(!Cloud.user){
+    lsSet('pn-uid', '');
+    if(soft){ const l = await loadLocal(); notes = l.notes; posts = l.posts; }   // the cache was someone signed out since: back to this device's data
+    Cloud.pending = false; if(soft) rerenderAll(); renderAccount(); return;
   }
-  rerenderAll(); renderAccount();
+  lsSet('pn-uid', Cloud.user.id);
+  try{
+    const c = await Cloud.load();
+    if(soft){ Cloud.pending = false; applyCloud(c); }
+    else if(c.notes.length || c.posts.length){ notes = c.notes; posts = c.posts; rerenderAll(); }
+    else if(notes.length || posts.length){   // first sign-in: move what this device has into the cloud
+      rerenderAll(); notes.forEach(x => noteSaver.soon(x.id)); posts.forEach(x => postSaver.soon(x.id));
+      await saveAll(); Cloud.pushSettings();
+      toast('已把這台裝置的資料上傳到雲端');
+    } else rerenderAll();
+    Cloud.cacheSoon(true);
+  }catch(e){ Cloud.failed = true; toast('連不上雲端，先顯示這台裝置的資料'); if(!soft) rerenderAll(); }
+  Cloud.pending = false; renderAccount();
 }
+async function loadData(){   // after signing in / out
+  const l = await loadLocal(); notes = l.notes; posts = l.posts;
+  await syncCloud(false);
+  if(!Cloud.user) rerenderAll();
+}
+const scriptReady = (id, ready) => new Promise(res => {   // the Supabase library and config.js load deferred; wait for them here
+  const el = document.getElementById(id); if(!el || ready()) return res();
+  el.addEventListener('load', res, {once:true}); el.addEventListener('error', res, {once:true}); setTimeout(res, 10000);
+});
 
 (async function boot(){
   setMode(document.documentElement.dataset.mode, true);
+  setZoom(+lsGet('pn-zoom') || 1, true);
   if(!reduced) requestAnimationFrame(loop);
   await Store.init();
-  try{ await Cloud.init(); }catch(e){ Cloud.sb = null; }
-  await loadData();
-  setTimeout(checkUpdate, 3000);
-  setZoom(+lsGet('pn-zoom') || 1, true);
+  /* show something right away: last session's cloud copy (signed in) or this device's data */
+  const uid = lsGet('pn-uid'), cached = uid ? await Store.get('cloud:' + uid) : null;
+  if(Array.isArray(cached?.notes)){ notes = cached.notes; posts = cached.posts; Cloud.pending = true; }
+  else { const l = await loadLocal(); notes = l.notes; posts = l.posts; }
+  rerenderAll();
   requestAnimationFrame(() => $$('.seg').forEach(b => placeInd(b, true)));
+  await Promise.all([scriptReady('sbLib', () => window.supabase), scriptReady('pnConfig', () => window.PN_CONFIG)]);
+  try{ await Cloud.init(); }catch(e){ Cloud.sb = null; }
+  await syncCloud(Cloud.pending);
+  setTimeout(checkUpdate, 3000);
 })();
 })();
 </script>

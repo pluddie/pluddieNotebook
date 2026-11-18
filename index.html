@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794982966">
+<meta name="pn-build" content="1794984093">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -112,9 +112,9 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .modeseg button{width:44px;height:32px}
 .modeseg svg{width:16px;height:16px}
 
-.setpop{position:fixed;top:0;right:0;bottom:0;z-index:2;width:340px;max-width:100vw;box-sizing:border-box;overflow:auto;background:var(--float);border-radius:18px 0 0 18px;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 16px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;transform:translateX(105%);transition:transform .32s var(--ease)}
+.setpop{position:fixed;top:0;right:0;bottom:0;z-index:2;width:340px;max-width:100vw;box-sizing:border-box;overflow:auto;background:var(--float);border-radius:18px 0 0 18px;padding:max(14px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 16px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:0;transform:translateX(105%);transition:transform .32s var(--ease)}
 .setpop.open{transform:none}
-.sp-head{display:flex;align-items:center;justify-content:space-between;font-size:16px;font-weight:700;padding:0 0 2px 4px}
+.sp-head{display:flex;align-items:center;justify-content:space-between;font-size:16px;font-weight:700;padding:0 0 12px 4px}
 .scrim{position:fixed;inset:0;z-index:1;background:rgba(0,0,0,.22);opacity:0;transition:opacity .3s var(--ease)}
 .scrim.open{opacity:1}
 #editor,#caption,#grid,#pgrid,#thumbs{zoom:var(--cz,1)}   /* 內容大小: only what you wrote / posted scales, never the bars */
@@ -122,8 +122,8 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .zoomctl .rbtn{width:30px;height:30px;font-size:16px;font-weight:600;color:var(--fg)}
 .zval{min-width:46px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;color:var(--fg);padding:4px 0;border-radius:8px}
 .zval:hover{background:var(--hover)}
-.sp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 2px 10px 4px;border-top:1px solid var(--s3);font-size:12px;font-weight:600;color:var(--muted)}
-.acct{display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--s3)}
+.sp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 2px 14px 4px;border-top:1px solid var(--s3);font-size:12px;font-weight:600;color:var(--muted)}
+.acct{display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:1px solid var(--s3)}
 .acct-in,.acct-out{display:flex;align-items:center;gap:6px}
 .acct-out{flex-wrap:wrap}
 .acct-out input[type=email]{flex-basis:100%}
@@ -131,7 +131,7 @@ html.theming,html.theming *{transition:background-color .35s ease,color .35s eas
 .acct-out input:focus{box-shadow:inset 0 0 0 1.5px var(--acc-text)}
 .acct-dot{width:8px;height:8px;border-radius:50%;background:#4cc38a;flex:none}
 .acct-mail{flex:1;min-width:0;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sp-acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:12px;border-top:1px solid var(--s3)}
+.sp-acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 0;border-top:1px solid var(--s3)}
 .sp-act{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--s2);color:var(--fg);padding:12px 4px 10px;border-radius:12px;font-size:12px;font-weight:600}
 .sp-act svg{width:18px;height:18px}
 .sp-act.danger{color:var(--danger)}
@@ -301,6 +301,9 @@ body.seldrag,body.seldrag *{cursor:grabbing!important}
 body.resizing,body.resizing *{cursor:col-resize!important;user-select:none}
 body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .rz-guide{position:fixed;z-index:250;background:var(--acc-text);border-radius:2px;pointer-events:none}
+.tcorner{position:absolute;z-index:15;width:14px;height:14px;padding:0;border-radius:4px;background:var(--s3);box-shadow:inset 0 0 0 1.5px var(--faint);cursor:var(--cursor-hot)}
+.tcorner:hover,.tcorner.on{background:var(--acc-text);box-shadow:none}
+@media (pointer:coarse){.tcorner{width:20px;height:20px;border-radius:6px}}
 .imgbox{position:absolute;z-index:14;box-shadow:0 0 0 2px var(--acc-text);border-radius:10px;pointer-events:none}
 .imgbox .ih{position:absolute;right:-16px;bottom:-16px;width:32px;height:32px;display:grid;place-items:center;pointer-events:auto;touch-action:none;cursor:nwse-resize}
 .imgbox .ih::after{content:'';width:14px;height:14px;border-radius:50%;background:var(--acc-text);box-shadow:0 0 0 2.5px var(--s1)}
@@ -714,6 +717,7 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <div class="meta-line" id="noteMeta"></div>
               <div id="editor" contenteditable="true" spellcheck="false" aria-label="備忘錄內容"></div>
               <div class="rzh-box" id="rzh" hidden></div>
+              <button class="tcorner" id="tCorner" hidden title="選取整個表格" aria-label="選取整個表格"></button>
               <i class="dropcaret" id="dropCaret" hidden></i><div class="imgbox" id="imgBox" hidden><i class="ih" id="imgHandle"></i></div>
               <div class="lbar" id="lbar" hidden></div>
             </div>
@@ -1741,9 +1745,10 @@ function cleanEl(el){
   if(!tag || !ALLOWED.test(tag.toUpperCase())){ el.replaceWith(...el.childNodes); return; }
   if(tag.toUpperCase() !== el.nodeName){ const n = document.createElement(tag); [...el.attributes].forEach(x => n.setAttribute(x.name, x.value)); n.append(...el.childNodes); el.replaceWith(n); el = n; }
   const T = el.nodeName, st = el.style, keep = {};
-  if(/^(P|H1|H2|LI)$/.test(T)){ if(/center|right/.test(st.textAlign)) keep.textAlign = st.textAlign; if(/^[\d.]+$/.test(st.lineHeight)) keep.lineHeight = st.lineHeight; }
+  if(/^(P|H1|H2|LI|TD)$/.test(T)){ if(/center|right/.test(st.textAlign)) keep.textAlign = st.textAlign; if(/^[\d.]+$/.test(st.lineHeight)) keep.lineHeight = st.lineHeight; }
   if(T === 'SPAN'){ if(st.color) keep.color = st.color; if(st.backgroundColor) keep.backgroundColor = st.backgroundColor; }   // already limited to the swatches
   if(/^(COL|TABLE|IMG)$/.test(T) && /px$/.test(st.width)) keep.width = st.width;
+  if(T === 'TR' && /px$/.test(st.height)) keep.height = st.height;
   const cap = el.dataset?.cap || '', cls = [...el.classList].filter(c => KEEP_CLASS.includes(c)), href = el.getAttribute('href') || '', src = el.getAttribute('src') || '', cs = el.colSpan, rs = el.rowSpan;
   [...el.attributes].forEach(x => el.removeAttribute(x.name));
   Object.assign(el.style, keep);
@@ -1775,8 +1780,13 @@ function adoptTables(root){
     const nt = document.createElement('table'), tb = document.createElement('tbody');
     if(t.querySelector('th') || t.tHead || t.classList.contains('has-header')) nt.className = 'has-header';
     [...t.rows].forEach(r => {
-      const tr = document.createElement('tr');
-      [...r.cells].forEach(c => { const td = document.createElement('td'); if(c.colSpan > 1) td.colSpan = c.colSpan; if(c.rowSpan > 1) td.rowSpan = c.rowSpan; td.innerHTML = cellHtml(c); tr.append(td); });
+      const tr = document.createElement('tr'); if(r.style.height) tr.style.height = r.style.height;
+      [...r.cells].forEach(c => {
+        const td = document.createElement('td'); if(c.colSpan > 1) td.colSpan = c.colSpan; if(c.rowSpan > 1) td.rowSpan = c.rowSpan; td.innerHTML = cellHtml(c);
+        const k = [...c.classList].filter(x => x === 'lg' || x === 'h1' || x === 'h2'); if(k.length) td.className = k.join(' ');   // the cell's look comes along
+        if(c.style.lineHeight) td.style.lineHeight = c.style.lineHeight; if(c.style.textAlign) td.style.textAlign = c.style.textAlign;
+        tr.append(td);
+      });
       if(tr.cells.length) tb.append(tr);
     });
     nt.append(tb);
@@ -1803,7 +1813,7 @@ function pasteCells(cd){
   const html = cd.getData('text/html'), text = cd.getData('text/plain');
   let rows = null;
   if(/<table/i.test(html)){ const t = adoptHtml(html).querySelector('table'); if(t) rows = [...t.rows].map(r => [...r.cells].map(c => c.innerHTML)); }
-  else if(/\t|\n./.test(text.trim())) rows = text.replace(/\r/g, '').replace(/\n$/, '').split('\n').map(l => l.split('\t').map(x => esc(x) || '<br>'));
+  else if(/\t/.test(text.trim()) && !/<(p|div|li|br)\b/i.test(html)) rows = text.replace(/\r/g, '').replace(/\n$/, '').split('\n').map(l => l.split('\t').map(x => esc(x) || '<br>'));
   if(!rows || rows.flat().length < 2) return false;   // a single value pastes as normal text
   const table = start.closest('table'); snap(); clearCellSel();
   let {grid, pos} = tableMap(table); const p0 = pos.get(start), cols = $$('col', table).length;
@@ -1833,6 +1843,10 @@ editor.addEventListener('paste', e => {
   const imgs = imageFiles(e.clipboardData?.files);
   if(imgs.length){ e.preventDefault(); if(!sel) saveSel(); addNoteImages(imgs, sel); return; }   // a picked picture / album gets them, else they go in at the caret
   if(pasteOnPic(e)) return;
+  if(cellSel?.whole && /<table/i.test(e.clipboardData?.getData('text/html') || '')){   // the whole table picked: the copied table replaces it
+    const w = adoptHtml(e.clipboardData.getData('text/html')).querySelector('.tbl-wrap');
+    if(w){ e.preventDefault(); snap(); const old = cellSel.table.closest('.tbl-wrap'); clearCellSel(); old.replaceWith(w); caretIn(w.querySelector('td')); touchNote(); fitWraps(); return; }
+  }
   if((cellSel || selNode()?.closest('td')) && pasteCells(e.clipboardData)){ e.preventDefault(); return; }
   const html = e.clipboardData?.getData('text/html'); if(!html) return;
   e.preventDefault(); snap(); insertHtml(html, true);
@@ -1883,6 +1897,7 @@ function insertHtml(html, paste){   // cleaned HTML in at the caret (the caller 
     const s = getSelection(); if(s.rangeCount && !s.isCollapsed) document.execCommand('delete');
     const n = selNode(), td = n?.closest('td'), li = !td && n?.closest('li'), line = td || li || (n && topBlock(n));
     const filled = line && (line.textContent.replace(/​/g, '').trim() || line.querySelector?.('img'));
+    if(td && !filled && !tmp.querySelector('img,table,hr,.gal')){ document.execCommand('insertHTML', false, cellHtml(tmp)); keepSel(() => tidyColors(editor)); touchNote(); return; }   // an empty cell: every line in this one cell
     if(line && filled && !tmp.querySelector('img,table,hr,.gal')){   // after text: plain lines in the look of the line it joins
       textLines(tmp).forEach((l, i) => { if(i) document.execCommand(td ? 'insertLineBreak' : 'insertParagraph'); if(l) document.execCommand('insertText', false, l); });
       touchNote(); return;
@@ -2181,7 +2196,20 @@ function placeTblBar(){
   $('#tblbar').hidden = !live; $('#tblClr').hidden = !(live && txt); $('#fmtbar').hidden = !txt || live; dockState();   // selected text: a 清除樣式 button (inside the table bar in a table)
   if(live) $('#tblbar [data-t="header"]').classList.toggle('on', curCell.closest('table').classList.contains('has-header'));
   placeKnobs(live ? curCell.closest('table') : null);
+  const k = $('#tCorner'), wrap = live && curCell.closest('.tbl-wrap');
+  if(wrap){
+    const sc = $('#escroll'), sr = sc.getBoundingClientRect(), wr = wrap.getBoundingClientRect(), z = k.offsetWidth || 14;
+    Object.assign(k.style, { left:Math.max(0, wr.left - sr.left - z - 3) + 'px', top:(wr.top - sr.top + sc.scrollTop - z - 3) + 'px' });
+    k.classList.toggle('on', !!cellSel?.whole && cellSel.table === curCell.closest('table'));
+  }
+  k.hidden = !wrap;
 }
+$('#tCorner').addEventListener('mousedown', e => e.preventDefault());   // keep the focus in the note
+$('#tCorner').addEventListener('click', () => {
+  const table = curCell?.closest('table'); if(!table) return;
+  const cells = $$('td', table); getSelection().removeAllRanges(); selectCells(cells[0], cells[cells.length - 1]);
+  cellSel.whole = true; editor.focus({preventScroll:true}); placeTblBar(); toast('已選取整個表格');
+});
 /* touch screens: drag knobs on the active table's column / row edges */
 function placeKnobs(table){
   const box = $('#rzh');
@@ -2541,7 +2569,7 @@ function mergeSelection(){
 }
 document.addEventListener('keydown', e => {
   if(!cellSel || imeBusy(e)) return;
-  if(e.key === 'Backspace' || e.key === 'Delete'){ e.preventDefault(); snap(); cellSel.cells.forEach(c => { c.innerHTML = '<br>'; }); touchNote(); }
+  if(e.key === 'Backspace' || e.key === 'Delete'){ e.preventDefault(); snap(); if(cellSel.whole) delTable(cellSel.table); else cellSel.cells.forEach(c => { c.innerHTML = '<br>'; }); touchNote(); }   // the whole table picked: it goes
   else if(e.key === 'Escape') clearCellSel();
   else if(!e.metaKey && !e.ctrlKey && e.key.length === 1) clearCellSel();
 });
@@ -2578,10 +2606,16 @@ function copySel(e, cut){   // a text selection in the note: the copy carries it
   }
   touchNote(); updateState(); return true;
 }
-document.addEventListener('cut', e => { copyPic(e, true) || copySel(e, true); });
-document.addEventListener('copy', e => {
-  if(copyPic(e, false)) return;
-  if(!cellSel){ copySel(e, false); return; }
+document.addEventListener('cut', e => { copyPic(e, true) || copyCells(e, true) || copySel(e, true); });
+document.addEventListener('copy', e => { copyPic(e, false) || copyCells(e, false) || copySel(e, false); });
+const tableClip = table => {   // the whole table as this editor's HTML: widths, header row, cell looks
+  const w = table.closest('.tbl-wrap').cloneNode(true);
+  w.querySelectorAll('.csel,.cur,.picking').forEach(x => UI_CLASS.forEach(c => x.classList.remove(c)));
+  w.querySelectorAll('[class=""]').forEach(x => x.removeAttribute('class')); return w.outerHTML;
+};
+function delTable(table){ const w = table.closest('.tbl-wrap'), nx = w.nextElementSibling; clearCellSel(); w.remove(); if(nx) caretIn(nx); curCell = null; placeTblBar(); }
+function copyCells(e, cut){
+  if(!cellSel) return false;
   e.preventDefault();
   const {grid} = tableMap(cellSel.table), rows = [];
   for(let r = cellSel.r1; r <= cellSel.r2; r++){
@@ -2590,9 +2624,11 @@ document.addEventListener('copy', e => {
     rows.push(line);
   }
   e.clipboardData.setData('text/plain', rows.map(l => l.map(x => x.innerText.replace(/\s*\n\s*/g, ' ').trim()).join('\t')).join('\n'));
-  e.clipboardData.setData('text/html', '<table>' + rows.map(l => '<tr>' + l.map(x => `<td>${x.innerHTML}</td>`).join('') + '</tr>').join('') + '</table>');
-  toast('已複製選取的儲存格');
-});
+  e.clipboardData.setData('text/html', cellSel.whole ? tableClip(cellSel.table) : '<table>' + rows.map(l => '<tr>' + l.map(x => `<td>${x.innerHTML}</td>`).join('') + '</tr>').join('') + '</table>');
+  if(cut && editor.isContentEditable){ snap(); if(cellSel.whole) delTable(cellSel.table); else cellSel.cells.forEach(c => { c.innerHTML = '<br>'; }); touchNote(); toast(cellSel ? '已剪下儲存格' : '已剪下表格'); }
+  else toast(cellSel.whole ? '已複製整個表格' : '已複製選取的儲存格');
+  return true;
+}
 
 /* column / row resizing: drag a cell's right or bottom edge */
 const EDGE = 6;

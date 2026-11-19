@@ -2,7 +2,7 @@
 <html lang="zh-Hant" data-mode="light">
 <head>
 <meta charset="utf-8">
-<meta name="pn-build" content="1794986122">
+<meta name="pn-build" content="1794991059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}html,body{overscroll-behavior:none}html body .app{position:fixed;inset:0}html .topbar{padding-top:max(10px,env(safe-area-inset-top))}html .main{padding-bottom:max(12px,env(safe-area-inset-bottom))}</style>
 <link rel="manifest" href="manifest.json">
@@ -68,6 +68,7 @@
 }
 [hidden]{display:none!important}
 html,body{height:100%;background:var(--bg);color:var(--fg)}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}   /* iOS would otherwise enlarge text in wide boxes such as tables */
 body{font-family:var(--font);font-size:13px;line-height:1.5;cursor:var(--cursor);overflow:hidden;-webkit-font-smoothing:antialiased}
 button,label[for],[role=button],a{cursor:var(--cursor-hot)}
 [contenteditable=true],textarea,input[type=search],input[type=text]{cursor:text}
@@ -289,28 +290,6 @@ body.seldrag,body.seldrag *{cursor:grabbing!important}
 #editor ul.checklist li.done{color:var(--muted);text-decoration:line-through}
 #editor a{color:var(--acc-text);text-decoration:underline;text-underline-offset:2px}
 #editor img{max-width:100%;border-radius:10px;display:block;margin:.6em 0}
-#editor img.ink{border-radius:0}
-:root[data-mode="dark"] #editor img.ink{filter:invert(1) hue-rotate(180deg)}   /* drawn on light paper: dark ink turns light */
-.lb-slide img.ink{background:#fffdf8}
-/* 手寫 pad */
-.inkpad{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:var(--bg)}
-.inkpad[hidden]{display:none}
-.ink-bar{display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) 10px max(12px,env(safe-area-inset-left,0px));background:var(--ebar);color:var(--ebar-ink)}
-.ink-bar .rbtn{flex:none;background:rgba(255,255,255,.35);color:inherit}
-.ink-tools{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:4px;overflow-x:auto;scrollbar-width:none}
-.ink-tools .sep{width:1px;height:18px;margin:0 6px;background:currentColor;opacity:.25;flex:none}
-.ink-tools button{flex:none;width:32px;height:32px;display:grid;place-items:center;border-radius:9px;color:inherit}
-.ink-tools button.on{background:rgba(255,255,255,.4)}
-.ink-tools button.off{opacity:.35;pointer-events:none}
-.ink-tools svg{width:18px;height:18px}
-.ink-c i{width:20px;height:20px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1.5px rgba(255,255,255,.7)}
-.ink-tools .ink-c.on{background:none}
-.ink-c.on i{box-shadow:0 0 0 2px var(--ebar),0 0 0 4px var(--ebar-ink)}
-.ink-s i{border-radius:50%;background:currentColor}
-.ink-body{flex:1;overflow:auto;padding:14px 12px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;-webkit-overflow-scrolling:touch}
-.ink-cv{flex:none;touch-action:none;border-radius:12px;box-shadow:var(--shadow);background-color:#fffdf8;background-image:linear-gradient(transparent calc(100% - 1px),rgba(120,100,80,.13) 0)}
-.ink-cv.erasing{cursor:cell}
-.ink-more{flex:none;padding:8px 16px;border-radius:999px;background:var(--s2);color:var(--muted);font-weight:600;font-size:12.5px}
 #editor .tbl-wrap{overflow-x:auto;overflow-y:hidden;margin:.3em 0;padding-bottom:4px}
 #editor table{border-collapse:separate;border-spacing:2px;table-layout:fixed;font-size:13px}
 #editor td{background:var(--s2);border-radius:4px;padding:2px 8px;line-height:1.45;vertical-align:top;min-width:40px;word-break:break-word}
@@ -387,6 +366,7 @@ body.resizing.rowr,body.resizing.rowr *{cursor:row-resize!important}
 .cal-d{position:relative;width:30px;height:30px;margin:1px auto;display:grid;place-items:center;border-radius:50%;font-size:12px;font-variant-numeric:tabular-nums}
 .cal-d.past{color:var(--faint)}
 .cal-d.today{color:var(--acc-text);font-weight:700}
+:root[data-mode="light"] .cal-d.today:not(.has){color:var(--hover-acc);font-weight:800}   /* light: the bright orange, so today is easy to spot */
 .cal-d.has{background:var(--acc);color:var(--acc-ink);font-weight:600}
 .cal-d.sel{box-shadow:0 0 0 2px var(--s1),0 0 0 3.5px var(--acc-text)}
 .cal-d[data-n]::after{content:attr(data-n);position:absolute;top:-3px;right:-3px;min-width:14px;height:14px;padding:0 3px;box-sizing:border-box;border-radius:999px;background:var(--btn-bg);color:var(--btn-fg);font-size:9px;font-weight:700;line-height:14px}
@@ -531,12 +511,12 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:2px 4px 8px}   /* phones: posts as a small grid, 3 a row */
   .pgrid .card{border-radius:10px;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
   .pgrid .ctop{top:5px;left:5px;right:5px;gap:3px}
-  .pgrid .ctitle{font-size:11px;padding:2px 7px}
-  .pgrid .chip{font-size:9.5px;padding:2px 5px}
+  .pgrid .ctitle{font-size:12.5px;padding:3px 8px}
+  .pgrid .chip{font-size:10.5px;padding:2px 6px}
   .pgrid .chip svg{width:9px;height:9px}
-  .pgrid .cfoot{padding:16px 6px 5px;font-size:10px}
+  .pgrid .cfoot{padding:18px 7px 6px;font-size:11.5px}
   .pgrid .ccopy{display:none}
-  .pgrid .txtcover{padding:28px 7px 22px;font-size:10px;line-height:1.55}
+  .pgrid .txtcover{padding:30px 8px 24px;font-size:12px;line-height:1.5}
   .pgrid .empty-grid{padding:28px 6px;font-size:13px}
   .meta-open .pmeta{display:block}
   #postEdit>.media{border-top:0}
@@ -716,7 +696,6 @@ body.dock-on .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
               <span class="sep"></span>
               <div class="tgrp">
               <button class="tb" id="imgBtn" title="插入圖片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-9 9"/></svg></button>
-              <button class="tb" id="inkBtn" title="手寫（Apple Pencil／手指／滑鼠）"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19.5c1.6-2.6 3-2.6 4.4 0s2.9 2.6 4.4 0 2.9-2.6 4.4 0"/><path d="M14.5 3.5l3 3-7 7H7.5v-3z"/></svg></button>
               <button class="tb" data-pop="link" title="連結"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 006.4 0l3-3a4.5 4.5 0 00-6.4-6.4l-1.2 1.2"/><path d="M14 10a4.5 4.5 0 00-6.4 0l-3 3a4.5 4.5 0 006.4 6.4l1.2-1.2"/></svg></button>
               <button class="tb" id="quoteBtn" title="引言"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 7H6a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6zM20 7h-4a2 2 0 00-2 2v3h4c0 2-1 3-3 3.5V18c3.5-.5 5-3 5-6z"/></svg></button>
               <button class="tb" data-cmd="insertHorizontalRule" title="分隔線"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12h18"/></svg></button>
@@ -1758,7 +1737,7 @@ function tidyColors(root){
 }
 
 /* paste: anything this editor can't make is turned into something it can, or dropped */
-const KEEP_CLASS = ['ink', 'ph', 'lg', 'h1', 'h2', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
+const KEEP_CLASS = ['ph', 'lg', 'h1', 'h2', 'checklist', 'done', 'gal', 'tbl-wrap', 'has-header'];
 const RENAME = { H3:'h2', H4:'h2', H5:'h2', H6:'h2', PRE:'p', DT:'p', DD:'p', ADDRESS:'p', STRONG:'b', EM:'i', DEL:'s', STRIKE:'s', INS:'u' };
 const ALLOWED = /^(P|DIV|H1|H2|BR|B|I|U|S|A|UL|OL|LI|BLOCKQUOTE|HR|IMG|TABLE|THEAD|TBODY|TFOOT|TR|TD|TH|COLGROUP|COL|SPAN)$/;
 function cleanEl(el){
@@ -1957,7 +1936,6 @@ toolbar.addEventListener('click', e => {
   if(groupTap(b) || !curNote) return;
   if(b.id === 'checkBtn') toggleChecklist();
   else if(b.id === 'imgBtn') pickImages(null);
-  else if(b.id === 'inkBtn'){ closePops(); saveSel(); openInk(null); }
   else if(b.id === 'quoteBtn'){ closePops(); toggleQuote(); }
   else if(b.dataset.cmd){
     const cmd = b.dataset.cmd; let target = null;
@@ -2409,12 +2387,11 @@ function placeMedia(){
     const sc = $('#escroll'), sr = sc.getBoundingClientRect(), r = sel.img.getBoundingClientRect();
     Object.assign(box.style, { left:(r.left - sr.left) + 'px', top:(r.top - sr.top + sc.scrollTop) + 'px', width:r.width + 'px', height:r.height + 'px' }); box.hidden = false;
   }
-  const key = (sel.img.classList.contains('ink') ? 'i' : '') + (sel.gal ? 'g' : 's');
+  const key = sel.gal ? 'g' : 's';
   if(bar.dataset.k !== 'cap' && bar.dataset.k !== key){
     bar.dataset.k = key;
     const btn = (m, title, d, cls = '') => `<button class="tb ${cls}" data-m="${m}" title="${title}" aria-label="${title}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg></button>`;
-    bar.innerHTML = (key.startsWith('i') ? btn('ink', '編輯手寫', '<path d="M3 19.5c1.6-2.6 3-2.6 4.4 0s2.9 2.6 4.4 0 2.9-2.6 4.4 0"/><path d="M14.5 3.5l3 3-7 7H7.5v-3z"/>') : '')
-      + btn('add', sel.gal ? '加照片' : '加照片（變成相簿）', '<rect x="3" y="5" width="13" height="13" rx="2"/><path d="M3 15l4-4 4 4M19 3v6M16 6h6"/>')
+    bar.innerHTML = btn('add', sel.gal ? '加照片' : '加照片（變成相簿）', '<rect x="3" y="5" width="13" height="13" rx="2"/><path d="M3 15l4-4 4 4M19 3v6M16 6h6"/>')
       + btn('cap', '圖片說明', '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M7 20h10M9 8h6M12 8v5"/>')
       + (sel.gal ? btn('split', '這張拆成單張', '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5" opacity=".45"/><path d="M7 14v6M4.5 17.5L7 20l2.5-2.5"/>') : '')
       + btn('dl', '下載這張', '<path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/>')
@@ -2440,7 +2417,6 @@ $('#mbar').addEventListener('click', e => {
   const b = e.target.closest('[data-m]'); if(!b || !sel) return;
   const { img, gal } = sel, act = b.dataset.m;
   if(act === 'add') return pickImages(sel);
-  if(act === 'ink') return openInk(img);
   if(act === 'cap'){   // the bar turns into a caption field
     const bar = $('#mbar'); bar.dataset.k = 'cap';
     bar.innerHTML = `<input class="capin" id="capIn" placeholder="圖片說明（留空就不顯示）" value="${esc(capOf(img))}"><button class="tb" data-m="capok" title="完成" aria-label="完成">✓</button>`;
@@ -2462,16 +2438,8 @@ function removePic(img){   // a picture (with its caption) out of the note: its 
   if(gal) tidyGal(gal);
   else if(p !== editor && !p.textContent.trim() && !p.querySelector('img')) p.parentElement.children.length > 1 ? p.remove() : (p.innerHTML = '<br>');
 }
-async function downloadPic(img){   // this one picture onto the device (a drawing comes out as a PNG on its paper)
-  let blob;
-  try{
-    if(img.classList.contains('ink')){
-      const im = new Image(); im.src = img.src; await im.decode();
-      const c = document.createElement('canvas'), x = c.getContext('2d'); c.width = im.naturalWidth * 2; c.height = im.naturalHeight * 2;
-      x.fillStyle = '#fffdf8'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
-      blob = await new Promise(r => c.toBlob(r, 'image/png'));
-    } else blob = await (await fetch(img.src)).blob();
-  }catch(e){ toast('這張圖片無法下載'); return; }
+async function downloadPic(img){   // just this one picture onto the device
+  let blob; try{ blob = await (await fetch(img.src)).blob(); }catch(e){ toast('這張圖片無法下載'); return; }
   const list = albumOf(img), name = (curNote?.title.trim() || '備忘錄').replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 40) + (list.length > 1 ? '-' + (list.indexOf(img) + 1) : '');
   const ext = (blob.type.split('/')[1] || 'jpg').replace('jpeg', 'jpg').replace('svg+xml', 'svg');
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${name}.${ext}`;
@@ -2556,158 +2524,23 @@ editor.addEventListener('touchmove', e => { if(gd?.active || cellDrag?.touch) e.
 editor.addEventListener('dragstart', e => { const s = getSelection(); if(sd || e.target.closest?.('.gal') || s.rangeCount && !s.isCollapsed && hasPics(s.getRangeAt(0))) e.preventDefault(); });   // pictures move with our own drag
 editor.addEventListener('load', queueMedia, true);   // pictures change the layout as they arrive
 
-/* =====================================================================
-   手寫: a drawing block for Apple Pencil (pressure, a resting palm is ignored), a finger or a mouse.
-   It is saved as an ordinary SVG picture, so albums, captions, copy / paste and sync all just work;
-   each stroke keeps its points inside the SVG, so the drawing can be opened and changed later.
-   ===================================================================== */
-const INK_W = 1000, INK_COLORS = ['#2b2a28', '#d0478f', '#2f6fd6', '#2e9e6a', '#e0782f'], INK_SIZES = [2.5, 5, 10];
-const ink = { strokes:[], undo:[], redo:[], H:520, color:INK_COLORS[0], size:5, erase:false, pen:false, cur:null, img:null, s:1, roll:null };
-const d1 = n => Math.round(n * 10) / 10;
-function inkPath(st){   // a stroke → its outline as SVG path data; with a pencil the pressure sets the width
-  const P = st.p, half = i => st.s * (st.pen ? .3 + 1.4 * P[i][2] : 1) / 2;
-  if(P.length === 1){ const [x, y] = P[0], r = d1(Math.max(.8, half(0))); return `M${d1(x - r)} ${d1(y)}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0Z`; }
-  const L = [], R = [];
-  P.forEach((q, i) => {
-    const a = P[Math.max(0, i - 1)], b = P[Math.min(P.length - 1, i + 1)];
-    let tx = b[0] - a[0], ty = b[1] - a[1]; const d = Math.hypot(tx, ty) || 1; tx /= d; ty /= d;
-    const h = half(i); L.push([q[0] - ty * h, q[1] + tx * h]); R.push([q[0] + ty * h, q[1] - tx * h]);
-  });
-  R.reverse();
-  const run = A => { let o = ''; for(let i = 1; i < A.length - 1; i++) o += `Q${d1(A[i][0])} ${d1(A[i][1])} ${d1((A[i][0] + A[i + 1][0]) / 2)} ${d1((A[i][1] + A[i + 1][1]) / 2)}`; const z = A[A.length - 1]; return o + `L${d1(z[0])} ${d1(z[1])}`; };
-  const he = d1(half(P.length - 1)), hs = d1(half(0));
-  return `M${d1(L[0][0])} ${d1(L[0][1])}${run(L)}A${he} ${he} 0 0 0 ${d1(R[0][0])} ${d1(R[0][1])}${run(R)}A${hs} ${hs} 0 0 0 ${d1(L[0][0])} ${d1(L[0][1])}Z`;   // round ends
-}
-function inkSvg(){   // the drawing as an SVG data URL, cut to just below the lowest stroke
-  const low = ink.strokes.reduce((m, st) => Math.max(m, ...st.p.map(q => q[1] + st.s)), 0), H = Math.round(Math.max(120, Math.min(ink.H, low + 24)));
-  const paths = ink.strokes.map(st => `<path fill="${st.c}" d="${inkPath(st)}" data-s="${st.s}"${st.pen ? ' data-pen="1"' : ''} data-p="${st.p.map(q => `${d1(q[0])},${d1(q[1])},${Math.round(q[2] * 10)}`).join(' ')}"/>`).join('');
-  return 'data:image/svg+xml;base64,' + btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="${INK_W}" height="${H}" viewBox="0 0 ${INK_W} ${H}" data-ink="1">${paths}</svg>`);
-}
-function inkRead(src){   // strokes back out of a saved drawing
-  try{
-    const svg = new DOMParser().parseFromString(atob(src.split(',')[1]), 'image/svg+xml').documentElement;
-    ink.H = Math.max(ink.H, +svg.getAttribute('height') || 0);
-    ink.strokes = [...svg.querySelectorAll('path[data-p]')].map(p => ({ c:p.getAttribute('fill'), s:+p.dataset.s || 5, pen:p.dataset.pen === '1', p:p.dataset.p.split(' ').map(t => { const [x, y, z] = t.split(','); return [+x, +y, (+z || 5) / 10]; }) }));
-  }catch(e){ ink.strokes = []; }
-}
-function inkUI(){   // built the first time it's needed
-  if($('#inkPad')) return;
-  const ico = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
-  document.body.insertAdjacentHTML('beforeend', `<div class="inkpad" id="inkPad" hidden>
-    <div class="ink-bar"><button class="rbtn" data-k="cancel" title="取消" aria-label="取消">${ico('<path d="M7 7l10 10M17 7L7 17"/>')}</button>
-      <div class="ink-tools">${INK_COLORS.map(c => `<button class="ink-c" data-c="${c}" style="--c:${c}" aria-label="顏色"><i></i></button>`).join('')}<span class="sep"></span>
-        ${INK_SIZES.map(z => `<button class="ink-s" data-s="${z}" aria-label="粗細"><i style="width:${z * .9 + 2}px;height:${z * .9 + 2}px"></i></button>`).join('')}<span class="sep"></span>
-        <button data-k="erase" title="橡皮擦（劃過筆畫就擦掉）" aria-label="橡皮擦">${ico('<path d="M8 20h12M4.5 15.5l9-9a2 2 0 012.8 0l2.2 2.2a2 2 0 010 2.8L11 19H8z"/><path d="M9 11l5 5"/>')}</button>
-        <button data-k="undo" title="上一步" aria-label="上一步">${ico('<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/>')}</button>
-        <button data-k="redo" title="下一步" aria-label="下一步">${ico('<path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/>')}</button>
-        <button data-k="clear" title="全部擦掉" aria-label="全部擦掉">${ico('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>')}</button></div>
-      <button class="rbtn" data-k="done" title="完成" aria-label="完成">${ico('<path d="M5 12.5l4.5 4.5L19 7.5"/>')}</button></div>
-    <div class="ink-body"><canvas class="ink-cv"></canvas><button class="ink-more" data-k="more">＋ 加長畫布</button></div></div>`);
-  const pad = $('#inkPad'), cv = $('.ink-cv', pad);
-  pad.addEventListener('click', e => {
-    const b = e.target.closest('button'); if(!b) return;
-    if(b.dataset.c){ ink.color = b.dataset.c; ink.erase = false; }
-    else if(b.dataset.s){ ink.size = +b.dataset.s; ink.erase = false; }
-    else ({ cancel:closeInk, done:saveInk, erase:() => { ink.erase = !ink.erase; },
-      undo:() => { if(ink.undo.length){ ink.redo.push(ink.strokes); ink.strokes = ink.undo.pop(); inkDraw(); } },
-      redo:() => { if(ink.redo.length){ ink.undo.push(ink.strokes); ink.strokes = ink.redo.pop(); inkDraw(); } },
-      clear:() => { if(ink.strokes.length){ ink.undo.push(ink.strokes); ink.redo = []; ink.strokes = []; inkDraw(); } },
-      more:() => { ink.H += 320; inkLayout(); $('.ink-body').scrollTop = 1e6; } })[b.dataset.k]?.();
-    inkMarks();
-  });
-  cv.addEventListener('pointerdown', e => {
-    if(e.pointerType === 'pen') ink.pen = true;
-    if(e.pointerType === 'touch' && ink.pen){ ink.roll = { id:e.pointerId, y:e.clientY, top:$('.ink-body').scrollTop }; return; }   // the pencil is in use: a finger (or palm) only scrolls
-    if(ink.cur || e.button > 0) return;
-    e.preventDefault(); try{ cv.setPointerCapture(e.pointerId); }catch(err){}
-    const erase = ink.erase || (e.buttons & 32) > 0;   // a pen's eraser end erases too
-    ink.undo.push(ink.strokes.slice()); ink.redo = [];
-    ink.cur = { id:e.pointerId, erase, st:erase ? null : { c:ink.color, s:ink.size, pen:e.pointerType === 'pen', p:[] } };
-    if(!erase) ink.strokes.push(ink.cur.st);
-    inkMove(e);
-  });
-  cv.addEventListener('pointermove', e => {
-    if(ink.roll?.id === e.pointerId){ $('.ink-body').scrollTop = ink.roll.top - (e.clientY - ink.roll.y); return; }
-    if(ink.cur?.id === e.pointerId) inkMove(e);
-  });
-  const up = e => {
-    if(ink.roll?.id === e.pointerId){ ink.roll = null; return; }
-    const c = ink.cur; if(!c || c.id !== e.pointerId) return; ink.cur = null;
-    if(c.erase ? !c.hit : !c.st.p.length){ ink.undo.pop(); if(!c.erase) ink.strokes.pop(); }   // nothing changed: no undo step
-    inkDraw(); inkMarks();
-  };
-  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
-  window.addEventListener('resize', () => { if(!pad.hidden) inkLayout(); });
-  document.addEventListener('keydown', e => {
-    if(pad.hidden) return;
-    if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z'){ e.preventDefault(); pad.querySelector(`[data-k="${e.shiftKey ? 'redo' : 'undo'}"]`).click(); }
-    else if(e.key === 'Escape') closeInk();
-    e.stopPropagation();
-  }, true);
-}
-function inkPos(ev){ const r = $('.ink-cv').getBoundingClientRect(); return [(ev.clientX - r.left) / ink.s, (ev.clientY - r.top) / ink.s, ev.pointerType === 'pen' ? (ev.pressure || .5) : .5]; }
-function inkMove(e){
-  const c = ink.cur, ctx = $('.ink-cv').getContext('2d');
-  const co = e.getCoalescedEvents?.();
-  for(const ev of co?.length ? co : [e]){
-    const q = inkPos(ev);
-    if(c.erase){   // a stroke the eraser passes over goes
-      const n = ink.strokes.length; ink.strokes = ink.strokes.filter(st => !st.p.some(p => Math.hypot(p[0] - q[0], p[1] - q[1]) < 8 + st.s));
-      if(ink.strokes.length !== n){ c.hit = true; inkDraw(); }
-      continue;
-    }
-    const P = c.st.p, last = P[P.length - 1];
-    if(last && Math.hypot(q[0] - last[0], q[1] - last[1]) < 1.5) continue;
-    P.push(q);
-    const w = c.st.s * (c.st.pen ? .3 + 1.4 * q[2] : 1);   // drawn as plain segments while the pen moves; the outline is drawn once it lifts
-    ctx.strokeStyle = c.st.c; ctx.lineCap = ctx.lineJoin = 'round'; ctx.lineWidth = w;
-    ctx.beginPath(); ctx.moveTo(...(last || q).slice(0, 2)); ctx.lineTo(q[0] + (last ? 0 : .01), q[1]); ctx.stroke();
-  }
-}
-function inkDraw(){
-  const cv = $('.ink-cv'), ctx = cv.getContext('2d'), k = (devicePixelRatio || 1) * ink.s;
-  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); ctx.setTransform(k, 0, 0, k, 0, 0);
-  ink.strokes.forEach(st => { ctx.fillStyle = st.c; ctx.fill(new Path2D(inkPath(st))); });
-}
-function inkLayout(){
-  const cv = $('.ink-cv'), w = Math.min(innerWidth - 24, INK_W), d = devicePixelRatio || 1;
-  ink.s = w / INK_W; cv.style.width = w + 'px'; cv.style.height = ink.H * ink.s + 'px'; cv.style.backgroundSize = `100% ${40 * ink.s}px`;
-  cv.width = Math.round(w * d); cv.height = Math.round(ink.H * ink.s * d); inkDraw();
-}
-function inkMarks(){
-  const pad = $('#inkPad');
-  $$('.ink-c', pad).forEach(b => b.classList.toggle('on', !ink.erase && b.dataset.c === ink.color));
-  $$('.ink-s', pad).forEach(b => b.classList.toggle('on', !ink.erase && +b.dataset.s === ink.size));
-  pad.querySelector('[data-k="erase"]').classList.toggle('on', ink.erase); $('.ink-cv').classList.toggle('erasing', ink.erase);
-  pad.querySelector('[data-k="undo"]').classList.toggle('off', !ink.undo.length); pad.querySelector('[data-k="redo"]').classList.toggle('off', !ink.redo.length);
-}
-function openInk(img){
-  inkUI(); Object.assign(ink, { img, strokes:[], undo:[], redo:[], H:520, erase:false, cur:null, roll:null });
-  if(img) inkRead(img.src);
-  $('#inkPad').hidden = false; inkLayout(); inkMarks(); $('.ink-body').scrollTop = 0;
-}
-function closeInk(){ $('#inkPad').hidden = true; ink.cur = null; }
-function saveInk(){
-  const img = ink.img; closeInk();
-  if(img && editor.contains(img)){
-    snap();
-    if(ink.strokes.length) img.src = inkSvg();
-    else removePic(img);   // erased to nothing: the drawing goes
-    touchNote(); queueMedia(); return;
-  }
-  if(!ink.strokes.length) return;
-  restoreSel(); snap();
-  document.execCommand('insertHTML', false, `<img class="ink" src="${inkSvg()}" alt=""><p><br></p>`);
-  touchNote(); toast('已插入手寫');
-}
-
 /* album viewer: every picture side by side; drag / swipe follows the finger, arrows and keys step */
-let lbList = [], lbI = 0, lbDrag = null, lbAt = 0;
-const lbTrack = $('#lbTrack');
+let lbList = [], lbI = 0, lbDrag = null, lbAt = 0, lbTap = 0;
+const lbTrack = $('#lbTrack'), lbPts = new Map(), lbZ = { s:1, x:0, y:0 };   // the fingers down; the shown picture's zoom
+const lbImg = () => lbTrack.children[lbI]?.querySelector('img');
+function lbZoom(s, x, y, animate){   // zoom 1–5×, panned no further than the picture's edges
+  const im = lbImg(); if(!im) return;
+  s = Math.min(5, Math.max(1, s));
+  const mx = Math.max(0, (im.offsetWidth * s - innerWidth) / 2), my = Math.max(0, (im.offsetHeight * s - innerHeight) / 2);
+  Object.assign(lbZ, { s, x:s === 1 ? 0 : Math.min(mx, Math.max(-mx, x)), y:s === 1 ? 0 : Math.min(my, Math.max(-my, y)) });
+  im.style.transition = animate ? 'transform .25s var(--ease)' : 'none';
+  im.style.transform = s === 1 ? '' : `translate(${lbZ.x}px,${lbZ.y}px) scale(${s})`;
+}
+const lbUnzoom = () => { $$('img', lbTrack).forEach(im => { im.style.transform = ''; }); Object.assign(lbZ, { s:1, x:0, y:0 }); };
 function openLb(list, i){
   lbList = list; lbI = Math.max(0, i);
-  lbTrack.innerHTML = list.map(im => `<div class="lb-slide"><img src="${im.src}" alt=""${im.classList.contains('ink') ? ' class="ink"' : ''}></div>`).join('');
-  $('#lb').hidden = false; lbAt = Date.now(); showLb(false);
+  lbTrack.innerHTML = list.map(im => `<div class="lb-slide"><img src="${im.src}" alt=""></div>`).join('');
+  lbUnzoom(); $('#lb').hidden = false; lbAt = Date.now(); showLb(false);
 }
 function showLb(animate = true){
   lbTrack.classList.toggle('drag', !animate); lbTrack.style.transform = `translateX(${-lbI * 100}%)`;
@@ -2716,29 +2549,57 @@ function showLb(animate = true){
   $('#lbPrev').classList.toggle('off', !many || lbI === 0); $('#lbNext').classList.toggle('off', !many || lbI === lbList.length - 1);
 }
 function closeLb(){ $('#lb').hidden = true; lbTrack.innerHTML = ''; }
-const lbStep = d => { const i = Math.max(0, Math.min(lbList.length - 1, lbI + d)); if(i !== lbI){ lbI = i; showLb(); } };
+const lbStep = d => { const i = Math.max(0, Math.min(lbList.length - 1, lbI + d)); if(i !== lbI){ lbUnzoom(); lbI = i; showLb(); } };
 $('#lbClose').addEventListener('click', closeLb);
 $('#lbPrev').addEventListener('click', e => { e.stopPropagation(); lbStep(-1); });
 $('#lbNext').addEventListener('click', e => { e.stopPropagation(); lbStep(1); });
 $('#lb').addEventListener('pointerdown', e => {
   if(e.target.closest('button')) return;
-  lbDrag = { x:e.clientX, t:Date.now(), dx:0, pic:onPic(e) }; lbTrack.classList.add('drag');
+  lbPts.set(e.pointerId, { x:e.clientX, y:e.clientY });
   try{ $('#lb').setPointerCapture(e.pointerId); }catch(err){}
+  if(lbPts.size === 2){   // a second finger: pinch
+    const [a, b] = [...lbPts.values()];
+    lbDrag = { pinch:true, d:Math.hypot(a.x - b.x, a.y - b.y) || 1, s:lbZ.s, x:lbZ.x, y:lbZ.y, mx:(a.x + b.x) / 2, my:(a.y + b.y) / 2 };
+    lbTrack.classList.remove('drag'); lbTrack.style.transform = `translateX(${-lbI * 100}%)`;
+  } else if(lbPts.size === 1){
+    lbDrag = { x:e.clientX, y:e.clientY, t:Date.now(), dx:0, moved:0, pic:onPic(e), pan:lbZ.s > 1, zx:lbZ.x, zy:lbZ.y };
+    if(!lbDrag.pan) lbTrack.classList.add('drag');
+  }
 });
 $('#lb').addEventListener('pointermove', e => {
-  if(!lbDrag) return;
-  let dx = e.clientX - lbDrag.x; if((lbI === 0 && dx > 0) || (lbI === lbList.length - 1 && dx < 0)) dx *= .3;   // resist past the ends
-  lbDrag.dx = dx; lbTrack.style.transform = `translateX(calc(${-lbI * 100}% + ${dx}px))`;
+  if(!lbPts.has(e.pointerId)) return;
+  lbPts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  const st = lbDrag; if(!st) return;
+  if(st.pinch){
+    if(lbPts.size < 2) return;
+    const [a, b] = [...lbPts.values()];
+    lbZoom(st.s * Math.hypot(a.x - b.x, a.y - b.y) / st.d, st.x + (a.x + b.x) / 2 - st.mx, st.y + (a.y + b.y) / 2 - st.my);
+    return;
+  }
+  const dx = e.clientX - st.x, dy = e.clientY - st.y; st.moved = Math.max(st.moved, Math.hypot(dx, dy));
+  if(st.pan){ lbZoom(lbZ.s, st.zx + dx, st.zy + dy); return; }   // zoomed in: look around
+  st.dx = (lbI === 0 && dx > 0) || (lbI === lbList.length - 1 && dx < 0) ? dx * .3 : dx;   // resist past the ends
+  lbTrack.style.transform = `translateX(calc(${-lbI * 100}% + ${st.dx}px))`;
 });
-const onPic = e => { const r = lbTrack.children[lbI]?.querySelector('img')?.getBoundingClientRect(); return !!r && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };   // the pictures don't take pointer events
-const lbEnd = () => {
-  if(!lbDrag) return; const { dx, t, pic } = lbDrag; lbDrag = null;
-  const fast = Math.abs(dx) > 20 && Date.now() - t < 250, step = Math.abs(dx) > innerWidth * .18 || fast ? (dx < 0 ? 1 : -1) : 0;
-  if(Math.abs(dx) < 6 && step === 0 && !$('#lb').hidden){ if(pic || Date.now() - lbAt < 400) showLb(); else closeLb(); return; }   // (the 2nd click of the double-click that opened it doesn't count)   // a tap: on the picture nothing happens, outside it closes
-  lbI = Math.max(0, Math.min(lbList.length - 1, lbI + step)); showLb();
+const onPic = e => { const r = lbImg()?.getBoundingClientRect(); return !!r && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };   // the pictures don't take pointer events
+const lbEnd = e => {
+  lbPts.delete(e.pointerId);
+  const st = lbDrag; if(!st) return;
+  if(st.pinch){ if(!lbPts.size){ lbDrag = null; if(lbZ.s < 1.05) lbZoom(1, 0, 0, true); } return; }   // a pinch ends when every finger is up
+  lbDrag = null; lbTrack.classList.remove('drag');
+  if(st.moved < 6){   // a tap
+    if(Date.now() - lbTap < 300){ lbTap = 0; lbZoom(lbZ.s > 1 ? 1 : 2.5, (innerWidth / 2 - e.clientX) * 1.5, (innerHeight / 2 - e.clientY) * 1.5, true); return; }   // double tap: zoom in there / back out
+    lbTap = Date.now();
+    if(!st.pic && lbZ.s === 1 && Date.now() - lbAt > 400) closeLb(); else showLb();   // outside the picture closes (not the 2nd click of the double-click that opened it)
+    return;
+  }
+  if(st.pan) return;
+  const fast = Math.abs(st.dx) > 20 && Date.now() - st.t < 250, step = Math.abs(st.dx) > innerWidth * .18 || fast ? (st.dx < 0 ? 1 : -1) : 0;
+  const i = Math.max(0, Math.min(lbList.length - 1, lbI + step)); if(i !== lbI){ lbUnzoom(); lbI = i; } showLb();
 };
 $('#lb').addEventListener('pointerup', lbEnd);
 $('#lb').addEventListener('pointercancel', lbEnd);
+$('#lb').addEventListener('wheel', e => { if(e.ctrlKey){ e.preventDefault(); lbZoom(lbZ.s * (1 - e.deltaY * .01), lbZ.x, lbZ.y); } }, {passive:false});   // trackpad pinch
 
 /* cell selection: dragging from one cell into another selects the rectangle between them,
    so dragging down one column selects just that column. Then: Delete clears, ⌘C copies, 合併 merges them. */
@@ -2928,7 +2789,7 @@ function fitEdge(h){
   }
   touchNote(); fitWraps(); placeKnobs(curCell?.closest('table') || null);
 }
-editor.addEventListener('dblclick', e => { const h = editor.isContentEditable && edgeAt(e); if(h){ e.preventDefault(); fitEdge(h); return; } if(galEdge(e)) return; const im = imgAt(e.target); if(im?.classList.contains('ink') && editor.isContentEditable) return openInk(im); if(im){ const list = albumOf(im); openLb(list, list.indexOf(im)); } });
+editor.addEventListener('dblclick', e => { const h = editor.isContentEditable && edgeAt(e); if(h){ e.preventDefault(); fitEdge(h); return; } if(galEdge(e)) return; const im = imgAt(e.target); if(im){ const list = albumOf(im); openLb(list, list.indexOf(im)); } });
 editor.addEventListener('contextmenu', e => { const im = imgAt(e.target); if(im){ e.preventDefault(); selectImg(im); } });
 $('#rzh').addEventListener('pointerdown', e => {
   const k = e.target.closest('.rzh'), table = $('#rzh')._table; if(!k || !table) return;
